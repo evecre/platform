@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <!-- TODO: 文言 -->
+  <title>イベント詳細 | イベクリ</title>
+  <meta name="description" content="イベクリで公開されたイベントの詳細です。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/common/evecre-icon-32.png">
+  <link rel="apple-touch-icon" href="/assets/img/common/evecre-icon-192.png">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script type="module" src="/assets/js/pages/event-detail.js"></script>
+</head>
+<body>
+  <header class="l-header">
+    <!-- TODO: ロゴ画像（assets/img/common/）に差し替える -->
+    <a class="l-header__logo" href="/">イベクリ</a>
+    <nav class="l-header__nav" aria-label="サイト内">
+      <ul class="l-header__list">
+        <li class="l-header__item"><a class="l-header__link" href="/">Top</a></li>
+        <li class="l-header__item"><a class="l-header__link" href="/pages/event-log/">イベント一覧</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="l-main">
+    <article class="p-event-detail">
+      <p class="p-event-detail__message" data-detail-message role="status">読み込み中…</p>
+
+      <!-- event-detail.js が API の値を textContent で入れてから表示する -->
+      <div class="p-event-detail__content u-hidden" data-detail-content>
+        <img class="p-event-detail__header-image" data-detail="headerImage" src="" alt="">
+        <span class="p-event-detail__label" data-detail="label"></span>
+        <h1 class="p-event-detail__title" data-detail="title"></h1>
+
+        <dl class="p-event-detail__info">
+          <div class="p-event-detail__info-row">
+            <dt class="p-event-detail__info-term">開催日時</dt>
+            <dd class="p-event-detail__info-desc">
+              <ul class="p-event-detail__dates" data-detail="dates"></ul>
+            </dd>
+          </div>
+          <div class="p-event-detail__info-row" data-detail="venueRow">
+            <dt class="p-event-detail__info-term">場所</dt>
+            <dd class="p-event-detail__info-desc" data-detail="venue"></dd>
+          </div>
+        </dl>
+
+        <p class="p-event-detail__summary" data-detail="summary"></p>
+
+        <section class="p-event-detail__knowledge">
+          <h2 class="p-event-detail__knowledge-title">ナレッジ</h2>
+          <p class="p-event-detail__knowledge-message u-hidden" data-detail="knowledgeMessage"></p>
+          <ol class="p-event-detail__knowledge-list" data-detail="knowledgeList"></ol>
+        </section>
+      </div>
+
+      <a class="p-event-detail__back" href="/pages/event-log/">イベント一覧へ戻る</a>
+    </article>
+  </main>
+
+  <!-- ナレッジ（タスクと振り返り）1件分。event-detail.js が複製して使う -->
+  <template data-knowledge-template>
+    <li class="p-event-knowledge">
+      <h3 class="p-event-knowledge__title"></h3>
+      <ul class="p-event-knowledge__tags"></ul>
+      <dl class="p-event-knowledge__review">
+        <div class="p-event-knowledge__review-row">
+          <dt class="p-event-knowledge__review-term" data-knowledge="firstLabel"></dt>
+          <dd class="p-event-knowledge__review-desc" data-knowledge="struggle"></dd>
+        </div>
+        <div class="p-event-knowledge__review-row">
+          <dt class="p-event-knowledge__review-term" data-knowledge="secondLabel"></dt>
+          <dd class="p-event-knowledge__review-desc" data-knowledge="solution"></dd>
+        </div>
+      </dl>
+      <p class="p-event-knowledge__text"></p>
+      <ul class="p-event-knowledge__images"></ul>
+      <ul class="p-event-knowledge__files"></ul>
+    </li>
+  </template>
+
+  <footer class="l-footer">
+    <!-- TODO: 文言 -->
+    <small class="l-footer__copyright">&copy; イベクリ</small>
+  </footer>
+</body>
+</html>

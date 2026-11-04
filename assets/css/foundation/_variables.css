@@ -1,0 +1,74 @@
+/* ==========================================================================
+   Foundation / variables — デザイントークン（値はすべて仮。ユーザーが決める）
+   ここに無い色・サイズを各ファイルで直書きしない。必要になったら、まずここに名前を付ける。
+   ========================================================================== */
+
+:root {
+  /* --- 色 ------------------------------------------------------------------
+     仮の値は本体（public/css/foundation/_variables.css）のブランド色を借りている */
+  --color-bg: #FDFBF8;           /* 画面の背景 */
+  --color-surface: #FFFFFF;      /* カード・パネルの背景 */
+  --color-text: #484545;         /* 本文 */
+  --color-text-muted: #A7AAAC;   /* 補足・日付などの薄い文字 */
+  --color-text-inverse: #FFFFFF; /* アクセント色の上に載る文字 */
+  --color-accent: #22AC38;       /* ボタン・リンクなど操作の色 */
+  --color-border: #D3D6D8;
+
+  /* --- フォント ------------------------------------------------------------ */
+  --font-family-base: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --line-height-base: 1.7;
+  --line-height-tight: 1.3;
+
+  /* --- 文字サイズ ----------------------------------------------------------
+     基準（html の font-size）は画面の大きさで伸びる：
+       スマホ〜ノート PC は 16px、1920×1080 で 20px、3840×2160（55インチ 4K）で 40px。
+       幅と高さの小さいほうに合わせる（Top は一画面で見せるので、横長の画面で文字があふれないように）。
+     各段階は rem なので、基準と一緒に伸びる。見出しはスマホで小さく、広い画面で大きくなる。 */
+  --font-size-root: clamp(100%, min(1.0417vw, 1.8519vh), 250%);
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  --font-size-2xl: clamp(1.5rem, 1.1rem + 2vw, 2.5rem);
+  --font-size-3xl: clamp(2rem, 1.2rem + 3.5vw, 4rem);
+
+  /* --- 余白の段階 ---------------------------------------------------------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  /* --- 角丸・幅 ------------------------------------------------------------ */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --content-max-width: 72rem;     /* 一覧・詳細の本文の最大幅 */
+  --card-min-width: 16rem;        /* 一覧のカードが並ぶときの最小幅 */
+  --detail-header-max-height: 50svh; /* 詳細のヘッダー画像の高さの上限（タイトルが一画面目に入るように） */
+
+  /* --- 重なり順 ------------------------------------------------------------ */
+  --z-header: 100;
+  --z-chatbot: 200;
+  --z-overlay: 300;
+
+  /* --- 動きの時間 ----------------------------------------------------------
+     展示モードの時間（自動送り・無操作で戻る）は CSS ではなく JS の定数で持つ */
+  --duration-fast: 0.2s;
+  --duration-base: 0.4s;
+  --duration-slow: 0.8s;
+  --easing-base: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* 動きを減らす設定のときは、時間のトークンを 0 にする（トークンを使っていれば自動で止まる） */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0s;
+    --duration-base: 0s;
+    --duration-slow: 0s;
+  }
+}

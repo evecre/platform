@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <!-- TODO: 文言 -->
+  <title>イベント一覧 | イベクリ</title>
+  <meta name="description" content="イベクリで公開されたイベントの告知と、開催後のナレッジ（タスクと振り返り）の一覧です。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/common/evecre-icon-32.png">
+  <link rel="apple-touch-icon" href="/assets/img/common/evecre-icon-192.png">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script type="module" src="/assets/js/pages/event-log.js"></script>
+</head>
+<body>
+  <header class="l-header">
+    <!-- TODO: ロゴ画像（assets/img/common/）に差し替える -->
+    <a class="l-header__logo" href="/">イベクリ</a>
+    <nav class="l-header__nav" aria-label="サイト内">
+      <ul class="l-header__list">
+        <li class="l-header__item"><a class="l-header__link" href="/">Top</a></li>
+        <li class="l-header__item"><a class="l-header__link" href="/pages/event-log/" aria-current="page">イベント一覧</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="l-main">
+    <section class="p-event-log">
+      <h1 class="p-event-log__title">イベント一覧</h1>
+
+      <div class="p-event-log__filter" role="group" aria-label="絞り込み">
+        <button class="p-event-log__filter-button is-active" type="button" data-filter="all" aria-pressed="true">すべて</button>
+        <button class="p-event-log__filter-button" type="button" data-filter="upcoming" aria-pressed="false">告知</button>
+        <button class="p-event-log__filter-button" type="button" data-filter="archive" aria-pressed="false">アーカイブ</button>
+      </div>
+
+      <p class="p-event-log__message" data-event-log-message role="status">読み込み中…</p>
+      <ul class="p-event-log__list u-hidden" data-event-log-list></ul>
+    </section>
+  </main>
+
+  <!-- イベントカード。event-log.js が複製して、文字は textContent で入れる -->
+  <template data-event-card-template>
+    <li class="p-event-log__item">
+      <a class="c-event-card" href="">
+        <img class="c-event-card__thumb" src="" alt="" loading="lazy" decoding="async">
+        <div class="c-event-card__body">
+          <span class="c-event-card__label"></span>
+          <h2 class="c-event-card__title"></h2>
+          <p class="c-event-card__date"></p>
+          <p class="c-event-card__venue"></p>
+        </div>
+      </a>
+    </li>
+  </template>
+
+  <footer class="l-footer">
+    <!-- TODO: 文言 -->
+    <small class="l-footer__copyright">&copy; イベクリ</small>
+  </footer>
+</body>
+</html>

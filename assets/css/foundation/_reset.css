@@ -1,0 +1,74 @@
+/* ==========================================================================
+   Foundation / reset — 要素の初期化（vendor/reset が空だったので最小限を自前で書いた）
+   余白・見出しのサイズ・ボタンの見た目は、各 c- / p- が自分で持つ前提。
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+h1, h2, h3, h4, h5, h6,
+p,
+figure,
+blockquote,
+dl,
+dd,
+hr,
+pre {
+  margin: 0;
+}
+
+ol,
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+img,
+svg,
+video,
+canvas,
+picture {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+[hidden] {
+  display: none;
+}

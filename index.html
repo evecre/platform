@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <!-- TODO: 文言 -->
+  <title>イベクリ — 学生のイベントづくりを支える Web アプリ</title>
+  <meta name="description" content="目的を定め、見失わず、共有する。学生のイベントづくりを支える Web アプリ「イベクリ」の紹介です。">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/common/evecre-icon-32.png">
+  <link rel="apple-touch-icon" href="/assets/img/common/evecre-icon-192.png">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script type="module" src="/assets/js/pages/top.js"></script>
+</head>
+<body>
+  <header class="l-header">
+    <!-- TODO: ロゴ画像（assets/img/common/）に差し替える -->
+    <a class="l-header__logo" href="/">イベクリ</a>
+    <nav class="l-header__nav" aria-label="サイト内">
+      <ul class="l-header__list">
+        <li class="l-header__item"><a class="l-header__link" href="/" aria-current="page">Top</a></li>
+        <li class="l-header__item"><a class="l-header__link" href="/pages/event-log/">イベント一覧</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="l-main l-stage" data-stage>
+    <!-- scene の足し方・data-state / --progress / data-step の使い方は assets/css/README.md -->
+
+    <section class="p-hero l-stage__scene" data-scene="hero" data-steps="1">
+      <div class="l-stage__frame">
+        <!-- TODO: ロゴ画像 -->
+        <!-- TODO: 文言 -->
+        <h1 class="p-hero__title">イベクリ</h1>
+        <p class="p-hero__lead">目的を見失わない、学生のイベントづくり。</p>
+      </div>
+    </section>
+
+    <section class="p-top-problem l-stage__scene" data-scene="problem" data-steps="2">
+      <div class="l-stage__frame">
+        <!-- TODO: 文言 -->
+        <h2 class="p-top-problem__title">「終わらせること」が目的になっていませんか</h2>
+        <p class="p-top-problem__text">準備に追われるうちに、なぜこのイベントをやるのかが見えなくなる。</p>
+        <p class="p-top-problem__text">気づけば「とにかく終わらせること」が目的になってしまう。</p>
+      </div>
+    </section>
+
+    <section class="p-top-concept l-stage__scene" data-scene="concept" data-steps="3">
+      <div class="l-stage__frame">
+        <!-- TODO: 文言 -->
+        <h2 class="p-top-concept__title">イベクリがすること</h2>
+        <ol class="p-top-concept__list">
+          <li class="p-top-concept__item">目的を定める</li>
+          <li class="p-top-concept__item">目的を見失わない</li>
+          <li class="p-top-concept__item">目的を共有する</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="p-top-world l-stage__scene" data-scene="world" data-steps="1">
+      <div class="l-stage__frame">
+        <!-- TODO: 文言 -->
+        <h2 class="p-top-world__title">イベントという山を、3体の仲間と登る</h2>
+        <p class="p-top-world__text">水・森・岩のキャラクターが、山登りに付き添います。</p>
+        <!-- TODO: キャラクターの画像（assets/img/top/） -->
+        <div class="p-top-world__visual" role="img" aria-label="水・森・岩のキャラクター（画像は準備中）"></div>
+      </div>
+    </section>
+
+    <section class="p-top-howto l-stage__scene" data-scene="how-to" data-steps="4">
+      <div class="l-stage__frame">
+        <!-- TODO: 文言 -->
+        <h2 class="p-top-howto__title">使い方</h2>
+        <ol class="p-top-howto__list">
+          <li class="p-top-howto__item">イベントを作る</li>
+          <li class="p-top-howto__item">目的を決める</li>
+          <li class="p-top-howto__item">タスクを進める</li>
+          <li class="p-top-howto__item">振り返る</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="p-top-features l-stage__scene" data-scene="features" data-steps="1">
+      <div class="l-stage__frame">
+        <!-- TODO: 文言 -->
+        <h2 class="p-top-features__title">できること</h2>
+        <ul class="p-top-features__list">
+          <li class="p-top-features__item">タスクの管理</li>
+          <li class="p-top-features__item">山で進み具合が見える</li>
+          <li class="p-top-features__item">振り返り・引き継ぎ</li>
+          <li class="p-top-features__item">通知</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="p-top-archive l-stage__scene" data-scene="archive" data-steps="1">
+      <div class="l-stage__frame">
+        <!-- TODO: 文言 -->
+        <h2 class="p-top-archive__title">公開されたイベント</h2>
+        <p class="p-top-archive__text">イベクリで作られたイベントの告知と、開催後の振り返りを見られます。</p>
+        <a class="p-top-archive__link" href="/pages/event-log/">イベント一覧へ</a>
+      </div>
+    </section>
+
+    <section class="p-top-closing l-stage__scene" data-scene="closing" data-steps="1">
+      <div class="l-stage__frame">
+        <!-- TODO: 文言 -->
+        <h2 class="p-top-closing__title">イベクリについて</h2>
+        <p class="p-top-closing__text">イベクリは、学生のイベントづくりの研究から生まれました。</p>
+      </div>
+    </section>
+
+    <nav class="c-step-indicator l-stage__indicator" data-stage-indicator aria-label="画面の位置"></nav>
+  </main>
+
+  <footer class="l-footer">
+    <!-- TODO: 文言 -->
+    <small class="l-footer__copyright">&copy; イベクリ</small>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,29 @@
+/* ==========================================================================
+   Foundation / typography — 基準の文字サイズと、素の見出し・本文の大きさ
+   段階の値そのものは _variables.css（--font-size-*）で変える。
+   ========================================================================== */
+
+html {
+  font-size: var(--font-size-root);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-size: var(--font-size-md);
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+  line-height: var(--line-height-tight);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-tight);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-tight);
+}

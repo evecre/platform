@@ -1,0 +1,20 @@
+{
+  "id": "mock-graduation-live",
+  "status": "archive",
+  "basic": {
+    "title": "卒業ライブ",
+    "headerImage": null,
+    "summary": "軽音サークルの4年生の卒業ライブです。",
+    "venue": "学生会館ホール",
+    "dates": [
+      "2026-02-14"
+    ],
+    "dateTimes": {
+      "2026-02-14": {
+        "start": "17:00",
+        "end": "20:00"
+      }
+    }
+  },
+  "knowledge": null
+}

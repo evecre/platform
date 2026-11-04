@@ -1,0 +1,62 @@
+/* ==========================================================================
+   Layout / stage — Top のスクロールの舞台（仕組みに必要な最小限だけ）
+   scene（section）はスクロールの長さだけを持ち、中身（__frame）は画面に固定する。
+   どの scene を見せるかは JS（scrollStage.js）が付ける data-state で決まる。
+   ★JS が動く前（.is-ready が無いとき）は、普通の縦並びのページとして読める。
+   ========================================================================== */
+
+/* 最後の scene も最後のステップまでスクロールできるように、一画面分の余白を足す */
+.l-stage.is-ready {
+  padding-bottom: 100svh;
+}
+
+/* --- scene のスクロールの長さ（data-steps × 100svh）---------------------
+   ★data-steps を 9 以上にするときは、ここに行を足す */
+.l-stage.is-ready .l-stage__scene { height: 100svh; }
+.l-stage.is-ready .l-stage__scene[data-steps="2"] { height: 200svh; }
+.l-stage.is-ready .l-stage__scene[data-steps="3"] { height: 300svh; }
+.l-stage.is-ready .l-stage__scene[data-steps="4"] { height: 400svh; }
+.l-stage.is-ready .l-stage__scene[data-steps="5"] { height: 500svh; }
+.l-stage.is-ready .l-stage__scene[data-steps="6"] { height: 600svh; }
+.l-stage.is-ready .l-stage__scene[data-steps="7"] { height: 700svh; }
+.l-stage.is-ready .l-stage__scene[data-steps="8"] { height: 800svh; }
+
+/* --- 画面に固定する中身 -------------------------------------------------- */
+.l-stage__frame {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-5);
+  min-height: 100svh;
+  /* 右は現在位置のドットに重ならない幅を空ける */
+  padding: var(--space-8) var(--space-7) var(--space-8) var(--space-5);
+}
+
+.l-stage.is-ready .l-stage__frame {
+  position: fixed;
+  inset: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+/* active 以外は隠す。ただし隠すのを --duration-slow だけ遅らせ、引いていく動きを見せられるようにする。
+   ★scene や __frame 自体に transition を書くときは、visibility を消さないように
+     「transition: opacity …, visibility 0s linear var(--duration-slow);」のように並べて書く */
+.l-stage.is-ready .l-stage__scene:not([data-state="active"]) .l-stage__frame {
+  visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0s linear var(--duration-slow);
+}
+
+/* --- 現在位置のドット（c-step-indicator）の置き場所 ----------------------- */
+.l-stage__indicator {
+  position: fixed;
+  top: 50%;
+  right: var(--space-4);
+  z-index: var(--z-header);
+  transform: translateY(-50%);
+}
+
+.l-stage:not(.is-ready) .l-stage__indicator {
+  display: none;
+}

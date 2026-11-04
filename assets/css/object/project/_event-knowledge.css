@@ -1,0 +1,80 @@
+/* ==========================================================================
+   Project / event-knowledge — 詳細ページのナレッジ1件（タスク名・タグ・振り返り2項目・本文・画像・ファイル）
+   ========================================================================== */
+
+.p-event-knowledge {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+.p-event-knowledge__title {
+  font-size: var(--font-size-lg);
+}
+
+.p-event-knowledge__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.p-event-knowledge__tag {
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+}
+
+.p-event-knowledge__review {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.p-event-knowledge__review-term {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+}
+
+.p-event-knowledge__review-desc,
+.p-event-knowledge__text {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.p-event-knowledge__images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--card-min-width)), 1fr));
+  gap: var(--space-3);
+}
+
+.p-event-knowledge__image {
+  width: 100%;
+  border-radius: var(--radius-sm);
+}
+
+.p-event-knowledge__files {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.p-event-knowledge__file {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-accent);
+}
+
+.p-event-knowledge__file-thumb {
+  width: var(--space-8);
+}
+
+.p-event-knowledge__file-size {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}

@@ -1,0 +1,14 @@
+/* ==========================================================================
+   Foundation / animation — 複数の場所で使う @keyframes だけを書く
+   使う側：animation: fade-in var(--duration-base) var(--easing-base) both;
+   ========================================================================== */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(var(--space-6)); }
+  to { opacity: 1; transform: none; }
+}

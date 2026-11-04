@@ -1,0 +1,29 @@
+/* ==========================================================================
+   style.css — @import だけを書く。並び＝詳細度の弱い順（入れ替えるとカスケードが壊れる）
+   ========================================================================== */
+
+/* Foundation */
+@import url("foundation/_reset.css");
+@import url("foundation/_variables.css");
+@import url("foundation/_base.css");
+@import url("foundation/_typography.css");
+@import url("foundation/_animation.css");
+
+/* Layout（l-） */
+@import url("layout/_header.css");
+@import url("layout/_main.css");
+@import url("layout/_footer.css");
+@import url("layout/_stage.css");
+
+/* Component（c-） */
+@import url("object/component/_step-indicator.css");
+@import url("object/component/_event-card.css");
+
+/* Project（p-） */
+@import url("object/project/_hero.css");
+@import url("object/project/_event-log.css");
+@import url("object/project/_event-detail.css");
+@import url("object/project/_event-knowledge.css");
+
+/* Utility（u-） */
+@import url("object/utility/_hidden.css");

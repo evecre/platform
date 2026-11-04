@@ -1,0 +1,16 @@
+{
+  "id": "mock-winter-cleanup",
+  "status": "upcoming",
+  "basic": {
+    "title": "冬の地域清掃ボランティア",
+    "headerImage": null,
+    "summary": "大学のまわりの通学路を、地域の方と一緒に清掃します。",
+    "venue": "正門前（集合）",
+    "dates": [
+      "2026-12-12",
+      "2026-12-13"
+    ],
+    "dateTimes": {}
+  },
+  "knowledge": null
+}

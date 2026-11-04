@@ -1,0 +1,33 @@
+/* ==========================================================================
+   Layout / header — ロゴと、Top・イベント一覧へのリンク（3ページ共通。HTML に直接書いてある）
+   ========================================================================== */
+
+.l-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-bg);
+}
+
+.l-header__logo {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+}
+
+.l-header__list {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.l-header__link {
+  font-size: var(--font-size-sm);
+}
+
+.l-header__link[aria-current="page"] {
+  color: var(--color-accent);
+}
