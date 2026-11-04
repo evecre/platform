@@ -1,0 +1,118 @@
+/* ==========================================================================
+   Component / character — イベクリのキャラクター（体 ＋ 白目 ＋ 虹彩）。たまに瞬きし、たまに目線を振る
+   組み立ては assets/js/modules/character.js。大きさは置く側（親）が width で決める
+   ========================================================================== */
+
+.c-character {
+  position: relative;
+  display: block;
+  aspect-ratio: 372 / 349;
+}
+
+.c-character--iwa {
+  aspect-ratio: 372 / 350;
+}
+
+.c-character__body {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --- 目 ------------------------------------------------------------------
+   ★寸法は素材から実測して決めてある。勝手に変えないこと。
+     白目 character-eye.svg  : viewBox 76.29×40、円 r=20、中心 x=20 / 56.29
+     虹彩 character-*-iris   : viewBox 50.2×13.91、円 r=6.95、中心 x=6.95 / 43.25
+     芯の間隔が 36.29 と 36.30 でほぼ一致するので、等倍で重ねると穴にぴたりと嵌る。
+       虹彩の幅  = 50.2 / 76.29  = 65.8%
+       虹彩の left = (20 - 6.95) / 76.29 = 17.1%
+       虹彩の top  = (40 - 13.91) / 2 / 40 = 32.6%
+   ★可動域は 白目r20 − 虹彩r6.95 = 13.05。虹彩自身の寸法に対して
+     横 ±26% / 縦 ±94% までが「白目からはみ出さない」限界。下の値はその内側。
+   ★目の位置（--face-left / --face-top）は suggest-box-*.svg の白目の円から測った値。
+     体（viewBox 372×349。iwa は 372×350）に対して：幅 76.29 / 372 = 20.5% */
+
+.c-character__face {
+  position: absolute;
+  z-index: 1;
+  top: var(--face-top);
+  left: var(--face-left);
+  width: 20.5%;
+  /* 瞬きは目の中心を軸に縦に潰す */
+  transform: scaleY(1);
+  pointer-events: none;
+  animation: character-blink var(--blink-dur) linear infinite;
+}
+
+.c-character__eye {
+  display: block;
+  width: 100%;
+}
+
+.c-character__iris {
+  position: absolute;
+  top: 32.6%;
+  left: 17.1%;
+  width: 65.8%;
+  transform: translate(var(--gaze-x), var(--gaze-y));
+  animation: character-glance var(--glance-dur) ease-in-out infinite;
+}
+
+/* 目の位置・普段の目線・ちらっと見る先。★普段の目線は参考画像どおり、両端の2体は内側の上を見る
+   ★瞬きと目線の周期を互いに素にして、動きが毎回同じ並びにならないようにする。
+   ★「たまに動く」くらいが狙いなので、短くしないこと。
+     瞬き 13〜19秒に1回／目を振るのは 29〜41秒に1回。 */
+.c-character--mizu {
+  --face-left: 39.45%;   /* 146.75 / 372 */
+  --face-top: 12.63%;    /* 44.07 / 349 */
+  --gaze-x: 20%;         /* 右上 */
+  --gaze-y: -42%;
+  --glance-x: -20%;      /* 左下をちらっと */
+  --glance-y: 30%;
+  --blink-dur: 13s;
+  --glance-dur: 29s;
+}
+
+.c-character--mori {
+  --face-left: 38.4%;    /* 142.86 / 372 */
+  --face-top: 12.89%;    /* 44.99 / 349 */
+  --gaze-x: 0%;          /* 上 */
+  --gaze-y: -48%;
+  --glance-x: 22%;       /* 右をちらっと */
+  --glance-y: 10%;
+  --blink-dur: 16s;
+  --glance-dur: 34s;
+}
+
+.c-character--iwa {
+  --face-left: 38.87%;   /* 144.58 / 372 */
+  --face-top: 13.6%;     /* 47.59 / 350 */
+  --gaze-x: -20%;        /* 左上 */
+  --gaze-y: -42%;
+  --glance-x: 20%;       /* 右下をちらっと */
+  --glance-y: 30%;
+  --blink-dur: 19s;
+  --glance-dur: 41s;
+}
+
+/* c-character だけで使う動き。周期の最後のほうで一瞬だけ動かす */
+@keyframes character-blink {
+  0%, 97%, 100% { transform: scaleY(1); }
+  98.5% { transform: scaleY(0.1); }
+}
+
+/* 普段の目線 → 正面 → ちらっと見る先 → 普段の目線 */
+@keyframes character-glance {
+  0%, 60%, 100% { transform: translate(var(--gaze-x), var(--gaze-y)); }
+  63%, 70% { transform: translate(0, 0); }
+  73%, 82% { transform: translate(var(--glance-x), var(--glance-y)); }
+  86% { transform: translate(var(--gaze-x), var(--gaze-y)); }
+}
+
+/* 動きを減らす設定のときは、瞬きも目線も止める（普段の目線のまま） */
+@media (prefers-reduced-motion: reduce) {
+  .c-character__face,
+  .c-character__iris {
+    animation: none;
+  }
+}

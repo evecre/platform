@@ -50,6 +50,14 @@
   --content-max-width: 72rem;     /* 一覧・詳細の本文の最大幅 */
   --card-min-width: 16rem;        /* 一覧のカードが並ぶときの最小幅 */
   --detail-header-max-height: 50svh; /* 詳細のヘッダー画像の高さの上限（タイトルが一画面目に入るように） */
+  --radius-full: 999px;           /* 丸いボタン */
+
+  /* --- チャットボット ------------------------------------------------------ */
+  --chatbot-toggle-size: 5rem;      /* 右下のボタン（キャラクター）の大きさ */
+  --chatbot-avatar-size: 2.5rem;    /* パネルの見出しのキャラクター */
+  --chatbot-panel-width: 24rem;
+  --chatbot-panel-height: 36rem;    /* 画面が低いときは画面に合わせて縮む */
+  --chatbot-message-max-width: 85%; /* 吹き出しの幅の上限 */
 
   /* --- 重なり順 ------------------------------------------------------------ */
   --z-header: 100;

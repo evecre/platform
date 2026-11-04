@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "snapshot": "node scripts/fetch-snapshot.mjs",
-    "check": "node scripts/check-js.mjs"
+    "check": "node scripts/check-js.mjs",
+    "check:faq": "node scripts/check-faq.mjs"
   }
 }

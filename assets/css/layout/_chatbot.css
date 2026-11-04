@@ -1,0 +1,11 @@
+/* ==========================================================================
+   Layout / chatbot — チャットボット（c-chatbot）を画面の右下に置く。中身は object/component/_chatbot.css
+   要素は JS（assets/js/modules/chatbot/chatbot.js）が body の最後に足す
+   ========================================================================== */
+
+.l-chatbot {
+  position: fixed;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  z-index: var(--z-chatbot);
+}

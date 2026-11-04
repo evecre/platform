@@ -1,0 +1,192 @@
+/* ==========================================================================
+   Component / chatbot — 右下のボタンと、重ねて開くパネル（見た目は仮。ユーザーが作り込む）
+   開いている間は .c-chatbot.is-open。置き場所は layout/_chatbot.css
+   メッセージは __message--bot（イベクリ）/ --user（質問した人）、選択肢は __choice--category / --question / --other
+   ========================================================================== */
+
+.c-chatbot {
+  position: relative;
+}
+
+/* --- 右下のボタン --------------------------------------------------------- */
+.c-chatbot__toggle {
+  display: block;
+  width: var(--chatbot-toggle-size);
+  height: var(--chatbot-toggle-size);
+  padding: var(--space-2);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-border);
+  cursor: pointer;
+}
+
+.c-chatbot__toggle-character {
+  width: 100%;
+}
+
+/* --- パネル ---------------------------------------------------------------- */
+.c-chatbot__panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + var(--space-3));
+  display: none;
+  flex-direction: column;
+  width: min(var(--chatbot-panel-width), calc(100vw - var(--space-4) * 2));
+  height: min(var(--chatbot-panel-height), calc(100svh - var(--chatbot-toggle-size) - var(--space-4) * 3));
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+.c-chatbot.is-open .c-chatbot__panel {
+  display: flex;
+  animation: fade-up var(--duration-base) var(--easing-base) both;
+}
+
+.c-chatbot__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.c-chatbot__avatar {
+  flex: none;
+  width: var(--chatbot-avatar-size);
+}
+
+.c-chatbot__title {
+  flex: 1;
+  font-size: var(--font-size-md);
+}
+
+.c-chatbot__close {
+  flex: none;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-size-lg);
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* --- メッセージの一覧 ----------------------------------------------------- */
+.c-chatbot__log {
+  position: relative; /* 子の offsetTop をこの中の位置にする（JS がスクロール位置に使う） */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.c-chatbot__message {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: var(--chatbot-message-max-width);
+}
+
+.c-chatbot__message--bot {
+  align-self: flex-start;
+}
+
+.c-chatbot__message--user {
+  align-self: flex-end;
+}
+
+.c-chatbot__text {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.c-chatbot__message--bot .c-chatbot__text {
+  background-color: var(--color-bg);
+}
+
+.c-chatbot__message--user .c-chatbot__text {
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+}
+
+.c-chatbot__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--font-size-sm);
+}
+
+.c-chatbot__link {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.c-chatbot__choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.c-chatbot__choice {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  color: var(--color-accent);
+  text-align: left;
+  cursor: pointer;
+}
+
+.c-chatbot__choice--other {
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+/* --- 入力欄 --------------------------------------------------------------- */
+.c-chatbot__form {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.c-chatbot__input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md); /* 16px 未満だと iPhone が入力時に拡大する */
+}
+
+.c-chatbot__send {
+  flex: none;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+  cursor: pointer;
+}
+
+/* --- スマホ（〜600px）：パネルを全画面にする ------------------------------
+   メディアクエリには CSS 変数が使えないので、境目の幅はここに直接書く */
+@media (max-width: 600px) {
+  .c-chatbot__panel {
+    position: fixed;
+    inset: 0;
+    width: auto;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+  }
+
+  /* 全画面のあいだは右下のボタンを隠す（閉じるのは見出しの × で） */
+  .c-chatbot.is-open .c-chatbot__toggle {
+    display: none;
+  }
+}

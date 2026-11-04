@@ -135,3 +135,21 @@ robots.txt  _headers               検索エンジン対策（§6）
   - 表示・非表示の切り替えは `u-hidden`（`hidden` 属性は、クラスの `display` に負けるので使わない）
 - **文字サイズ**：`html` の font-size が画面に合わせて伸びる（16px → 1920×1080 で 20px → 4K で 40px）。サイズは rem で書く
 - **動きの時間**：`--duration-*` を使う。動きを減らす設定で 0 になる
+
+## 11. チャットボット（02 で追加）
+
+- 判定：`assets/js/modules/chatbot/`（`normalize.js` → `matcher.js` → `engine.js`。DOM に依存しない）。パネル：`chatbot.js`（`startChatbot({ kiosk })`。`common.js` から起動）
+  - 全ページに出す。Top だけにするなら `config.js` の `CHATBOT_TOP_ONLY = true`
+  - 答え・質問の文はすべて `textContent`、リンクは `safeUrl()` を通す
+  - 展示モードで `CHATBOT_RESET_MS`（kiosk.js）操作が無ければ、閉じて最初のあいさつに戻す
+  - パネルの中の keydown は Top の舞台に渡さない（stopPropagation）
+- データ：`assets/data/faq.json`（カテゴリと質問）・`synonyms.json`（類義語）・`faq-tests.json`（正答率のテスト）
+  - 質問を足す：`items` に1件足す。`id`（英小文字とハイフン）・`category`（`categories` の id）・`question`・`patterns`（言い回し。**5個以上**）・`keywords`（その項目らしい語。1つ含まれるごとに +0.1）・`answer`（改行可）・`links`（`/` か `https://` で始まる）・`related`（ほかの項目の id）・`featured`（カテゴリを選んだときに出すか）
+  - 言い回しが違うだけで外れるときは、まず `synonyms.json`（代表の語 → 言い換えの一覧）に足す。全部の項目に効く。語尾・つなぎは `normalize.js` の `FILLER_PHRASES`
+  - テストの文を、そのまま `patterns` に写さない（テストが意味を失う）
+  - 足したら `npm run check:faq`（`--tune` でしきい値の表）。faq.json に誤り（id の重複・無い related・patterns 5個未満・無いカテゴリ）があると終了コード 1
+- しきい値（`engine.js`）：1位の点数が `THRESHOLD_ANSWER`（0.55）以上で、2位との差が `MIN_MARGIN`（0.05）以上なら回答。`THRESHOLD_SUGGEST`（0.30）以上なら「もしかして」（上位3件）。それ未満は「答えられない」でカテゴリに戻す
+  - 下げると答える数が増えるが、**違う答え（誤答）を出しやすくなる**。誤答は「もしかして」より悪いので、`--tune` の表で誤答 0 を保てる範囲で決める（2026-11-04：0.50 以下で誤答が出る）
+- キャラクター：`assets/js/modules/character.js`（`pickCharacter()` は読み込みごとに1体。`createCharacter(ch, { className })`）＋ `object/component/_character.css`
+  - 素材は `assets/img/character/`。目の寸法・位置は素材から実測した値。勝手に変えない
+  - 瞬き・目線は「たまに」（瞬き 13〜19秒、目線 29〜41秒）。短くしない。動きを減らす設定では止める

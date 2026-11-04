@@ -18,6 +18,90 @@
 
 ---
 
+## 2026-11-04 — 02 Phase 4：正答率のチェック（02 完了）
+
+- 指示書：docs/instructions/02_chatbot.md（Phase 4・完了条件まで）
+- やったこと：
+  - `scripts/check-faq.mjs`（`npm run check:faq`、`--tune` でしきい値の表）。faq.json の検査（id の重複・無い related・自分自身の related・patterns 5個未満・無いカテゴリ・リンクの形・テストの expect が無い id）、正答・到達・誤答・answer / suggest / fallback の割合、外れた質問の一覧
+  - テストを 15 → 31 件に（答えない質問 5件を含む）
+  - 精度の調整：`FILLER_PHRASES` に話し言葉（って・なに・なんで・したらいい・すればいい・いいですか）、`synonyms.json` に はじめ（最初・まず）・流れ・機能・イベクリ（アプリ）・育つ を追加、keywords の重複をまとめる（類義語で同じ語になったものの二重加点を防ぐ）、質問が keyword そのものだけなら近さ 1（「山ってなに？」→「山」の1文字になり、2文字ずつでは点が出なかったため）
+  - faq.json の誤りを直した：task-create と member-invite の related にあった `task-assign`（存在しない）を、それぞれ [review-write, process-flow] と [event-create, task-create] に
+- 決めたこと・理由：
+  - 答えない質問（expect: null）は fallback のときだけ正答とする（関係の無い「もしかして」を出すのもよくないため）
+  - しきい値は初期値のまま（ANSWER 0.55 / SUGGEST 0.30 / MARGIN 0.05）。表で誤答 0・到達 100% のうち一番答える範囲。0.50 以下にすると誤答が1件出る（「後輩に記録を残したい」→ review-write）
+  - テストの文は patterns に写していない（類義語と言い回しの規則で上げた）
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 21 / 21 件 OK
+  - `npm run check:faq` → 検査の誤り 0（注意：answer が TODO 12件）。正答 26 / 31（84%）・到達 31 / 31（100%）・誤答 0。answer 68% / suggest 16% / fallback 16%
+  - 調整前（31件）：正答 21・到達 28
+  - 完了条件のパネル表示（375 / 1920×1080）と展示モードの止まる・再開は Phase 3 で確認済み
+- 残っていること・次にやること：
+  - FAQ の回答本文（12件とも TODO）を書く
+  - 「もしかして」に残る5件（後輩を入れたい・ゴールの決め方・準備の進め方・どんな機能・後輩に記録）は、回答本文が入ってから言い回しを見直す
+  - main へのマージ（ユーザーの確認後）
+- ユーザーに確認したいこと：main にマージしてよいか
+- 本体側に頼むこと：なし
+
+## 2026-11-04 — 02 Phase 3：パネル UI ＋ キャラクター
+
+- 指示書：docs/instructions/02_chatbot.md（Phase 3 まで）
+- やったこと：
+  - チャットボットのパネル `assets/js/modules/chatbot/chatbot.js`（`startChatbot({ kiosk })`）。`common.js` から全ページで起動。Top だけにするなら `config.js` の `CHATBOT_TOP_ONLY = true`
+  - キャラクターの部品 `assets/js/modules/character.js` ＋ `object/component/_character.css`（`c-character`）。ユーザーが `assets/img/character/` に入れた素材を使い、読み込みごとに mizu / mori / iwa から1体を選ぶ。右下のボタンとパネルの見出しに同じ1体を出す
+  - 瞬き（`character-blink`：13 / 16 / 19 秒に1回、目を縦に潰す）と目線（`character-glance`：29 / 34 / 41 秒に1回、正面→ちらっと見る先→普段の目線）。動きを減らす設定では止まる
+  - 置き場所 `layout/_chatbot.css`（`l-chatbot`。右下に固定）、中身 `object/component/_chatbot.css`
+  - Top の使い方の scene に `id="how-to"`（FAQ のリンク先）
+- 変えたファイル：上のほか `common.js`・`config.js`・`kiosk.js`（`CHATBOT_RESET_MS`）・`style.css`・`_variables.css`（`--radius-full`・`--chatbot-*`）・`index.html`
+- 決めたこと・理由：
+  - 目の寸法はユーザーの参考コードのまま。目の位置（`--face-left` / `--face-top`、幅 20.5%）は `suggest-box-*.svg` の白目の円から実測（参考コードの top 12% / width 27% は別の素材向けの値だったため）。普段の目線は参考コードの値
+  - 参考コードの `style="--char-body:url(…)"` は HTML に `style` を書かない決まりに合わないので、体は `<img>`、目の位置は modifier（`c-character--mizu` など）の CSS 変数にした
+  - `character-closed-eyes.svg`（参考コードの閉じた目）はフォルダに無いので使っていない。瞬きは目を縦に潰すだけ
+  - Component は位置を持たない決まりなので、右下に固定するのは Layout の `l-chatbot`
+  - パネルの中のキー操作は Top の舞台に渡さない（入力欄やボタンで ↓ を押しても画面が送られない）
+  - 自由入力・選択のたびに、ユーザーの発言が一覧の一番上に来るようにスクロールする（長い回答を頭から読めるように）
+  - スマホ（〜600px）の全画面のあいだは右下のボタンを隠す（送信ボタンに重なるため）。閉じるのは見出しの ×
+  - 答えられなかった質問の `console.info` は localhost / 127.0.0.1 のときだけ
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 20 / 20 件 OK
+  - Playwright（1280×800・375×667・1920×1080）：開く→ aria-expanded=true・入力欄にフォーカス／カテゴリ→ featured→回答→ links・related・ほかの質問をする／自由入力で answer・fallback／`<img onerror>` を入れても img は作られない／パネルで ↓ を押しても Top は動かない／Esc で閉じてトグルにフォーカス／chatbot:open・close が1回ずつ発火／375 で全画面・横スクロールなし／リンクで `/#how-to` に移ってパネルが閉じる／6回読み込んで3体とも出る
+  - 展示モード（`?kiosk=1&fast=1`）：開いている間は自動送りが止まる → 18秒操作なしで閉じてあいさつだけに戻る → 閉じたあと自動送りが再開
+  - 動きを減らす設定で瞬き・目線のアニメーションが無くなる
+- 残っていること・次にやること：Phase 4（`scripts/check-faq.mjs`、テストを30件に、精度の調整）。FAQ の回答本文はまだ TODO
+- ユーザーに確認したいこと：なし
+- 本体側に頼むこと：なし
+
+## 2026-11-04 — 02 Phase 2：判定エンジン
+
+- 指示書：docs/instructions/02_chatbot.md（Phase 2 まで）
+- やったこと：`assets/js/modules/chatbot/normalize.js`・`matcher.js`・`engine.js`（DOM に依存しない ES Module）
+- 決めたこと・理由：
+  - normalize：NFKC → 小文字 → ひらがなをカタカナに → 記号・空白を除く → 類義語を代表の語へ（長い順の1つの正規表現）→ 言い回しの語尾・つなぎを除く（`FILLER_PHRASES`）。1文字の助詞は除かない（2文字ずつの手がかりが減りすぎるため）
+  - matcher：scorer は `{ prepare(raw, normalized), similarity(a, b) }` の形で差し替えられる。既定は `bigramScorer`（Dice 係数）。意味検索を足すときは `combineScorers([{ scorer, weight }, …])` で重み付きの平均にする。prepare に元の文も渡すのは、意味検索は正規化前の文を使うため
+  - keywords は1つ含まれるごとに `KEYWORD_BONUS = 0.1` を足す（点数は 1 を超えることがある）
+  - engine：`createEngine({ faq, synonyms, scorer?, thresholds?, onUnanswered? })` → `ask` / `getItem` / `featured` / `categories` / `unanswered` / `normalize`。答えられなかった質問はメモリ上の配列に貯め、`onUnanswered` で知らせる（console.info は Phase 3 のパネル側で、開発中だけ出す）
+  - suggest の候補は上位3件のうち点数が 0 より大きいもの
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 18 / 18 件 OK
+  - 15件のテスト（しきい値は指示書の初期値のまま）：answer が正しい 5件、答えない質問 3件が正しく fallback → 8 / 15。外れた 7件のうち 4件は suggest の1位が正解（もしかしてで正解が一番上に出る）。fallback になった3件：「山ってなに？」0.24、「まず何をしたらいい？」0.25、「準備って何から進める？」（1位が howto-start）
+  - 正規化の例：「やること増やすには？」→「タスク作成」、「ＴＯＤＯを作りたいです！」→「タスクヲ作成」
+- 残っていること・次にやること：Phase 3（パネル UI）。精度の調整は Phase 4（言い回しの追加・「って」「なに」など話し言葉のつなぎの追加・しきい値）
+- ユーザーに確認したいこと：なし
+- 本体側に頼むこと：なし
+
+## 2026-11-04 — 02 Phase 1：チャットボットのデータの形
+
+- 指示書：docs/instructions/02_chatbot.md（Phase 1 まで）。ブランチ `feature/02-chatbot`
+- やったこと：`assets/data/faq.json`（4カテゴリ × 3件 = 12件、言い回し各10個）、`assets/data/synonyms.json`（11グループ）、`assets/data/faq-tests.json`（15件。答えない質問 3件を含む）
+- 決めたこと・理由：
+  - 回答本文はすべて `TODO`。質問は、01 の指示書に書かれた機能（タスク・山・振り返り・引き継ぎ・通知・メンバー・目的）と、本体のコードで存在を確かめた機能（招待・プッシュ通知・アーカイブ）だけから選んだ（機能を推測で書かないため）
+  - Top の使い方へのリンクは `/#how-to`。Phase 3 で how-to の section に `id="how-to"` を付ける（今は付いていない）
+  - テストの質問は、patterns と同じ文にしない（そのまま当たってしまい、チェックにならないため）。Phase 4 で 30 件程度に増やす
+  - 類義語の「公開」に「アーカイブ」「ナレッジ」を寄せた（イベント一覧を見たい質問を、公開の項目に集めるため）。言葉の意味としては近くないので、本番のデータで見直す
+- 確かめたこと：3ファイルとも JSON として読める
+- 残っていること・次にやること：Phase 2（判定エンジン）
+- ユーザーに確認したいこと：12件の質問の選び方／類義語
+- 本体側に頼むこと：なし
+
 ## 2026-11-04 — GitHub に push・main を作成
 
 - 指示書：なし（01 の仕上げ）

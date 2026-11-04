@@ -1,0 +1,393 @@
+{
+  "version": 1,
+  "categories": [
+    {
+      "id": "operation",
+      "label": "操作について"
+    },
+    {
+      "id": "features",
+      "label": "できること"
+    },
+    {
+      "id": "howto",
+      "label": "使い方"
+    },
+    {
+      "id": "process",
+      "label": "イベントの進め方"
+    }
+  ],
+  "items": [
+    {
+      "id": "event-create",
+      "category": "operation",
+      "question": "イベントはどうやって作りますか？",
+      "patterns": [
+        "イベントの作り方",
+        "新しいイベントを始めたい",
+        "イベントを追加するには",
+        "企画を登録したい",
+        "最初にイベントを作る方法",
+        "イベントの新規作成",
+        "イベントを立ち上げたい",
+        "新しく企画を作りたい",
+        "イベントを作成する手順",
+        "どこからイベントを作れる"
+      ],
+      "keywords": [
+        "イベント",
+        "作成"
+      ],
+      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "links": [
+        {
+          "label": "使い方を Top で見る",
+          "href": "/#how-to"
+        }
+      ],
+      "related": [
+        "member-invite",
+        "howto-start"
+      ],
+      "featured": true
+    },
+    {
+      "id": "task-create",
+      "category": "operation",
+      "question": "タスクはどうやって作りますか？",
+      "patterns": [
+        "タスクの作り方",
+        "やることを増やしたい",
+        "やることを追加するには",
+        "新しいタスクを登録したい",
+        "タスクを追加したい",
+        "作業を増やす方法",
+        "todoを作る",
+        "タスクの新規作成",
+        "やることリストに足したい",
+        "タスクを書き込むには"
+      ],
+      "keywords": [
+        "タスク",
+        "作成"
+      ],
+      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "links": [
+        {
+          "label": "使い方を Top で見る",
+          "href": "/#how-to"
+        }
+      ],
+      "related": [
+        "review-write",
+        "process-flow"
+      ],
+      "featured": true
+    },
+    {
+      "id": "member-invite",
+      "category": "operation",
+      "question": "メンバーを招待するには？",
+      "patterns": [
+        "メンバーの招待方法",
+        "仲間を呼びたい",
+        "チームに人を入れたい",
+        "参加者を招待する方法",
+        "友だちを誘うには",
+        "メンバーを増やしたい",
+        "招待リンクの送り方",
+        "部員を参加させたい",
+        "イベントに人を招きたい",
+        "一緒に使う人を追加するには"
+      ],
+      "keywords": [
+        "メンバー",
+        "招待"
+      ],
+      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "links": [],
+      "related": [
+        "event-create",
+        "task-create"
+      ],
+      "featured": true
+    },
+    {
+      "id": "feature-overview",
+      "category": "features",
+      "question": "イベクリで何ができますか？",
+      "patterns": [
+        "イベクリって何",
+        "どんなことができる",
+        "できることを知りたい",
+        "イベクリの機能",
+        "何に使えるアプリ",
+        "イベクリでできること一覧",
+        "このアプリは何をするもの",
+        "主な機能を教えて",
+        "どんな時に使う",
+        "イベクリの特徴"
+      ],
+      "keywords": [
+        "イベクリ",
+        "機能"
+      ],
+      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "links": [
+        {
+          "label": "使い方を Top で見る",
+          "href": "/#how-to"
+        }
+      ],
+      "related": [
+        "mountain",
+        "notification"
+      ],
+      "featured": true
+    },
+    {
+      "id": "mountain",
+      "category": "features",
+      "question": "山は何を表していますか？",
+      "patterns": [
+        "山の意味",
+        "山の絵は何",
+        "山が育つのはなぜ",
+        "山の見方",
+        "山登りってどういうこと",
+        "山で何がわかる",
+        "進み具合が山になるの",
+        "山が高くなる条件",
+        "キャラクターと山の関係",
+        "山のしくみ"
+      ],
+      "keywords": [
+        "山"
+      ],
+      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "links": [],
+      "related": [
+        "feature-overview",
+        "task-create"
+      ],
+      "featured": true
+    },
+    {
+      "id": "notification",
+      "category": "features",
+      "question": "通知は届きますか？",
+      "patterns": [
+        "通知の設定",
+        "お知らせは来る",
+        "リマインドしてくれる",
+        "締め切りを知らせてほしい",
+        "プッシュ通知を受け取りたい",
+        "通知が来ない",
+        "通知をオンにするには",
+        "知らせが届く仕組み",
+        "スマホに通知を出したい",
+        "通知を止めたい"
+      ],
+      "keywords": [
+        "通知"
+      ],
+      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "links": [],
+      "related": [
+        "feature-overview"
+      ],
+      "featured": true
+    },
+    {
+      "id": "howto-start",
+      "category": "howto",
+      "question": "はじめに何をすればいいですか？",
+      "patterns": [
+        "最初にやること",
+        "使い始め方",
+        "はじめ方を知りたい",
+        "何から始めればいい",
+        "初めて使う",
+        "スタートの手順",
+        "登録したあとは何をする",
+        "使い方の流れ",
+        "最初の一歩",
+        "始めるときの準備"
+      ],
+      "keywords": [
+        "はじめ",
+        "最初"
+      ],
+      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "links": [
+        {
+          "label": "使い方を Top で見る",
+          "href": "/#how-to"
+        }
+      ],
+      "related": [
+        "event-create",
+        "purpose-set"
+      ],
+      "featured": true
+    },
+    {
+      "id": "purpose-set",
+      "category": "howto",
+      "question": "イベントの目的はどう決めればいいですか？",
+      "patterns": [
+        "目的の決め方",
+        "ゴールを決めたい",
+        "目標の立て方",
+        "何のためにやるのか決めたい",
+        "目的を書くには",
+        "ねらいを考えるコツ",
+        "目的が決まらない",
+        "目的を見失わないためには",
+        "イベントの目的を設定する",
+        "目的をみんなで決めたい"
+      ],
+      "keywords": [
+        "目的"
+      ],
+      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "links": [
+        {
+          "label": "使い方を Top で見る",
+          "href": "/#how-to"
+        }
+      ],
+      "related": [
+        "howto-start",
+        "process-flow"
+      ],
+      "featured": true
+    },
+    {
+      "id": "review-write",
+      "category": "howto",
+      "question": "振り返りはどう書けばいいですか？",
+      "patterns": [
+        "振り返りの書き方",
+        "反省を書きたい",
+        "ふりかえりのやり方",
+        "振り返りを入力するには",
+        "終わったあとに記録を残したい",
+        "うまくいったことを書く",
+        "困ったことを残したい",
+        "振り返りのコツ",
+        "反省会のメモを残す",
+        "タスクの振り返りを書く"
+      ],
+      "keywords": [
+        "振り返り"
+      ],
+      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "links": [
+        {
+          "label": "使い方を Top で見る",
+          "href": "/#how-to"
+        }
+      ],
+      "related": [
+        "handover",
+        "knowledge-public"
+      ],
+      "featured": true
+    },
+    {
+      "id": "process-flow",
+      "category": "process",
+      "question": "イベントはどんな流れで進めればいいですか？",
+      "patterns": [
+        "イベントの進め方",
+        "準備の流れ",
+        "何から順番にやる",
+        "企画の段取り",
+        "イベントづくりの手順",
+        "準備のスケジュールの立て方",
+        "当日までの流れ",
+        "進め方のコツ",
+        "準備がうまく進まない",
+        "全体の流れを知りたい"
+      ],
+      "keywords": [
+        "進め方",
+        "流れ"
+      ],
+      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "links": [
+        {
+          "label": "使い方を Top で見る",
+          "href": "/#how-to"
+        }
+      ],
+      "related": [
+        "purpose-set",
+        "handover"
+      ],
+      "featured": true
+    },
+    {
+      "id": "handover",
+      "category": "process",
+      "question": "次の代に引き継ぐにはどうすればいいですか？",
+      "patterns": [
+        "引き継ぎの方法",
+        "後輩に引き継ぎたい",
+        "来年に残したい",
+        "次の担当に渡す",
+        "引継ぎ資料を作りたい",
+        "代替わりのとき",
+        "ノウハウを残すには",
+        "前の代の記録を見たい",
+        "経験を次に活かす",
+        "引き継ぎで困らないために"
+      ],
+      "keywords": [
+        "引き継ぎ"
+      ],
+      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "links": [],
+      "related": [
+        "review-write",
+        "knowledge-public"
+      ],
+      "featured": true
+    },
+    {
+      "id": "knowledge-public",
+      "category": "process",
+      "question": "ほかのイベントの振り返りを見られますか？",
+      "patterns": [
+        "ほかのイベントを参考にしたい",
+        "公開されているイベントを見たい",
+        "ナレッジとは",
+        "他の団体の記録",
+        "過去のイベントを見たい",
+        "アーカイブを見るには",
+        "イベントを公開したい",
+        "公開のしかた",
+        "人のイベントの振り返りを読みたい",
+        "参考になる事例"
+      ],
+      "keywords": [
+        "公開",
+        "ナレッジ"
+      ],
+      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "links": [
+        {
+          "label": "イベント一覧を見る",
+          "href": "/pages/event-log/"
+        }
+      ],
+      "related": [
+        "review-write",
+        "handover"
+      ],
+      "featured": true
+    }
+  ]
+}

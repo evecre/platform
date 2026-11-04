@@ -1,0 +1,126 @@
+[
+  {
+    "q": "やること増やすには？",
+    "expect": "task-create"
+  },
+  {
+    "q": "新しい企画ってどこで作るの",
+    "expect": "event-create"
+  },
+  {
+    "q": "サークルの後輩を入れたい",
+    "expect": "member-invite"
+  },
+  {
+    "q": "このアプリでできることは？",
+    "expect": "feature-overview"
+  },
+  {
+    "q": "山ってなに？",
+    "expect": "mountain"
+  },
+  {
+    "q": "リマインドは来ますか",
+    "expect": "notification"
+  },
+  {
+    "q": "まず何をしたらいい？",
+    "expect": "howto-start"
+  },
+  {
+    "q": "ゴールってどうやって決める",
+    "expect": "purpose-set"
+  },
+  {
+    "q": "反省ってどこに書く？",
+    "expect": "review-write"
+  },
+  {
+    "q": "準備って何から進める？",
+    "expect": "process-flow"
+  },
+  {
+    "q": "来年の人に引き継ぎたい",
+    "expect": "handover"
+  },
+  {
+    "q": "他のイベントの記録を見たい",
+    "expect": "knowledge-public"
+  },
+  {
+    "q": "天気を教えて",
+    "expect": null
+  },
+  {
+    "q": "おなかすいた",
+    "expect": null
+  },
+  {
+    "q": "今日のニュースは",
+    "expect": null
+  },
+  {
+    "q": "イベントを新しく作るには",
+    "expect": "event-create"
+  },
+  {
+    "q": "企画を立てたい",
+    "expect": "event-create"
+  },
+  {
+    "q": "タスクを登録する方法",
+    "expect": "task-create"
+  },
+  {
+    "q": "メンバーを追加したい",
+    "expect": "member-invite"
+  },
+  {
+    "q": "友達を呼ぶには",
+    "expect": "member-invite"
+  },
+  {
+    "q": "どんな機能がある？",
+    "expect": "feature-overview"
+  },
+  {
+    "q": "山が大きくなるのはなんで",
+    "expect": "mountain"
+  },
+  {
+    "q": "締め切りのお知らせは来る？",
+    "expect": "notification"
+  },
+  {
+    "q": "使い始めるには",
+    "expect": "howto-start"
+  },
+  {
+    "q": "目標を決めるコツ",
+    "expect": "purpose-set"
+  },
+  {
+    "q": "振り返りを残すには",
+    "expect": "review-write"
+  },
+  {
+    "q": "イベントの段取りを知りたい",
+    "expect": "process-flow"
+  },
+  {
+    "q": "後輩に記録を残したい",
+    "expect": "handover"
+  },
+  {
+    "q": "公開されている振り返りを見たい",
+    "expect": "knowledge-public"
+  },
+  {
+    "q": "パスワードを忘れた",
+    "expect": null
+  },
+  {
+    "q": "好きな食べ物は？",
+    "expect": null
+  }
+]

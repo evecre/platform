@@ -53,6 +53,9 @@
 | イベント詳細のページ（ヘッダー画像・ラベル・開催日時と場所・概要・ナレッジの枠・戻るリンク） | `object/project/_event-detail.css` |
 | 詳細のナレッジ1件（タスク名・タグ・振り返り2項目・本文・画像・ファイル） | `object/project/_event-knowledge.css` |
 | 角丸・本文の最大幅・カードの最小幅の値 | `foundation/_variables.css` |
+| チャットボットの置き場所（右下に固定） | `layout/_chatbot.css` |
+| チャットボットのボタン・パネル・吹き出し・選択肢・入力欄（開いている間は `.c-chatbot.is-open`） | `object/component/_chatbot.css` |
+| キャラクター（目の位置・普段の目線・瞬きと目線の周期） | `object/component/_character.css` |
 | 要素を隠す（`u-hidden`） | `object/utility/_hidden.css` |
 
 ---
@@ -153,3 +156,24 @@ Top は縦に長いページではなく、スクロールに合わせて **scen
 ## 7. 動きを減らす設定
 
 `prefers-reduced-motion: reduce` のとき、`--duration-*` が 0 になる。`transition` / `animation` の時間は直書きせず、このトークンを使うこと（使っていれば、設定に合わせて自動で止まる）。
+
+## 8. チャットボットとキャラクター
+
+チャットボットの要素は JS（`assets/js/modules/chatbot/chatbot.js` の `buildUi()`）が body の最後に足す。並びを変えるときはそこを直す。
+
+```
+div.l-chatbot
+  div.c-chatbot（開いている間 .is-open）
+    div.c-chatbot__panel（role="dialog"）
+      div.c-chatbot__header  > span.c-character.c-chatbot__avatar / h2.c-chatbot__title / button.c-chatbot__close
+      div.c-chatbot__log（aria-live="polite"）
+        div.c-chatbot__message.c-chatbot__message--bot | --user
+          p.c-chatbot__text（改行は white-space: pre-line）
+          ul.c-chatbot__links > li > a.c-chatbot__link
+          div.c-chatbot__choices > button.c-chatbot__choice--category | --question | --other
+      form.c-chatbot__form > input.c-chatbot__input / button.c-chatbot__send
+    button.c-chatbot__toggle > span.c-character.c-chatbot__toggle-character
+```
+
+キャラクター（`c-character`）は `assets/js/modules/character.js` の `createCharacter()` で作る。大きさは置く側が `width` で決める（高さは素材の比率で決まる）。
+目の寸法・位置は素材から実測した値なので、素材を差し替えたとき以外は変えない（`_character.css` のコメントに計算がある）。

@@ -5,6 +5,7 @@
 export const AUTO_ADVANCE_MS = 30000; // Top：次の画面へ自動で進む間隔
 export const RESUME_AFTER_MS = 30000; // Top：操作が止まってから自動送りを再開するまで
 export const IDLE_RETURN_MS = 180000; // Top 以外：操作が無ければ Top に戻るまで
+export const CHATBOT_RESET_MS = 180000; // チャットボット：操作が無ければ閉じて最初の状態に戻すまで
 const FAST_SCALE = 0.1;
 
 const STORAGE_KEY = 'evecre:kiosk';

@@ -14,10 +14,13 @@
 @import url("layout/_main.css");
 @import url("layout/_footer.css");
 @import url("layout/_stage.css");
+@import url("layout/_chatbot.css");
 
 /* Component（c-） */
 @import url("object/component/_step-indicator.css");
 @import url("object/component/_event-card.css");
+@import url("object/component/_character.css");
+@import url("object/component/_chatbot.css");
 
 /* Project（p-） */
 @import url("object/project/_hero.css");
