@@ -18,6 +18,18 @@
 
 ---
 
+## 2026-11-04 — GitHub に push・main を作成
+
+- 指示書：なし（01 の仕上げ）
+- やったこと：リモート `origin` = https://github.com/evecre/platform.git を登録し、`feature/01-foundation` を push。ユーザーの確認後、同じ commit から `main` を作って push
+- 決めたこと・理由：
+  - 最初は `evecre-developer/evecre-platform` に push しようとしたが、`Usamy1106` に権限が無く（403 → 招待後も Repository not found）、ユーザーが `evecre/platform` に切り替えた
+  - main は feature ブランチから早送りで作った（まだ main に commit が無かったため、マージ commit は無い）
+- 確かめたこと（コマンドと結果）：`git push -u origin HEAD` が通った
+- 残っていること・次にやること：GitHub の Default branch を `main` にする（ユーザー）。指示書 02（チャットボット）は `feature/02-chatbot` で作業する
+- ユーザーに確認したいこと：なし
+- 本体側に頼むこと：なし
+
 ## 2026-11-04 — 01 Phase 5：イベント一覧・詳細（仮データ）／01 完了
 
 - 指示書：docs/instructions/01_foundation.md（Phase 5 まで。01 はすべて完了）
