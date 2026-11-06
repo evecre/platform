@@ -39,9 +39,9 @@
   - `npm run build` → dist に CLAUDE.md・docs/・scripts/・package.json・faq-tests.json・README.md・mock が無い
   - `node scripts/serve.mjs --root dist`：/CLAUDE.md・/package.json・/docs/START.md・/assets/data/faq-tests.json・/assets/data/mock/events.json は 404。Top（チャットボット）・一覧・詳細が本番データで動く、noindex の meta あり、エラーなし
 - 残っていること・次にやること：
-  - main へのマージ（ユーザーの確認後）→ Cloudflare Pages のプロジェクトを作る（ユーザー。設定は START）→ https://evecre.pages.dev で一覧・詳細・X-Robots-Tag を確かめる
+  - main にマージ済み（2026-11-06）。Pages のプロジェクトはユーザーが先に作っていて、マージ前の main（bf300d7、build スクリプトが無い）で `Missing script: "build"` になっていた。マージの push で作り直されるはず → https://evecre.pages.dev で一覧・詳細・X-Robots-Tag を確かめる
   - FAQ の回答本文（12件 TODO）
-- ユーザーに確認したいこと：main にマージしてよいか
+- ユーザーに確認したいこと：なし
 - 本体側に頼むこと：なし（PUBLIC_SITE_ORIGINS には localhost:5173 と evecre.pages.dev が入っている）
 
 ## 2026-11-06 — 03 Phase 2：本番の API に切り替える
