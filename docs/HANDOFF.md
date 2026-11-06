@@ -39,7 +39,9 @@
   - `npm run build` → dist に CLAUDE.md・docs/・scripts/・package.json・faq-tests.json・README.md・mock が無い
   - `node scripts/serve.mjs --root dist`：/CLAUDE.md・/package.json・/docs/START.md・/assets/data/faq-tests.json・/assets/data/mock/events.json は 404。Top（チャットボット）・一覧・詳細が本番データで動く、noindex の meta あり、エラーなし
 - 残っていること・次にやること：
-  - main にマージ済み（2026-11-06）。Pages のプロジェクトはユーザーが先に作っていて、マージ前の main（bf300d7、build スクリプトが無い）で `Missing script: "build"` になっていた。マージの push で作り直されるはず → https://evecre.pages.dev で一覧・詳細・X-Robots-Tag を確かめる
+  - main にマージ済み（2026-11-06）。Pages のプロジェクトはユーザーが先に作っていて、マージ前の main（bf300d7、build スクリプトが無い）で `Missing script: "build"` になっていた。マージの push（041efa4）で作り直され、デプロイできた
+  - https://evecre.pages.dev で確かめた：Top（チャットボット）・一覧2件・詳細（R2 の画像）が本番データで出る、コンソールのエラーなし、`X-Robots-Tag: noindex, nofollow`、robots.txt は `Disallow: /`
+  - Pages は 404.html が無いと、無い URL にも Top の HTML を 200 で返す（シングルページアプリの扱い）。/CLAUDE.md・/package.json・/assets/data/faq-tests.json なども中身は Top の HTML で、ファイルは公開されていない。無い URL を 404 にしたいなら dist に 404.html を足す
   - FAQ の回答本文（12件 TODO）
 - ユーザーに確認したいこと：なし
 - 本体側に頼むこと：なし（PUBLIC_SITE_ORIGINS には localhost:5173 と evecre.pages.dev が入っている）
