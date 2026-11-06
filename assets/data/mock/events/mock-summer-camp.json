@@ -1,4 +1,5 @@
 {
+  "ok": true,
   "id": "mock-summer-camp",
   "status": "archive",
   "basic": {
@@ -28,8 +29,8 @@
         "広報"
       ],
       "outcome": "success",
-      "struggle": "説明会のあとに、その場で申し込める QR コードを配った。",
-      "solution": "興味を持った瞬間に申し込めたので、あとから連絡する手間がなかった。",
+      "struggle": "",
+      "solution": "説明会のあとに、その場で申し込める QR コードを配った。",
       "text": "説明会は2回開き、合わせて60人が参加した。",
       "images": [
         "/assets/data/mock/img/photo-1.svg"

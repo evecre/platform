@@ -2,6 +2,7 @@
 //   node scripts/serve.mjs            → http://localhost:5173
 //   node scripts/serve.mjs --port 8080
 //   node scripts/serve.mjs --kiosk    → 展示モードで開く URL を表示
+//   node scripts/serve.mjs --root dist → dist/（npm run build で作る、Cloudflare Pages に出すもの）を配信して確かめる
 // 展示会場で一日動かし続ける前提なので、どの例外でもプロセスを落とさない。
 
 import http from 'node:http';
@@ -9,7 +10,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DEFAULT_PORT = 5173;
 
 const MIME = {
@@ -32,12 +33,18 @@ const MIME = {
 };
 
 function parseArgs(argv) {
-  const args = { port: DEFAULT_PORT, kiosk: false };
+  const args = { port: DEFAULT_PORT, kiosk: false, root: REPO_ROOT };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--kiosk') args.kiosk = true;
     else if (a === '--port') args.port = Number(argv[++i]);
     else if (a.startsWith('--port=')) args.port = Number(a.slice('--port='.length));
+    else if (a === '--root') args.root = path.resolve(REPO_ROOT, argv[++i] ?? '.');
+    else if (a.startsWith('--root=')) args.root = path.resolve(REPO_ROOT, a.slice('--root='.length));
+  }
+  if (!fs.existsSync(args.root) || !fs.statSync(args.root).isDirectory()) {
+    console.error(`配信するフォルダがありません：${args.root}（dist なら先に npm run build）`);
+    process.exit(1);
   }
   if (!Number.isInteger(args.port) || args.port <= 0 || args.port > 65535) {
     console.error(`ポート番号が正しくありません。${DEFAULT_PORT} を使います。`);
@@ -130,6 +137,7 @@ function handle(req, res) {
 }
 
 const args = parseArgs(process.argv.slice(2));
+const ROOT = args.root;
 
 const server = http.createServer((req, res) => {
   try {
@@ -159,7 +167,7 @@ process.on('unhandledRejection', (err) => console.error('[serve] unhandledReject
 
 server.listen(args.port, () => {
   const base = `http://localhost:${args.port}`;
-  console.log(`配信中：${base}/`);
+  console.log(`配信中：${base}/${ROOT === REPO_ROOT ? '' : `（${path.relative(REPO_ROOT, ROOT) || ROOT}）`}`);
   if (args.kiosk) console.log(`展示モード：${base}/?kiosk=1`);
   console.log('止めるには Ctrl+C');
 });

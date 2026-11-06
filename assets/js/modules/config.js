@@ -1,11 +1,16 @@
 // データの取り方の設定。ブラウザ（api.js）と Node（scripts/fetch-snapshot.mjs）の両方から読む
 
-// イベクリ本体の公開 API の根元（例：'https://evecre.onrender.com'）。空なら API は使わない
-// TODO: 本体の公開 API ができたら、本番の Render の URL を入れる
-export const API_BASE = '';
+// イベクリ本体の公開 API の根元（末尾の / は付けない）。空なら API は使わない
+// ★本体側の Render の環境変数 PUBLIC_SITE_ORIGINS に、このサイトの Origin が入っていないと CORS で読めない
+export const API_BASE = 'https://evecre-ver-2-2-1.onrender.com';
 
-// 仮データ（assets/data/mock/）を最後の手段として使うか。★本番に出す前に false にする
-export const USE_MOCK_DATA = true;
+// 仮データ（assets/data/mock/）を最後の手段として使うか。ローカル（localhost）で動かすときだけ使う
+// （Node から読むとき（scripts/）は location が無いので false）
+export const USE_MOCK_DATA = globalThis.location?.hostname === 'localhost';
+
+// API の応答を sessionStorage に置いて使い回す時間（API の Cache-Control: max-age=300 と同じ）
+// API は同じ IP から 1分 60 回までなので、ページを行き来しても取り直さないようにする
+export const API_CACHE_MS = 5 * 60 * 1000;
 
 export const API_TIMEOUT_MS = 8000;
 

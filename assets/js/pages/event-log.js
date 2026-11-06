@@ -1,6 +1,6 @@
 // イベント一覧（pages/event-log/）の入口
 import { initCommon } from '../modules/common.js';
-import { listEvents } from '../modules/api.js';
+import { listEvents, RateLimitedError } from '../modules/api.js';
 import { formatEventPeriodLines } from '../modules/format.js';
 import { setImage, setStatusLabel } from '../modules/eventView.js';
 
@@ -8,6 +8,7 @@ initCommon({ page: 'event-log' });
 
 const MESSAGES = {
   error: 'イベントを読み込めませんでした。時間をおいて開き直してください。',
+  busy: 'ただいま混み合っています。1分ほどおいて開き直してください。',
   empty: '公開されているイベントはまだありません。',
   emptyFiltered: '該当するイベントはありません。',
 };
@@ -65,5 +66,5 @@ try {
   render();
 } catch (err) {
   console.warn('[event-log] 一覧を読み込めませんでした', err);
-  showMessage(MESSAGES.error);
+  showMessage(err instanceof RateLimitedError ? MESSAGES.busy : MESSAGES.error);
 }

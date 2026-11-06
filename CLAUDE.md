@@ -21,7 +21,7 @@
 
 - 静的サイト：HTML ＋ CSS ＋ Vanilla JS（ES Modules）。**ビルド工程なし・フレームワークなし**
 - 依存は最小限。npm パッケージを足す前に、自前で短く書けないか考え、足すなら理由を HANDOFF に書く
-- 配信：Cloudflare Pages（本番）。展示会場では**ローカルで動かす**（`node scripts/serve.mjs` → http://localhost:5173）
+- 配信：Cloudflare Pages（本番 https://evecre.pages.dev）。**配信するのは `npm run build` で作る `dist/` だけ**（§12）。展示会場では**ローカルで動かす**（`node scripts/serve.mjs` → http://localhost:5173）
 - イベントのデータは、イベクリ本体の**公開 API**（`/api/public/events`）からだけ取る。応答の形は `docs/api-contract.md`
   - API が使えないとき・展示モードのときは、`assets/data/snapshot/` に書き出したデータを読む
 - チャットボットは**外部サービスを使わない自作**（ブラウザ内で完結。無料・回数無制限）
@@ -77,7 +77,7 @@ robots.txt  _headers               検索エンジン対策（§6）
 
 - JS を編集したら必ず `node --check <file>` を通す
 - `<script type="module">` で読み込む。インラインスクリプトを書かない
-- ブラウザ保存は `sessionStorage` の展示モードフラグだけ。読み書きは try/catch で包む
+- ブラウザ保存は `sessionStorage` の展示モードフラグ（`evecre:kiosk`）と、API の応答のキャッシュ（`evecre:api:<URL>`、5分）だけ。読み書きは try/catch で包む
 - `prefers-reduced-motion: reduce` のときは、自動送りのスクロールを瞬時に切り替える
 
 ## 6. 公開範囲（必須）
@@ -128,8 +128,11 @@ robots.txt  _headers               検索エンジン対策（§6）
   - チャットボットは開いたとき `chatbot:open`、閉じたとき `chatbot:close` を **document で**発火すること（自動送りが止まる・再開する）
   - 展示中は `<html class="is-kiosk">`
 - **イベントのデータ**：`assets/js/modules/api.js`（`listEvents()` / `getEvent(id)`）。設定は `config.js`（`API_BASE`・`USE_MOCK_DATA`）
-  - 取る順番：展示モードは snapshot → API → mock、それ以外は API → snapshot → mock。`API_BASE` が空なら API を飛ばす。snapshot の `events.json` が空の配列なら「まだ無い」とみなして次へ
-  - **本番に出す前に `USE_MOCK_DATA` を false にする**
+  - 取る順番：展示モードは snapshot → API → mock、それ以外は API → snapshot → mock。`API_BASE` が空なら API を飛ばす。snapshot の `events.json` の `events` が空なら「まだ無い」とみなして次へ
+  - snapshot と mock も API と同じ形（一覧 `{ ok, events }`・詳細 `{ ok, id, status, basic, knowledge }`）。API の 429 は `RateLimitedError`（ほかの取り先でも取れなかったときだけ投げる。ページは「混み合っています」）
+  - `API_BASE` は本番の Render（`https://evecre-ver-2-2-1.onrender.com`）。`USE_MOCK_DATA` は localhost のときだけ true（自動。Node から読むと false）
+  - API の成功した応答は sessionStorage に `API_CACHE_MS`（5分）置いて使い回す（API は同じ IP から1分60回まで）
+  - CORS：本体の Render の `PUBLIC_SITE_ORIGINS` に入っている Origin だけ読める（2026-11-06 時点：`http://localhost:5173`・`https://evecre.pages.dev`）。`127.0.0.1` や別のポートでは読めない
   - snapshot：`npm run snapshot -- --with-images`（または `node scripts/fetch-snapshot.mjs --api <URL> --with-images`）。全部取れてから入れ替える
   - カード・ナレッジ1件の HTML は各ページの `<template>` にある。文字は `textContent`、URL は `safeUrl()` を通す（`innerHTML` に API の値を入れない）
   - 表示・非表示の切り替えは `u-hidden`（`hidden` 属性は、クラスの `display` に負けるので使わない）
@@ -153,3 +156,15 @@ robots.txt  _headers               検索エンジン対策（§6）
 - キャラクター：`assets/js/modules/character.js`（`pickCharacter()` は読み込みごとに1体。`createCharacter(ch, { className })`）＋ `object/component/_character.css`
   - 素材は `assets/img/character/`。目の寸法・位置は素材から実測した値。勝手に変えない
   - 瞬き・目線は「たまに」（瞬き 13〜19秒、目線 29〜41秒）。短くしない。動きを減らす設定では止める
+
+## 12. 公開 API と配信（03 で追加）
+
+- 公開 API：本体（`https://evecre-ver-2-2-1.onrender.com`）の `/api/public/events`・`/api/public/events/:id`。形と注意点は `docs/api-contract.md`
+  - 一覧 `{ ok: true, events }`、詳細 `{ ok: true, id, status, basic, knowledge }`。404 は見つからない（非公開を含む）、429 は回数制限（同じ IP から1分60回）
+  - CORS は本体の Render の `PUBLIC_SITE_ORIGINS` に入っている Origin だけ。新しい URL（独自ドメイン・プレビュー）で読むなら、そこに足してもらう
+  - 利用者が書いた文章なので、すべて `textContent`。日付は `"YYYY-MM-DD"` の文字列のまま扱う（`new Date("YYYY-MM-DD")` は使わない）
+  - PDF・画像は R2 の別ドメイン。PDF は `download` を付けず新しいタブで開く
+- 配信：`scripts/build-dist.mjs` が `dist/` に `index.html`・`pages/`・`assets/`・`favicon.ico`・`robots.txt`・`_headers` だけをコピーする（`faq-tests.json`・`assets/data/mock/`・`.md`・`.DS_Store` は除く）
+  - **配信するものを足したら `INCLUDE` に足す**。リポジトリの直下をそのまま配信しない（CLAUDE.md・docs/・scripts/ が公開される）
+  - Cloudflare Pages の設定値は `docs/START.md`
+- snapshot（`assets/data/snapshot/`）は実際のデータなので commit しない。展示の端末で `npm run snapshot -- --with-images`

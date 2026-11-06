@@ -1,6 +1,6 @@
 // イベント詳細（pages/event-log/detail/?id=…）の入口
 import { initCommon } from '../modules/common.js';
-import { getEvent } from '../modules/api.js';
+import { getEvent, RateLimitedError } from '../modules/api.js';
 import { formatEventPeriodLines, formatFileSize, safeUrl } from '../modules/format.js';
 import { setImage, setStatusLabel } from '../modules/eventView.js';
 
@@ -10,14 +10,16 @@ const SITE_NAME = 'イベクリ';
 const MESSAGES = {
   notFound: 'イベントが見つかりませんでした。公開が終わったか、URL が違う可能性があります。',
   error: 'イベントを読み込めませんでした。時間をおいて開き直してください。',
+  busy: 'ただいま混み合っています。1分ほどおいて開き直してください。',
   knowledgeBefore: 'ナレッジは開催後に公開されます。',
   knowledgeNone: 'ナレッジは公開されていません。',
   knowledgeEmpty: '公開されている振り返りはまだありません。',
 };
 
 // 振り返りの見出しは outcome で変わる（本体と同じ）。null は struggle と同じ
+// success の struggle は普通は空なので、1つ目の項目は出ないことが多い（空の項目は外す）
 const REVIEW_LABELS = {
-  success: ['効いたこと', 'なぜうまくいった？'],
+  success: ['効いたこと', '何をしたら、うまくいった？'],
   struggle: ['困ったこと', '次にやるなら'],
 };
 
@@ -87,7 +89,7 @@ function buildKnowledge(item) {
   q('[data-knowledge="firstLabel"]').textContent = firstLabel;
   q('[data-knowledge="secondLabel"]').textContent = secondLabel;
   const struggle = q('[data-knowledge="struggle"]');
-  if (item.struggle) struggle.textContent = item.struggle;
+  if (typeof item.struggle === 'string' && item.struggle.trim()) struggle.textContent = item.struggle;
   else struggle.parentElement.remove();
   q('[data-knowledge="solution"]').textContent = item.solution || '';
 
@@ -193,5 +195,5 @@ try {
   }
 } catch (err) {
   console.warn('[event-detail] 詳細を読み込めませんでした', err);
-  showMessage(MESSAGES.error);
+  showMessage(err instanceof RateLimitedError ? MESSAGES.busy : MESSAGES.error);
 }

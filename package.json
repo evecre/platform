@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build-dist.mjs",
     "snapshot": "node scripts/fetch-snapshot.mjs",
     "check": "node scripts/check-js.mjs",
     "check:faq": "node scripts/check-faq.mjs"

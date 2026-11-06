@@ -1,88 +1,91 @@
-[
-  {
-    "id": "mock-autumn-festa",
-    "title": "秋の交流フェスタ 2026",
-    "headerImage": "/assets/data/mock/img/header-1.svg",
-    "summary": "学部や学年をこえて交流する、学生主催のフェスタです。\n模擬店とステージ企画を予定しています。",
-    "venue": "キャンパス中央広場",
-    "dates": [
-      "2026-11-20"
-    ],
-    "dateTimes": {
-      "2026-11-20": {
-        "start": "10:00",
-        "end": "16:00"
-      }
-    },
-    "status": "upcoming",
-    "hasKnowledge": false
-  },
-  {
-    "id": "mock-winter-cleanup",
-    "title": "冬の地域清掃ボランティア",
-    "headerImage": null,
-    "summary": "大学のまわりの通学路を、地域の方と一緒に清掃します。",
-    "venue": "正門前（集合）",
-    "dates": [
-      "2026-12-12",
-      "2026-12-13"
-    ],
-    "dateTimes": {},
-    "status": "upcoming",
-    "hasKnowledge": false
-  },
-  {
-    "id": "mock-summer-camp",
-    "title": "新入生歓迎サマーキャンプ",
-    "headerImage": "/assets/data/mock/img/header-2.svg",
-    "summary": "新入生と上級生が一緒に過ごす、1泊2日のキャンプです。",
-    "venue": "県立青少年の家",
-    "dates": [
-      "2026-07-18",
-      "2026-07-19"
-    ],
-    "dateTimes": {
-      "2026-07-18": {
-        "start": "09:00",
-        "end": ""
+{
+  "ok": true,
+  "events": [
+    {
+      "id": "mock-autumn-festa",
+      "title": "秋の交流フェスタ 2026",
+      "headerImage": "/assets/data/mock/img/header-1.svg",
+      "summary": "学部や学年をこえて交流する、学生主催のフェスタです。\n模擬店とステージ企画を予定しています。",
+      "venue": "キャンパス中央広場",
+      "dates": [
+        "2026-11-20"
+      ],
+      "dateTimes": {
+        "2026-11-20": {
+          "start": "10:00",
+          "end": "16:00"
+        }
       },
-      "2026-07-19": {
-        "start": "",
-        "end": "15:00"
-      }
+      "status": "upcoming",
+      "hasKnowledge": false
     },
-    "status": "archive",
-    "hasKnowledge": true
-  },
-  {
-    "id": "mock-kids-workshop",
-    "title": "こども食堂 ものづくりワークショップ",
-    "headerImage": "/assets/data/mock/img/header-1.svg",
-    "summary": "地域のこども食堂で、小学生と一緒に紙のおもちゃを作りました。",
-    "venue": "市民交流センター",
-    "dates": [
-      "2026-05-30"
-    ],
-    "dateTimes": {},
-    "status": "archive",
-    "hasKnowledge": true
-  },
-  {
-    "id": "mock-graduation-live",
-    "title": "卒業ライブ",
-    "headerImage": null,
-    "summary": "軽音サークルの4年生の卒業ライブです。",
-    "venue": "学生会館ホール",
-    "dates": [
-      "2026-02-14"
-    ],
-    "dateTimes": {
-      "2026-02-14": {
-        "start": "17:00",
-        "end": "20:00"
-      }
+    {
+      "id": "mock-winter-cleanup",
+      "title": "冬の地域清掃ボランティア",
+      "headerImage": null,
+      "summary": "大学のまわりの通学路を、地域の方と一緒に清掃します。",
+      "venue": "正門前（集合）",
+      "dates": [
+        "2026-12-12",
+        "2026-12-13"
+      ],
+      "dateTimes": {},
+      "status": "upcoming",
+      "hasKnowledge": false
     },
-    "status": "archive",
-    "hasKnowledge": false
-  }
-]
+    {
+      "id": "mock-summer-camp",
+      "title": "新入生歓迎サマーキャンプ",
+      "headerImage": "/assets/data/mock/img/header-2.svg",
+      "summary": "新入生と上級生が一緒に過ごす、1泊2日のキャンプです。",
+      "venue": "県立青少年の家",
+      "dates": [
+        "2026-07-18",
+        "2026-07-19"
+      ],
+      "dateTimes": {
+        "2026-07-18": {
+          "start": "09:00",
+          "end": ""
+        },
+        "2026-07-19": {
+          "start": "",
+          "end": "15:00"
+        }
+      },
+      "status": "archive",
+      "hasKnowledge": true
+    },
+    {
+      "id": "mock-kids-workshop",
+      "title": "こども食堂 ものづくりワークショップ",
+      "headerImage": "/assets/data/mock/img/header-1.svg",
+      "summary": "地域のこども食堂で、小学生と一緒に紙のおもちゃを作りました。",
+      "venue": "市民交流センター",
+      "dates": [
+        "2026-05-30"
+      ],
+      "dateTimes": {},
+      "status": "archive",
+      "hasKnowledge": true
+    },
+    {
+      "id": "mock-graduation-live",
+      "title": "卒業ライブ",
+      "headerImage": null,
+      "summary": "軽音サークルの4年生の卒業ライブです。",
+      "venue": "学生会館ホール",
+      "dates": [
+        "2026-02-14"
+      ],
+      "dateTimes": {
+        "2026-02-14": {
+          "start": "17:00",
+          "end": "20:00"
+        }
+      },
+      "status": "archive",
+      "hasKnowledge": false
+    }
+  ]
+}

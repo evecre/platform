@@ -18,6 +18,76 @@
 
 ---
 
+## 2026-11-06 — 03 Phase 3：Cloudflare Pages に出すファイルを絞る（03 完了）
+
+- 指示書：docs/instructions/03_api-connect.md（Phase 3・完了条件まで）
+- 本番データでの確認（Phase 2 の残り。ユーザーが「テスト公開」を公開）：
+  - 公開は2件（1787536757139「テスト公開」archive・ナレッジ1件・画像1枚／1783149606759「イベクリ展示企画」upcoming・日程未定）
+  - http://localhost:5173 の 1280・375：一覧2件、詳細は「何をしたら、うまくいった？」だけ（struggle 空）、R2 の画像が出る、横スクロールなし、コンソールのエラーなし。開催前は「ナレッジは開催後に公開されます。」
+  - `npm run snapshot -- --with-images` → 2件・画像1枚。`?kiosk=1`（1920×1080）で一覧・詳細が snapshot だけから出る（API・mock・R2 に行かない）
+  - **snapshot は実際のデータなので commit しない**ことにし、確かめたあと空に戻した。会場の端末で作る（START に手順）
+  - Render は有料プラン（ユーザー確認済み）なので、止まって遅くなる心配はない。`API_TIMEOUT_MS` は 8 秒のまま
+- やったこと：
+  - `scripts/build-dist.mjs`（依存なし）：`dist/` を空にして `index.html`・`pages/`・`assets/`・`favicon.ico`・`robots.txt`・`_headers` をコピー。`assets/data/faq-tests.json`・`assets/data/mock/`・`.md`（assets/css/README.md）・`.DS_Store` は除く
+  - `package.json` に `build`、`.gitignore` に `dist/`、`check-js.mjs` は `dist/` を見ない
+  - `serve.mjs --root dist`（無いフォルダならエラーで止まる）
+  - START に Cloudflare Pages の設定値・dist の確かめ方・展示会場の手順。CLAUDE.md §12（公開 API と配信）
+- 決めたこと・理由：
+  - mock も dist から除いた（本番では USE_MOCK_DATA が false で読まないため）。`.md` も開発用の説明なので除いた
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 22 / 22 件 OK、`node scripts/check-faq.mjs` → 正答 26 / 31・誤答 0
+  - `npm run build` → dist に CLAUDE.md・docs/・scripts/・package.json・faq-tests.json・README.md・mock が無い
+  - `node scripts/serve.mjs --root dist`：/CLAUDE.md・/package.json・/docs/START.md・/assets/data/faq-tests.json・/assets/data/mock/events.json は 404。Top（チャットボット）・一覧・詳細が本番データで動く、noindex の meta あり、エラーなし
+- 残っていること・次にやること：
+  - main へのマージ（ユーザーの確認後）→ Cloudflare Pages のプロジェクトを作る（ユーザー。設定は START）→ https://evecre.pages.dev で一覧・詳細・X-Robots-Tag を確かめる
+  - FAQ の回答本文（12件 TODO）
+- ユーザーに確認したいこと：main にマージしてよいか
+- 本体側に頼むこと：なし（PUBLIC_SITE_ORIGINS には localhost:5173 と evecre.pages.dev が入っている）
+
+## 2026-11-06 — 03 Phase 2：本番の API に切り替える
+
+- 指示書：docs/instructions/03_api-connect.md（Phase 2 まで）
+- やったこと：
+  - `config.js`：`API_BASE = 'https://evecre-ver-2-2-1.onrender.com'`、`USE_MOCK_DATA = globalThis.location?.hostname === 'localhost'`（Node の scripts からは false）、`API_CACHE_MS = 5分`
+  - `api.js`：API の成功した応答（形が正しいものだけ）を sessionStorage（`evecre:api:<URL>`、`{ savedAt, data }`）に5分置いて使い回す。読み書きは try/catch。snapshot・mock は置かない
+  - CLAUDE.md のブラウザ保存の決まりに、API のキャッシュを足した
+- 確かめたこと（コマンドと結果）：
+  - `curl -H "Origin: …" https://evecre-ver-2-2-1.onrender.com/api/public/events`：`http://localhost:5173` と `https://evecre.pages.dev` の両方で `Access-Control-Allow-Origin` が返る（PUBLIC_SITE_ORIGINS に両方入っている）。`Cache-Control: public, max-age=300`、`Vary: Origin`
+  - **公開しているイベントは 0 件**（`{"ok":true,"events":[]}`）。本番データでの一覧・詳細の見た目はまだ確かめられていない
+  - Playwright（http://localhost:5173）：一覧が本番の API から取れて「公開されているイベントはまだありません。」（API が答えたので mock には行かない）／2回目は API に行かない（キャッシュ）／保存時刻を5分前にずらすと取り直す／存在しない id は API の 404 で「見つかりませんでした」
+  - `npm run snapshot -- --with-images` → 0 件・画像 0 枚で正常終了。snapshot から出ることは Phase 1 で偽の API で確かめ済み
+  - `npm run check` → 21 / 21 件 OK
+- 残っていること・次にやること：
+  - イベクリでイベントを1件「宣伝用に公開」にしてもらい、本番データで一覧・詳細・snapshot・展示モードを確かめる（→ Phase 3 の記録で済ませた）
+  - Phase 3（dist/ を作る・Cloudflare Pages の設定値）
+- ユーザーに確認したいこと：
+  - 確認用に、イベントを1件公開できるか
+  - Render の無料プランなら、15分アクセスが無いと止まり、起きるまで30秒〜1分かかる。今の `API_TIMEOUT_MS` は 8 秒なので、止まっているときの最初の1回は失敗する（Pages では snapshot が空なので「読み込めませんでした」）。有料プランか、時間を延ばすか
+- 本体側に頼むこと：なし
+
+## 2026-11-06 — 03 Phase 1：応答の形を実際の API に合わせる
+
+- 指示書：docs/instructions/03_api-connect.md（Phase 1 まで）
+- やったこと：
+  - `api.js`：一覧は `{ ok: true, events }` を読む（`ok` が true でない・events が配列でない → 失敗として次の取り先へ）。詳細も `ok` を確かめる。429 は `RateLimitedError`（export）。次の取り先を試し、どこからも取れなかったときに 429 があればそれを投げる。失敗した一覧はキャッシュに残さない
+  - `event-log.js` / `event-detail.js`：429 なら「ただいま混み合っています。1分ほどおいて開き直してください。」
+  - `event-detail.js`：success の見出しを「効いたこと」／「何をしたら、うまくいった？」に。struggle は空白だけでも出さない。画像は本文の後ろ・PDF は target=_blank で download なし・thumb があれば画像（これは 01 で済んでいたのを確かめた）
+  - mock の一覧・詳細を `{ ok: true, … }` の形に。success の振り返りは struggle を空にし、solution に「何をしたら、うまくいった？」の中身を入れた
+  - snapshot の空の状態を `{ "ok": true, "events": [] }` に
+  - `fetch-snapshot.mjs`：API の応答の形で保存する（一覧は `{ ok: true, events }`、詳細はそのまま）。形が違えば失敗。429 なら 61 秒待って1回だけ取り直す
+- 決めたこと・理由：
+  - 429 でも mock / snapshot があればそちらを見せる（展示モードでは snapshot が先なので、そもそも API に行かない）
+  - 日付：`new Date("YYYY-MM-DD")` を使っている所は無かった（format.js は `new Date(y, m - 1, d)`）
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 21 / 21 件 OK、`node scripts/check-faq.mjs` → 正答 26 / 31・誤答 0（変化なし）
+  - Playwright（config.js を通信の途中で差し替えて偽の API に向けた。ファイルは変えていない）：一覧・詳細が API の形で出る（数字の id・HTML の入ったタイトルは文字のまま）／存在しない id → 見つかりません／429 で mock なし → 一覧・詳細とも「混み合っています」／429 で mock あり → mock の一覧に切り替わる
+  - mock：success の振り返りは「何をしたら、うまくいった？」だけ、struggle は「困ったこと」「次にやるなら」、PDF は target=_blank・download なし
+  - 偽の API（scratchpad の fakeapi/server.mjs）に `node scripts/fetch-snapshot.mjs --api http://localhost:5299 --with-images` → 2件・画像4枚を保存、URL が snapshot/img/ に書き換わる。`?kiosk=1` で一覧・詳細が snapshot から出る（API にも mock にも行かない）。確かめたあと snapshot を空に戻した
+  - 429 の待ち直し（61秒）は実際には試していない
+- 残っていること・次にやること：Phase 2（本番の API_BASE・mock はローカルだけ・sessionStorage に 5 分キャッシュ・本番データで確認・snapshot）
+- ユーザーに確認したいこと：本体の本番 URL（Render）、`PUBLIC_SITE_ORIGINS` を入れたか
+- 本体側に頼むこと：なし（main へのマージ・デプロイ・PUBLIC_SITE_ORIGINS はユーザーが行う）
+
 ## 2026-11-04 — 02 Phase 4：正答率のチェック（02 完了）
 
 - 指示書：docs/instructions/02_chatbot.md（Phase 4・完了条件まで）

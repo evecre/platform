@@ -3,6 +3,8 @@
 //   node scripts/fetch-snapshot.mjs --api https://…       → 取り先を指定する
 //   node scripts/fetch-snapshot.mjs --with-images         → 画像も snapshot/img/ に保存し、URL を書き換える
 // 全部取れてから古い snapshot を消して書き込む（途中で失敗したら、前の snapshot はそのまま残る）
+// 保存する形は API の応答と同じ（一覧 { ok, events }・詳細 { ok, id, status, basic, knowledge }）。サイトは API と同じ読み方をする
+// API は同じ IP から 1分 60 回まで。429 が返ったら 1分待って、もう一度だけ取る
 
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -12,6 +14,7 @@ import { API_BASE, API_TIMEOUT_MS, SNAPSHOT_BASE, EVENT_ID_RE } from '../assets/
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SNAPSHOT_DIR = path.join(ROOT, SNAPSHOT_BASE);
+const RATE_LIMIT_WAIT_MS = 61_000;
 const IMAGE_EXT = {
   'image/jpeg': '.jpg',
   'image/png': '.png',
@@ -37,8 +40,15 @@ async function fetchWithTimeout(url) {
   return res;
 }
 
-async function fetchJson(url) {
-  return (await fetchWithTimeout(url)).json();
+async function fetchJson(url, { retried = false } = {}) {
+  const res = await fetch(url, { signal: AbortSignal.timeout(API_TIMEOUT_MS) });
+  if (res.status === 429 && !retried) {
+    console.log(`  回数制限にかかりました。${RATE_LIMIT_WAIT_MS / 1000} 秒待ってから取り直します…`);
+    await new Promise((resolve) => setTimeout(resolve, RATE_LIMIT_WAIT_MS));
+    return fetchJson(url, { retried: true });
+  }
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${url}`);
+  return res.json();
 }
 
 // 画像を取って、保存するファイルの中身と名前を返す。同じ URL は1回だけ取る
@@ -98,9 +108,9 @@ async function main() {
 
   console.log(`一覧を取得：${args.api}/api/public/events`);
   const list = await fetchJson(`${args.api}/api/public/events`);
-  if (!Array.isArray(list)) throw new Error('一覧の形が違います（配列ではない）');
+  if (list?.ok !== true || !Array.isArray(list.events)) throw new Error('一覧の形が違います（{ ok: true, events: [...] } ではない）');
 
-  const events = list.filter((event) => {
+  const events = list.events.filter((event) => {
     const ok = event && typeof event.id === 'string' && EVENT_ID_RE.test(event.id);
     if (!ok) console.warn(`  id の形が違うので飛ばします：${JSON.stringify(event?.id)}`);
     return ok;
@@ -109,7 +119,9 @@ async function main() {
   const details = new Map();
   for (const event of events) {
     console.log(`  詳細を取得：${event.id}`);
-    details.set(event.id, await fetchJson(`${args.api}/api/public/events/${encodeURIComponent(event.id)}`));
+    const detail = await fetchJson(`${args.api}/api/public/events/${encodeURIComponent(event.id)}`);
+    if (detail?.ok !== true || !detail.basic) throw new Error(`詳細の形が違います：${event.id}`);
+    details.set(event.id, detail);
   }
 
   const store = args.withImages ? createImageStore(args.api) : null;
@@ -129,7 +141,7 @@ async function main() {
   for (const [id, detail] of details) {
     await writeFile(path.join(SNAPSHOT_DIR, 'events', `${id}.json`), JSON.stringify(detail, null, 2) + '\n');
   }
-  await writeFile(path.join(SNAPSHOT_DIR, 'events.json'), JSON.stringify(events, null, 2) + '\n');
+  await writeFile(path.join(SNAPSHOT_DIR, 'events.json'), JSON.stringify({ ok: true, events }, null, 2) + '\n');
 
   console.log(`保存しました：${events.length} 件${store ? `、画像 ${store.files.size} 枚` : ''}（${path.relative(ROOT, SNAPSHOT_DIR)}/）`);
 }
