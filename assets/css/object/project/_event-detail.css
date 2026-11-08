@@ -113,6 +113,13 @@
   gap: var(--space-7);
 }
 
+/* つまずいたことの索引への導線 */
+.p-event-detail__struggles-link {
+  align-self: flex-start;
+  margin-top: var(--space-4);
+  color: var(--color-accent);
+}
+
 .p-event-detail__back {
   align-self: flex-start;
   color: var(--color-accent);

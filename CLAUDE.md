@@ -32,6 +32,7 @@
 index.html                         Top（スクロールで画面が切り替わる）
 pages/event-log/index.html         イベント一覧（告知・アーカイブ）
 pages/event-log/detail/index.html  イベント詳細（?id=…）
+pages/event-log/struggles/index.html  つまずいたことの横断索引（04）
 assets/
   css/
     style.css                      @import だけを書く（並び＝詳細度の弱い順）
@@ -168,3 +169,19 @@ robots.txt  _headers               検索エンジン対策（§6）
   - **配信するものを足したら `INCLUDE` に足す**。リポジトリの直下をそのまま配信しない（CLAUDE.md・docs/・scripts/ が公開される）
   - Cloudflare Pages の設定値は `docs/START.md`
 - snapshot（`assets/data/snapshot/`）は実際のデータなので commit しない。展示の端末で `npm run snapshot -- --with-images`
+
+## 13. 読み物としての一覧・詳細（04 で追加）
+
+- 振り返りの判定：`assets/js/modules/eventView.js` の `outcomeKey(item)`（`'success'` / `'struggle'`。`null` は struggle）。**判定の分け方はここだけ**。文言は `event-detail.js` の `REVIEW_LABELS`・`OUTCOME_LABEL`
+  - 色は `--color-outcome-*`。**つまずいたを警告の色（赤・橙・黄）にしない**（いちばん読まれる記録で、悪いものとして見せない）
+- ナレッジ1件の並び：頭（判定＋タイトル＋タグ）→ 振り返り → 詳しく（本文・画像・ファイル）。**振り返りを本文より先に置く**。`knowledge[]` に日付は無いので出さない
+- 本文を描くのは `event-detail.js` の `renderKnowledgeText()` だけ。本体に `knowledge[].blocks`（見出し・箇条書き）を依頼中（`docs/api-contract.md`）。来たらここだけ差し替える。印（`{{h}}` など）の解釈はサイト側に持たない
+- テンプレートの目印：カードは `data-card="…"`、ナレッジ1件は `data-knowledge="…"`、索引の1件は `data-struggle="…"`。JS は `data-*` だけを探す（クラスは見た目のため）
+- 絞り込みのボタンは `assets/js/modules/filterButtons.js` の `setupFilterButtons()`（一覧・索引で共通）
+- 一覧の件数：「2件」／絞ると「2件中 1件」。0件のときは出さない
+- つまずいたことの横断索引（`pages/event-log/struggles/`、`assets/js/pages/event-struggles.js`）
+  - 一覧に knowledge が無いので詳細を1件ずつ取る。`hasKnowledge === true` だけ・開催の最終日が新しい順に `MAX_EVENTS`（20）件まで・**順に**（並列にしない）。`getEvent()` を使うのでキャッシュと展示モードの snapshot 優先が効く
+  - 載せるのは `outcomeKey === 'struggle'` かつ `solution` が空でないもの。タグ（企画／運営／制作／広報）で絞る
+  - 429 が出たらそこで止めて、取れた分＋お知らせ。1件も取れていなければ「混み合っています」だけ
+  - 公開 API は同じ IP から1分60回。1回開くと「一覧1回＋詳細最大20回」。イベントが増えたら、本体に「振り返りをまとめて返すエンドポイント」を頼む
+- `getEvent()`：API が 429 のときは、ほかの取り先に無くても「見つからない」にせず `RateLimitedError` を投げる

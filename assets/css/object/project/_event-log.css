@@ -28,6 +28,12 @@
   color: var(--color-text-muted);
 }
 
+/* つまずいたことの索引への導線 */
+.p-event-log__struggles-link {
+  align-self: flex-start;
+  color: var(--color-accent);
+}
+
 .p-event-log__filter {
   display: flex;
   flex-wrap: wrap;

@@ -52,6 +52,7 @@
 | イベント一覧のページ（見出し・絞り込みのボタン・カードの並び・読み込み中などのメッセージ） | `object/project/_event-log.css` |
 | イベント詳細のページ（ヘッダー画像・ラベル・開催日時と場所・概要・ナレッジの枠・戻るリンク） | `object/project/_event-detail.css` |
 | 詳細のナレッジ1件（判定・タスク名・タグ・振り返り2項目・「詳しく」の本文・画像・ファイル） | `object/project/_event-knowledge.css` |
+| つまずいたことの索引のページ（見出し・件数・タグの絞り込み・記録の並び・出どころ・止まったときのお知らせ） | `object/project/_event-struggles.css` |
 | 判定（うまくいった／つまずいた）の色 | `foundation/_variables.css` の `--color-outcome-*`（★つまずいたを警告の色にしない） |
 | 文章の1行の長さの上限（詳細の概要・ナレッジ） | `foundation/_variables.css` の `--reading-max-width` |
 | 角丸・本文の最大幅・カードの最小幅の値 | `foundation/_variables.css` |

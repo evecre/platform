@@ -159,6 +159,8 @@ export async function getEvent(id) {
       else errors.push(err);
     }
   }
+  // API が回数制限で答えられなかったときは、ほかの取り先に無くても「無い」とは言い切れない（混み合いとして投げる）
+  if (errors.some((err) => err instanceof RateLimitedError)) throw pickError(errors);
   if (answered || !errors.length) return null;
   throw pickError(errors);
 }

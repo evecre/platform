@@ -27,6 +27,7 @@
 @import url("object/project/_event-log.css");
 @import url("object/project/_event-detail.css");
 @import url("object/project/_event-knowledge.css");
+@import url("object/project/_event-struggles.css");
 
 /* Utility（u-） */
 @import url("object/utility/_hidden.css");

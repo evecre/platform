@@ -8,7 +8,7 @@ import { startChatbot } from './chatbot/chatbot.js';
 import { CHATBOT_TOP_ONLY } from './config.js';
 
 /**
- * @param {{ page: 'top' | 'event-log' | 'event-detail' }} options
+ * @param {{ page: 'top' | 'event-log' | 'event-detail' | 'event-struggles' }} options
  * @returns {{ kiosk: boolean }}
  */
 export function initCommon({ page }) {

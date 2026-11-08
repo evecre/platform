@@ -3,6 +3,7 @@ import { initCommon } from '../modules/common.js';
 import { listEvents, RateLimitedError } from '../modules/api.js';
 import { formatEventPeriodLines } from '../modules/format.js';
 import { setImage, setStatusLabel } from '../modules/eventView.js';
+import { setupFilterButtons } from '../modules/filterButtons.js';
 
 initCommon({ page: 'event-log' });
 
@@ -57,17 +58,10 @@ function showCount(total, shown) {
   countEl.classList.toggle('u-hidden', shown === 0);
 }
 
-for (const button of filterButtons) {
-  button.addEventListener('click', () => {
-    filter = button.dataset.filter;
-    for (const b of filterButtons) {
-      const active = b === button;
-      b.classList.toggle('is-active', active);
-      b.setAttribute('aria-pressed', String(active));
-    }
-    render();
-  });
-}
+setupFilterButtons(filterButtons, (value) => {
+  filter = value;
+  render();
+});
 
 try {
   events = (await listEvents()).filter((event) => event && typeof event.id === 'string');
