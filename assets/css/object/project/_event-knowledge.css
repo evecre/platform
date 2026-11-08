@@ -1,19 +1,47 @@
 /* ==========================================================================
-   Project / event-knowledge — 詳細ページのナレッジ1件（タスク名・タグ・振り返り2項目・本文・画像・ファイル）
+   Project / event-knowledge — 詳細ページのナレッジ1件
+   並び：頭（判定・タイトル・タグ）→ 振り返り（困ったこと／次にやるなら）→ 詳しく（本文・画像・ファイル）
+   判定は __outcome の data-state（success / struggle）で色を変える
    ========================================================================== */
 
+/* カードで囲まず、区切りの線と余白で1件ずつ読ませる */
 .p-event-knowledge {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background-color: var(--color-surface);
+  gap: var(--space-4);
+  max-width: var(--reading-max-width);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border);
+}
+
+/* --- 頭：判定・タイトル・タグ ------------------------------------------- */
+.p-event-knowledge__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.p-event-knowledge__outcome {
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+}
+
+.p-event-knowledge__outcome[data-state="success"] {
+  background-color: var(--color-outcome-success-bg);
+  color: var(--color-outcome-success-text);
+}
+
+.p-event-knowledge__outcome[data-state="struggle"] {
+  background-color: var(--color-outcome-struggle-bg);
+  color: var(--color-outcome-struggle-text);
 }
 
 .p-event-knowledge__title {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-tight);
 }
 
 .p-event-knowledge__tags {
@@ -29,10 +57,11 @@
   font-size: var(--font-size-xs);
 }
 
+/* --- 振り返り：本文より先に、はっきり見せる ------------------------------ */
 .p-event-knowledge__review {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
 }
 
 .p-event-knowledge__review-term {
@@ -40,9 +69,27 @@
   font-weight: 700;
 }
 
-.p-event-knowledge__review-desc,
-.p-event-knowledge__text {
+.p-event-knowledge__review-desc {
   margin: 0;
+  white-space: pre-wrap;
+}
+
+/* --- 詳しく：本文・画像・ファイル。振り返りより一歩引いた見た目 ---------- */
+.p-event-knowledge__detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-left: var(--space-4);
+  border-left: 2px solid var(--color-border);
+  font-size: var(--font-size-sm);
+}
+
+.p-event-knowledge__detail-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.p-event-knowledge__text {
   white-space: pre-wrap;
 }
 

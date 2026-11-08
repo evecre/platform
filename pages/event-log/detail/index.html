@@ -34,6 +34,7 @@
         <img class="p-event-detail__header-image" data-detail="headerImage" src="" alt="">
         <span class="p-event-detail__label" data-detail="label"></span>
         <h1 class="p-event-detail__title" data-detail="title"></h1>
+        <p class="p-event-detail__summary" data-detail="summary"></p>
 
         <dl class="p-event-detail__info">
           <div class="p-event-detail__info-row">
@@ -48,10 +49,11 @@
           </div>
         </dl>
 
-        <p class="p-event-detail__summary" data-detail="summary"></p>
-
         <section class="p-event-detail__knowledge">
-          <h2 class="p-event-detail__knowledge-title">ナレッジ</h2>
+          <div class="p-event-detail__knowledge-head">
+            <h2 class="p-event-detail__knowledge-title">ナレッジ</h2>
+            <p class="p-event-detail__knowledge-count u-hidden" data-detail="knowledgeCount"></p>
+          </div>
           <p class="p-event-detail__knowledge-message u-hidden" data-detail="knowledgeMessage"></p>
           <ol class="p-event-detail__knowledge-list" data-detail="knowledgeList"></ol>
         </section>
@@ -61,13 +63,18 @@
     </article>
   </main>
 
-  <!-- ナレッジ（タスクと振り返り）1件分。event-detail.js が複製して使う -->
+  <!-- ナレッジ（タスクと振り返り）1件分。event-detail.js が複製して使う
+       JS が探すのは data-knowledge="…" だけ。クラスは見た目のためのもので、変えてよい
+       並び：頭（判定・タイトル・タグ）→ 振り返り → 詳しく（本文・画像・ファイル）。振り返りを本文より先に置く -->
   <template data-knowledge-template>
     <li class="p-event-knowledge">
-      <h3 class="p-event-knowledge__title"></h3>
-      <ul class="p-event-knowledge__tags"></ul>
+      <div class="p-event-knowledge__head">
+        <span class="p-event-knowledge__outcome" data-knowledge="outcome"></span>
+        <h3 class="p-event-knowledge__title" data-knowledge="title"></h3>
+        <ul class="p-event-knowledge__tags" data-knowledge="tags"></ul>
+      </div>
       <dl class="p-event-knowledge__review">
-        <div class="p-event-knowledge__review-row">
+        <div class="p-event-knowledge__review-row" data-knowledge="struggleRow">
           <dt class="p-event-knowledge__review-term" data-knowledge="firstLabel"></dt>
           <dd class="p-event-knowledge__review-desc" data-knowledge="struggle"></dd>
         </div>
@@ -76,9 +83,12 @@
           <dd class="p-event-knowledge__review-desc" data-knowledge="solution"></dd>
         </div>
       </dl>
-      <p class="p-event-knowledge__text"></p>
-      <ul class="p-event-knowledge__images"></ul>
-      <ul class="p-event-knowledge__files"></ul>
+      <div class="p-event-knowledge__detail" data-knowledge="detail">
+        <p class="p-event-knowledge__detail-label">詳しく</p>
+        <p class="p-event-knowledge__text" data-knowledge="text"></p>
+        <ul class="p-event-knowledge__images" data-knowledge="images"></ul>
+        <ul class="p-event-knowledge__files" data-knowledge="files"></ul>
+      </div>
     </li>
   </template>
 

@@ -22,3 +22,12 @@ export function setStatusLabel(el, blockClass, status) {
   el.textContent = STATUS_LABEL[key];
   el.classList.add(`${blockClass}__label--${key}`);
 }
+
+/**
+ * 振り返りの判定。success だけが「うまくいった」、struggle と null は「つまずいた」（本体と同じ分け方）
+ * ★判定の分け方はここだけに書く（詳細の見出し・判定の表示・つまずいた記録の索引が、すべてここを使う）
+ * @returns {'success' | 'struggle'}
+ */
+export function outcomeKey(item) {
+  return item?.outcome === 'success' ? 'success' : 'struggle';
+}

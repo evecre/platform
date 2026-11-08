@@ -70,7 +70,11 @@
   margin: 0;
 }
 
+/* 概要：タイトルのすぐ後のリードとして、本文より大きく読ませる */
 .p-event-detail__summary {
+  max-width: var(--reading-max-width);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-base);
   white-space: pre-wrap;
 }
 
@@ -82,8 +86,21 @@
   border-top: 1px solid var(--color-border);
 }
 
+.p-event-detail__knowledge-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+}
+
 .p-event-detail__knowledge-title {
   font-size: var(--font-size-xl);
+}
+
+/* ナレッジの件数（「3件（つまずいた 2件・うまくいった 1件）」） */
+.p-event-detail__knowledge-count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 }
 
 .p-event-detail__knowledge-message {
@@ -93,7 +110,7 @@
 .p-event-detail__knowledge-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-7);
 }
 
 .p-event-detail__back {

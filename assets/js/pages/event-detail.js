@@ -2,7 +2,7 @@
 import { initCommon } from '../modules/common.js';
 import { getEvent, RateLimitedError } from '../modules/api.js';
 import { formatEventPeriodLines, formatFileSize, safeUrl } from '../modules/format.js';
-import { setImage, setStatusLabel } from '../modules/eventView.js';
+import { setImage, setStatusLabel, outcomeKey } from '../modules/eventView.js';
 
 initCommon({ page: 'event-detail' });
 
@@ -16,11 +16,17 @@ const MESSAGES = {
   knowledgeEmpty: '公開されている振り返りはまだありません。',
 };
 
-// 振り返りの見出しは outcome で変わる（本体と同じ）。null は struggle と同じ
+// 振り返りの文言。キーは outcomeKey()（eventView.js）が決める。null は struggle と同じ
 // success の struggle は普通は空なので、1つ目の項目は出ないことが多い（空の項目は外す）
 const REVIEW_LABELS = {
   success: ['効いたこと', '何をしたら、うまくいった？'],
   struggle: ['困ったこと', '次にやるなら'],
+};
+
+// 判定の表示。見た目は data-state（success / struggle）で変える
+const OUTCOME_LABEL = {
+  success: 'うまくいった',
+  struggle: 'つまずいた',
 };
 
 const messageEl = document.querySelector('[data-detail-message]');
@@ -67,13 +73,18 @@ function renderBasic(event) {
 
 function buildKnowledge(item) {
   const fragment = knowledgeTemplate.content.cloneNode(true);
-  const q = (selector) => fragment.querySelector(selector);
+  const q = (name) => fragment.querySelector(`[data-knowledge="${name}"]`);
+  const key = outcomeKey(item);
   const title = item.title || '（タスク名未設定）';
-  q('.p-event-knowledge__title').textContent = title;
+
+  const outcome = q('outcome');
+  outcome.textContent = OUTCOME_LABEL[key];
+  outcome.dataset.state = key;
+  q('title').textContent = title;
 
   const tags = Array.isArray(item.tags) ? item.tags.filter((tag) => typeof tag === 'string' && tag) : [];
   if (tags.length) {
-    q('.p-event-knowledge__tags').replaceChildren(
+    q('tags').replaceChildren(
       ...tags.map((tag) => {
         const li = document.createElement('li');
         li.className = 'p-event-knowledge__tag';
@@ -82,48 +93,72 @@ function buildKnowledge(item) {
       }),
     );
   } else {
-    q('.p-event-knowledge__tags').remove();
+    q('tags').remove();
   }
 
-  const [firstLabel, secondLabel] = REVIEW_LABELS[item.outcome === 'success' ? 'success' : 'struggle'];
-  q('[data-knowledge="firstLabel"]').textContent = firstLabel;
-  q('[data-knowledge="secondLabel"]').textContent = secondLabel;
-  const struggle = q('[data-knowledge="struggle"]');
-  if (typeof item.struggle === 'string' && item.struggle.trim()) struggle.textContent = item.struggle;
-  else struggle.parentElement.remove();
-  q('[data-knowledge="solution"]').textContent = item.solution || '';
+  const [firstLabel, secondLabel] = REVIEW_LABELS[key];
+  q('firstLabel').textContent = firstLabel;
+  q('secondLabel').textContent = secondLabel;
+  if (typeof item.struggle === 'string' && item.struggle.trim()) q('struggle').textContent = item.struggle;
+  else q('struggleRow').remove();
+  q('solution').textContent = item.solution || '';
 
-  setTextOrRemove(q('.p-event-knowledge__text'), item.text);
-
-  const images = (Array.isArray(item.images) ? item.images : []).map(safeUrl).filter(Boolean);
-  if (images.length) {
-    q('.p-event-knowledge__images').replaceChildren(
-      ...images.map((src, i) => {
-        const li = document.createElement('li');
-        li.className = 'p-event-knowledge__image-item';
-        const img = document.createElement('img');
-        img.className = 'p-event-knowledge__image';
-        img.src = src;
-        img.alt = `${title}の画像 ${i + 1}`;
-        img.loading = 'lazy';
-        img.decoding = 'async';
-        // 読めない画像は枠ごと外す（壊れた画像のマークを見せない）
-        img.addEventListener('error', () => li.remove());
-        li.append(img);
-        return li;
-      }),
-    );
-  } else {
-    q('.p-event-knowledge__images').remove();
-  }
-
-  const files = (Array.isArray(item.files) ? item.files : []).filter((file) => file && safeUrl(file.url));
-  if (files.length) {
-    q('.p-event-knowledge__files').replaceChildren(...files.map(buildFileLink));
-  } else {
-    q('.p-event-knowledge__files').remove();
-  }
+  // 「詳しく」：本文・画像・ファイル。どれも無ければまとまりごと外す
+  const hasText = renderKnowledgeText(q('text'), item);
+  const hasImages = renderImages(q('images'), item, title);
+  const hasFiles = renderFiles(q('files'), item);
+  if (!hasText && !hasImages && !hasFiles) q('detail').remove();
   return fragment;
+}
+
+/**
+ * 本文を描く。★本文を描くのはここだけ
+ * 本体に、見出し・箇条書きを解いた knowledge[].blocks を足してもらうよう依頼中（docs/api-contract.md）。
+ * 来たら、blocks があればそれで描き、無ければ今までどおり text を使う形に、ここだけを差し替える
+ * @returns {boolean} 描いたか（空なら要素ごと外して false）
+ */
+function renderKnowledgeText(el, item) {
+  if (typeof item.text === 'string' && item.text.trim()) {
+    el.textContent = item.text;
+    return true;
+  }
+  el.remove();
+  return false;
+}
+
+function renderImages(list, item, title) {
+  const images = (Array.isArray(item.images) ? item.images : []).map(safeUrl).filter(Boolean);
+  if (!images.length) {
+    list.remove();
+    return false;
+  }
+  list.replaceChildren(
+    ...images.map((src, i) => {
+      const li = document.createElement('li');
+      li.className = 'p-event-knowledge__image-item';
+      const img = document.createElement('img');
+      img.className = 'p-event-knowledge__image';
+      img.src = src;
+      img.alt = `${title}の画像 ${i + 1}`;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      // 読めない画像は枠ごと外す（壊れた画像のマークを見せない）
+      img.addEventListener('error', () => li.remove());
+      li.append(img);
+      return li;
+    }),
+  );
+  return true;
+}
+
+function renderFiles(list, item) {
+  const files = (Array.isArray(item.files) ? item.files : []).filter((file) => file && safeUrl(file.url));
+  if (!files.length) {
+    list.remove();
+    return false;
+  }
+  list.replaceChildren(...files.map(buildFileLink));
+  return true;
 }
 
 function buildFileLink(file) {
@@ -174,7 +209,20 @@ function renderKnowledge(event) {
     list.remove();
   } else {
     list.replaceChildren(...knowledge.map(buildKnowledge));
+    const count = field('knowledgeCount');
+    count.textContent = knowledgeCountText(knowledge);
+    count.classList.remove('u-hidden');
   }
+}
+
+// 例：「3件（つまずいた 2件・うまくいった 1件）」。0件の内訳は出さない
+function knowledgeCountText(knowledge) {
+  const struggles = knowledge.filter((item) => outcomeKey(item) === 'struggle').length;
+  const successes = knowledge.length - struggles;
+  const parts = [];
+  if (struggles) parts.push(`${OUTCOME_LABEL.struggle} ${struggles}件`);
+  if (successes) parts.push(`${OUTCOME_LABEL.success} ${successes}件`);
+  return `${knowledge.length}件（${parts.join('・')}）`;
 }
 
 function showNotFound() {

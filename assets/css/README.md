@@ -51,7 +51,9 @@
 | イベントのカード（`c-event-card`。ラベルは `__label--upcoming` / `--archive`） | `object/component/_event-card.css` |
 | イベント一覧のページ（見出し・絞り込みのボタン・カードの並び・読み込み中などのメッセージ） | `object/project/_event-log.css` |
 | イベント詳細のページ（ヘッダー画像・ラベル・開催日時と場所・概要・ナレッジの枠・戻るリンク） | `object/project/_event-detail.css` |
-| 詳細のナレッジ1件（タスク名・タグ・振り返り2項目・本文・画像・ファイル） | `object/project/_event-knowledge.css` |
+| 詳細のナレッジ1件（判定・タスク名・タグ・振り返り2項目・「詳しく」の本文・画像・ファイル） | `object/project/_event-knowledge.css` |
+| 判定（うまくいった／つまずいた）の色 | `foundation/_variables.css` の `--color-outcome-*`（★つまずいたを警告の色にしない） |
+| 文章の1行の長さの上限（詳細の概要・ナレッジ） | `foundation/_variables.css` の `--reading-max-width` |
 | 角丸・本文の最大幅・カードの最小幅の値 | `foundation/_variables.css` |
 | チャットボットの置き場所（右下に固定） | `layout/_chatbot.css` |
 | チャットボットのボタン・パネル・吹き出し・選択肢・入力欄（開いている間は `.c-chatbot.is-open`） | `object/component/_chatbot.css` |
@@ -141,7 +143,9 @@ Top は縦に長いページではなく、スクロールに合わせて **scen
 ## 5. イベント一覧・詳細のマークアップ
 
 カードとナレッジ1件の HTML は、各ページの `<template>` に書いてある（`pages/event-log/index.html`、`pages/event-log/detail/index.html`）。JS はそれを複製して文字を入れるだけなので、**クラスや要素の並びは HTML の `<template>` を直せば変わる**。
-ただし、JS が探しているクラスと `data-*` の属性（`c-event-card__title`、`data-knowledge="…"` など）は消さないこと。
+
+- JS が探すのは `data-*` の属性だけ（カードは `data-card="…"`、ナレッジ1件は `data-knowledge="…"`）。**クラスは見た目のためのものなので、名前を変えてよい**。`data-*` の属性は消さないこと
+- ナレッジ1件の判定は `[data-knowledge="outcome"]` に `data-state="success | struggle"` が付く。色はこれで変える
 
 読み込み中・0件・失敗のときは、`p-event-log__message` / `p-event-detail__message` に文が入る。隠すときは `u-hidden` が付く。
 
