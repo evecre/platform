@@ -18,6 +18,13 @@
 
 ---
 
+## 2026-11-08 — 本体への依頼文：振り返りをまとめて返すエンドポイント
+
+- やったこと：`docs/requests/main-app-public-reflections.md`（本体の Claude Code に渡す指示書）。`GET /api/public/reflections`：全公開イベントの振り返り（title・tags・outcome・struggle・solution と出どころのイベント）を1回で返す。値は `buildPublicEvent()` の knowledge から作る、basic が null のイベントは出さない、text・images・files は入れない、1000件で切って truncated
+- 着手の目安：ナレッジのある公開イベントが10件を超えたら（ユーザーが本体側に渡す）
+- 分かったこと：本体（`evecre01-node 2`、`432dd15`）はすでに公開 API の basic に `eventType`（`exhibit` / `festival_market` / `live_performance` / `contest` / `social` / `other` か null）と `lastUpdated` を足していて、本番の一覧にも出ている。指示書04 §7 の作業に入れる（本体からの正式な報告と、id ごとの文言を待つ）
+- 本体側に頼むこと：上の依頼文（10件を超えたら）。eventType の id と文言の対応の報告
+
 ## 2026-11-08 — 04 §5：つまずいたことの横断索引（04 完了）
 
 - 指示書：docs/instructions/04_event-reading.md（§5・完了条件まで。ユーザーの指示「1」＝今作る）
