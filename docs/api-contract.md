@@ -77,3 +77,36 @@
 | success の solution の見出し | 「なぜうまくいった？」 | 「何をしたら、うまくいった？」 |
 | success の struggle | 「効いたこと」として表示 | 普通は空。空なら項目ごと出さない |
 | 429 | 想定なし | `rate_limited` を返す |
+
+---
+
+## 本体へ依頼中・本体の変更待ち（指示書 04、2026-11-08）
+
+### 依頼中：`knowledge[].blocks`（見出し・箇条書きの構造）
+
+本体の指示書Bで、タスクの本文に見出し（`{{h}}…{{/h}}`）と箇条書き（`{{l}}…{{/l}}`）が入る。今の `lib/publicData.js` は公開するときに印を外して文字だけにするので、このサイトでは見出しが本文に埋もれ、箇条書きは点の無い行の連なりになる。
+
+依頼している形（`text` はそのまま残し、`blocks` を足すだけ）：
+
+```json
+{
+  "text": "初稿を共有\n…",
+  "blocks": [
+    { "type": "heading", "text": "決めたこと" },
+    { "type": "text",    "text": "3案を並べてメンバーで投票した" },
+    { "type": "item",    "text": "入稿は前日まで" }
+  ]
+}
+```
+
+- 印の解釈はサイト側に持たない（本体が解いて渡す）
+- サイト側：本文を描くのは `assets/js/pages/event-detail.js` の `renderKnowledgeText()` だけ。`blocks` が来たら、そこで `blocks` があれば使い、無ければ `text`
+
+### 変更待ち：`eventType`・`lastUpdated`
+
+| 項目 | 形（予定） | サイトで使う場所 |
+|---|---|---|
+| `eventType` | 種別の id か `null`。id の一覧は本体から報告が来る（来たらここに追記） | 一覧の2軸目の絞り込み（`event-log.js` の `filter` と `render()`、`pages/event-log/index.html` のボタン）。ラベルは `assets/js/modules/` に1か所だけ置き、知らない id は出さない |
+| `lastUpdated` | `"YYYY-MM-DD"` | 詳細の情報の並び（`pages/event-log/detail/index.html` の `p-event-detail__info` に行を足し、`event-detail.js` の `renderBasic()` で入れる）。日付は文字列のまま `formatEventPeriodLines` と同じく年月日に分けて扱う |
+
+- ★一覧の1件は `basic` を持たない平らな形（`{ id, title, …, status }`）。指示書04 §7 には「一覧と詳細の basic に入る」とあるが、一覧では `event.eventType`、詳細では `basic.eventType` になるはず。来たら形を確かめる
