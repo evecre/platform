@@ -15,6 +15,7 @@ const MESSAGES = {
 
 const listEl = document.querySelector('[data-event-log-list]');
 const messageEl = document.querySelector('[data-event-log-message]');
+const countEl = document.querySelector('[data-event-log-count]');
 const template = document.querySelector('[data-event-card-template]');
 const filterButtons = [...document.querySelectorAll('[data-filter]')];
 
@@ -28,14 +29,14 @@ function showMessage(text) {
 
 function buildCard(event) {
   const fragment = template.content.cloneNode(true);
-  const card = fragment.querySelector('.c-event-card');
-  card.href = `/pages/event-log/detail/?id=${encodeURIComponent(event.id)}`;
-  setImage(fragment.querySelector('.c-event-card__thumb'), event.headerImage);
-  setStatusLabel(fragment.querySelector('.c-event-card__label'), 'c-event-card', event.status);
-  fragment.querySelector('.c-event-card__title').textContent = event.title || '（タイトル未設定）';
+  const q = (name) => fragment.querySelector(`[data-card="${name}"]`);
+  q('link').href = `/pages/event-log/detail/?id=${encodeURIComponent(event.id)}`;
+  setImage(q('thumb'), event.headerImage);
+  setStatusLabel(q('label'), 'c-event-card', event.status);
+  q('title').textContent = event.title || '（タイトル未設定）';
   const lines = formatEventPeriodLines(event.dates, event.dateTimes);
-  fragment.querySelector('.c-event-card__date').textContent = lines.length ? lines.join('、') : '日程未定';
-  const venue = fragment.querySelector('.c-event-card__venue');
+  q('date').textContent = lines.length ? lines.join('、') : '日程未定';
+  const venue = q('venue');
   if (event.venue) venue.textContent = event.venue;
   else venue.remove();
   return fragment;
@@ -47,6 +48,13 @@ function render() {
   listEl.classList.toggle('u-hidden', shown.length === 0);
   if (shown.length) showMessage('');
   else showMessage(events.length ? MESSAGES.emptyFiltered : MESSAGES.empty);
+  showCount(events.length, shown.length);
+}
+
+// 件数。絞っているときは「12件中 5件」。0件のとき（公開なし・絞って該当なし）は出さない（メッセージが出るので）
+function showCount(total, shown) {
+  countEl.textContent = shown === total ? `${total}件` : `${total}件中 ${shown}件`;
+  countEl.classList.toggle('u-hidden', shown === 0);
 }
 
 for (const button of filterButtons) {

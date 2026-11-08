@@ -27,7 +27,10 @@
 
   <main class="l-main">
     <section class="p-event-log">
-      <h1 class="p-event-log__title">イベント一覧</h1>
+      <div class="p-event-log__head">
+        <h1 class="p-event-log__title">イベント一覧</h1>
+        <p class="p-event-log__count u-hidden" data-event-log-count aria-live="polite"></p>
+      </div>
 
       <div class="p-event-log__filter" role="group" aria-label="絞り込み">
         <button class="p-event-log__filter-button is-active" type="button" data-filter="all" aria-pressed="true">すべて</button>
@@ -40,16 +43,17 @@
     </section>
   </main>
 
-  <!-- イベントカード。event-log.js が複製して、文字は textContent で入れる -->
+  <!-- イベントカード。event-log.js が複製して、文字は textContent で入れる
+       JS が探すのは data-card="…" だけ。クラスは見た目のためのもので、変えてよい -->
   <template data-event-card-template>
     <li class="p-event-log__item">
-      <a class="c-event-card" href="">
-        <img class="c-event-card__thumb" src="" alt="" loading="lazy" decoding="async">
+      <a class="c-event-card" href="" data-card="link">
+        <img class="c-event-card__thumb" src="" alt="" loading="lazy" decoding="async" data-card="thumb">
         <div class="c-event-card__body">
-          <span class="c-event-card__label"></span>
-          <h2 class="c-event-card__title"></h2>
-          <p class="c-event-card__date"></p>
-          <p class="c-event-card__venue"></p>
+          <span class="c-event-card__label" data-card="label"></span>
+          <h2 class="c-event-card__title" data-card="title"></h2>
+          <p class="c-event-card__date" data-card="date"></p>
+          <p class="c-event-card__venue" data-card="venue"></p>
         </div>
       </a>
     </li>

@@ -11,8 +11,21 @@
   padding: var(--space-6) var(--space-4);
 }
 
+.p-event-log__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+}
+
 .p-event-log__title {
   font-size: var(--font-size-2xl);
+}
+
+/* 公開されているイベントの件数（絞っているときは「12件中 5件」） */
+.p-event-log__count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 }
 
 .p-event-log__filter {
