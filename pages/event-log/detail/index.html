@@ -49,6 +49,18 @@
           </div>
         </dl>
 
+        <!-- 目的と柱。ナレッジの前に置く（本体のアーカイブと同じ並び）。値が無い項目は event-detail.js が外す -->
+        <section class="p-event-detail__purpose" data-detail="purposeSection" aria-label="このイベントの目的">
+          <div class="p-event-detail__purpose-block" data-detail="purposeBlock">
+            <h2 class="p-event-detail__purpose-title">目的</h2>
+            <p class="p-event-detail__purpose-text" data-detail="purpose"></p>
+          </div>
+          <div class="p-event-detail__purpose-block" data-detail="pillarsBlock">
+            <h2 class="p-event-detail__purpose-title">柱</h2>
+            <ul class="p-event-detail__pillars" data-detail="pillars"></ul>
+          </div>
+        </section>
+
         <section class="p-event-detail__knowledge">
           <div class="p-event-detail__knowledge-head">
             <h2 class="p-event-detail__knowledge-title">ナレッジ</h2>

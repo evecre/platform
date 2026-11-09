@@ -18,6 +18,24 @@
 
 ---
 
+## 2026-11-09 — 詳細に「目的」と「柱」を出す（本体からの連絡）
+
+- 元：`docs/external-site-purpose-pillars.md`（本体 `26e8c62` からの連絡。詳細の API に `purpose`・`pillars` が増えた）
+- やったこと：
+  - 詳細ページのナレッジの前に「目的」（文章）と「柱」（名前の並び）。`pages/event-log/detail/index.html` に `data-detail="purposeSection" / purposeBlock / purpose / pillarsBlock / pillars`、`event-detail.js` に `renderPurpose()`、`_event-detail.css` に `p-event-detail__purpose*` / `__pillars` / `__pillar`（仮の見た目）
+  - 値が無い（null・空・項目が無い古い snapshot）見出しは外す。両方無ければまとまりごと外す
+  - mock：サマーキャンプに目的＋柱2つ、ワークショップは `purpose: null`・`pillars: []`（出ないことの確認用）
+  - `docs/api-contract.md` に項目と「いつ値が入るか」の表、CLAUDE.md §13 に1行
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 24 / 24 件 OK
+  - mock（API_BASE を空にして）：サマーキャンプ＝目的と柱2つがナレッジの前に出る／ワークショップ・開催前のフェスタ＝まとまりごと出ない。375px で横スクロールなし
+  - 本番：テスト公開の詳細に `purpose: null`・`pillars: []` が入っている（目的が未記入なので、まだ何も出ない）
+- 分かったこと：本番に **`GET /api/public/reflections` がもう入っている**（2026-11-08 の依頼文のもの。`items[].event.eventType` も入っている）。本体からの正式な報告はまだ受け取っていない
+- 残っていること・次にやること：
+  - 索引（`event-struggles.js`）を reflections に切り替える（依頼文 §5 の「外部サイト側で変えること」）。本体の報告を `api-contract.md` に貼ってから
+  - 目的・柱の見た目は Usami が作り込む
+- 本体側に頼むこと：reflections の正式な報告（api-contract.md に貼れる形）。eventType の id と文言の対応
+
 ## 2026-11-08 — 本体への依頼文：振り返りをまとめて返すエンドポイント
 
 - やったこと：`docs/requests/main-app-public-reflections.md`（本体の Claude Code に渡す指示書）。`GET /api/public/reflections`：全公開イベントの振り返り（title・tags・outcome・struggle・solution と出どころのイベント）を1回で返す。値は `buildPublicEvent()` の knowledge から作る、basic が null のイベントは出さない、text・images・files は入れない、1000件で切って truncated

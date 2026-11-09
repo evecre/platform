@@ -53,6 +53,26 @@
 | `knowledge[].files` | `[{ url, name, size, thumb }]`。PDF。size はバイト数、thumb は1ページ目の画像 URL か null |
 | `knowledge[].tags` | ラベル名の配列。「企画」「運営」「制作」「広報」のほか、団体が自由に作ったラベル名も入る |
 
+### 詳細に追加：`purpose`・`pillars`（本体 `26e8c62`、2026-11-09）
+
+本体からの連絡（`docs/external-site-purpose-pillars.md`）。詳細（`GET /api/public/events/:id`）だけに入る。一覧・`/api/public/reflections`・`knowledge[]` は変わらない。
+
+| 項目 | 型 | 中身 |
+|---|---|---|
+| `purpose` | `string \| null` | イベントの**目的**（なぜやるのか）。本体の初期タスク「このイベントの目的・目標を決めよう」の文章。書式の印は含まない |
+| `pillars` | `string[] \| null` | 目的を支える**柱**（何を大事にするか）。名前だけ、最大3つ、本体で決めた順 |
+
+いつ値が入るか（`knowledge` が1件以上公開されているときだけ）：
+
+| 状況 | `purpose` | `pillars` |
+|---|---|---|
+| `knowledge` が1件以上 ＋ 目的が書かれている | 文字列 | 柱の名前の配列（柱が無ければ `[]`） |
+| `knowledge` が1件以上 ＋ 目的がまだ書かれていない | `null` | 同上 |
+| `knowledge` が `null` または `[]` | `null` | `null` |
+
+- 柱の id・書いた人・書いた時刻は出ない
+- サイト側：項目が無い（古い snapshot）ときも `null` と同じに扱う。`event-detail.js` の `renderPurpose()` が、ナレッジの前に「目的」「柱」を出す。`purpose` が空なら目的の見出しごと、`pillars` が空なら柱の見出しごと外す
+
 ## 注意点（本体側から）
 
 - **画像と PDF**：`https://pub-….r2.dev/…` の公開 URL。`<img src>` やリンクでそのまま読める。別ドメインなので `<a download>` は効かない → リンクを開く形にする

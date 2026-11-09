@@ -71,6 +71,33 @@ function renderBasic(event) {
   setTextOrRemove(field('summary'), basic.summary);
 }
 
+/**
+ * 目的と柱（詳細の purpose・pillars）。knowledge が1件以上あるときだけ値が入る（docs/api-contract.md）
+ * null・空・項目が無い（古い snapshot）ときは見出しごと外し、両方無ければまとまりごと外す
+ */
+function renderPurpose(event) {
+  const purpose = typeof event.purpose === 'string' ? event.purpose.trim() : '';
+  const pillars = Array.isArray(event.pillars) ? event.pillars.filter((p) => typeof p === 'string' && p.trim()) : [];
+
+  if (purpose) field('purpose').textContent = purpose;
+  else field('purposeBlock').remove();
+
+  if (pillars.length) {
+    field('pillars').replaceChildren(
+      ...pillars.map((pillar) => {
+        const li = document.createElement('li');
+        li.className = 'p-event-detail__pillar';
+        li.textContent = pillar;
+        return li;
+      }),
+    );
+  } else {
+    field('pillarsBlock').remove();
+  }
+
+  if (!purpose && !pillars.length) field('purposeSection').remove();
+}
+
 function buildKnowledge(item) {
   const fragment = knowledgeTemplate.content.cloneNode(true);
   const q = (name) => fragment.querySelector(`[data-knowledge="${name}"]`);
@@ -237,6 +264,7 @@ try {
     showNotFound();
   } else {
     renderBasic(event);
+    renderPurpose(event);
     renderKnowledge(event);
     showMessage('');
     contentEl.classList.remove('u-hidden');
