@@ -47,6 +47,15 @@
             <dt class="p-event-detail__info-term">場所</dt>
             <dd class="p-event-detail__info-desc" data-detail="venue"></dd>
           </div>
+          <div class="p-event-detail__info-row" data-detail="typeRow">
+            <dt class="p-event-detail__info-term">種別</dt>
+            <dd class="p-event-detail__info-desc" data-detail="type"></dd>
+          </div>
+          <!-- 最終更新日：この記録の新しさ（基礎情報か、公開している記録が最後に変わった日） -->
+          <div class="p-event-detail__info-row" data-detail="lastUpdatedRow">
+            <dt class="p-event-detail__info-term">最終更新</dt>
+            <dd class="p-event-detail__info-desc" data-detail="lastUpdated"></dd>
+          </div>
         </dl>
 
         <!-- 目的と柱。ナレッジの前に置く（本体のアーカイブと同じ並び）。値が無い項目は event-detail.js が外す -->
@@ -98,7 +107,8 @@
       </dl>
       <div class="p-event-knowledge__detail" data-knowledge="detail">
         <p class="p-event-knowledge__detail-label">詳しく</p>
-        <p class="p-event-knowledge__text" data-knowledge="text"></p>
+        <!-- 本文。見出し・段落・箇条書きは event-detail.js の renderKnowledgeText() が中に作る -->
+        <div class="p-event-knowledge__text" data-knowledge="text"></div>
         <ul class="p-event-knowledge__images" data-knowledge="images"></ul>
         <ul class="p-event-knowledge__files" data-knowledge="files"></ul>
       </div>

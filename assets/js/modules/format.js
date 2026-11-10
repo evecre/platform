@@ -33,6 +33,14 @@ export function formatEventPeriodLines(dates, dateTimes) {
   return list.map((d) => formatDateWithTime(d, dt[d]));
 }
 
+/**
+ * 1日の日付（例 '2026/11/8（日）'）。最終更新日など。'YYYY-MM-DD' でなければ ''
+ * new Date('YYYY-MM-DD') は UTC で読まれて日本時間の前日になるので、年月日に分けて扱う
+ */
+export function formatDate(dateStr) {
+  return typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateStr) ? formatDateWithTime(dateStr) : '';
+}
+
 /** バイト数を「24 KB」「1.2 MB」の形に */
 export function formatFileSize(bytes) {
   if (!Number.isFinite(bytes) || bytes <= 0) return '';

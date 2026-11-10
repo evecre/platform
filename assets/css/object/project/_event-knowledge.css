@@ -90,7 +90,24 @@
 }
 
 .p-event-knowledge__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.p-event-knowledge__heading {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+}
+
+.p-event-knowledge__paragraph,
+.p-event-knowledge__list-item {
   white-space: pre-wrap;
+}
+
+.p-event-knowledge__list {
+  padding-left: var(--space-5);
+  list-style: disc;
 }
 
 .p-event-knowledge__images {

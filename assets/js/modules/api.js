@@ -1,5 +1,6 @@
 // イベントのデータを取る。応答の形は docs/api-contract.md（snapshot・mock も API と同じ形）
 //   一覧：{ ok: true, events: [...] }　詳細：{ ok: true, id, status, basic, knowledge }
+//   振り返りの一覧：{ ok: true, items: [...], truncated }（snapshot・mock は reflections.json）
 //   展示モード：snapshot → API → mock
 //   それ以外  ：API → snapshot → mock
 //   mock は config.js の USE_MOCK_DATA が true のときだけ。API は API_BASE が空なら飛ばす
@@ -18,6 +19,7 @@ function apiSource() {
     name: 'api',
     listUrl: () => `${API_BASE}/api/public/events`,
     detailUrl: (id) => `${API_BASE}/api/public/events/${encodeURIComponent(id)}`,
+    reflectionsUrl: () => `${API_BASE}/api/public/reflections`,
     isStatic: false,
   };
 }
@@ -27,6 +29,7 @@ function staticSource(name, base) {
     name,
     listUrl: () => `${base}/events.json`,
     detailUrl: (id) => `${base}/events/${id}.json`,
+    reflectionsUrl: () => `${base}/reflections.json`,
     isStatic: true,
   };
 }
@@ -72,6 +75,7 @@ async function fetchApiJson(url, isValid) {
 
 const isListResponse = (data) => data?.ok === true && Array.isArray(data.events);
 const isDetailResponse = (data) => data?.ok === true && Boolean(data.basic) && typeof data.basic === 'object';
+const isReflectionsResponse = (data) => data?.ok === true && Array.isArray(data.items);
 
 async function fetchJson(url) {
   const controller = new AbortController();
@@ -163,4 +167,29 @@ export async function getEvent(id) {
   if (errors.some((err) => err instanceof RateLimitedError)) throw pickError(errors);
   if (answered || !errors.length) return null;
   throw pickError(errors);
+}
+
+/**
+ * 全公開イベントの振り返り（GET /api/public/reflections）。1回で全部取れる（つまずいたことの索引が使う）
+ * 取り先の順は一覧・詳細と同じ。snapshot・mock は、一覧（events.json）が空でないときだけ reflections.json を読む
+ * @returns {Promise<{ items: object[], truncated: boolean } | null>}
+ *   どの取り先にも無い（API がまだ持っていない 404・古い snapshot）・つながらないときは null
+ *   （呼ぶ側は、詳細を1件ずつ取る形に戻す）
+ * @throws {RateLimitedError} API が回数制限で断り、ほかの取り先でも取れなかったとき
+ */
+export async function listReflections() {
+  const errors = [];
+  for (const source of sources()) {
+    try {
+      if (source.isStatic) await loadList(source); // snapshot がまだ無いなら次へ
+      const url = source.reflectionsUrl();
+      const data = source.isStatic ? await fetchJson(url) : await fetchApiJson(url, isReflectionsResponse);
+      if (!isReflectionsResponse(data)) throw new Error(`振り返りの一覧の形が違います: ${source.name}`);
+      return { items: data.items, truncated: data.truncated === true };
+    } catch (err) {
+      errors.push(err);
+    }
+  }
+  if (errors.some((err) => err instanceof RateLimitedError)) throw pickError(errors);
+  return null;
 }

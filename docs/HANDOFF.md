@@ -18,6 +18,29 @@
 
 ---
 
+## 2026-11-10 — eventType・lastUpdated・blocks・reflections を読む（本体からの連絡）
+
+- 元：`docs/external-site-eventtype-lastupdated-blocks-reflections.md`（本体からの連絡。2026-11-10 デプロイ済み）。指示書04 §7 と §8 の続き
+- やったこと：
+  - `eventType`：`eventView.js` に `EVENT_TYPE_LABEL`・`eventTypeLabel()`（表示名はここだけ。知らない id は出さない）。一覧のカードに表示名、一覧に2つ目の絞り込み「すべての種別＋一覧にある種別」（`data-type-filter`・`<template data-type-filter-template>`。告知・アーカイブのボタンは `data-status-filter` の中に）。詳細に「種別」の行
+  - `lastUpdated`：`format.js` に `formatDate()`。詳細に「最終更新」の行。一覧のカードには出していない（04 §7「実際のデータを見てから」）
+  - `blocks`：`renderKnowledgeText()` が見出し（h4）・段落・箇条書き（続いた item を1つの ul に）で描く。無ければ `text` を1段落。テンプレートの本文を `<p>` から `<div>` に
+  - reflections：`api.js` に `listReflections()`。つまずいたことの索引は、ふだんこれを1回だけ取る。取れない（404・古い snapshot）ときだけ今までの「詳細を1件ずつ」（`collectByDetails()`）。429 なら「混み合っています」。`truncated` ならお知らせ
+  - `fetch-snapshot.mjs`：`reflections.json` も保存（API に無い 404 なら作らず、古いものは消す）
+  - mock：一覧・詳細に eventType・lastUpdated（ワークショップは eventType null）、knowledge に blocks（サマーキャンプの1件目は見出し＋箇条書き）、`mock/reflections.json`
+  - `.gitignore`：snapshot の `events/`・`img/`・`reflections.json` を足した（実データを誤って commit しないように。今までは入っていなかった）
+  - `docs/api-contract.md` の「依頼中・変更待ち」の節を、届いた4つの取り決めに置き換えた。CLAUDE.md §10・§13
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 24 / 24 件 OK
+  - mock：種別のボタン「すべての種別／フェス・マーケット／ライブ・公演／交流会・パーティー／その他」（null のワークショップはカードに種別なし）。交流会 →「5件中 1件」、さらに告知 →「該当するイベントはありません。」。詳細：種別・最終更新「2026/7/25（土）」、本文が h4・p・h4・ul(li×2)。ワークショップは種別の行なし・本文1段落
+  - 索引（mock）：`mock/reflections.json` 1回で2件（詳細は取らない）。reflections.json を 404 にすると詳細を1件ずつ取って同じ2件
+  - 本番：索引は API に `/api/public/reflections` の1回だけ（今は振り返り0件で「まだ公開されていません」）。一覧に「ライブ・公演」、詳細に「種別 ライブ・公演」「最終更新 2026/11/6（金）」。375px で横スクロールなし
+  - reflections が 429：snapshot があればそれを使う。無ければ「ただいま混み合っています。…」だけ（API に1回だけ）
+  - `node scripts/fetch-snapshot.mjs`：「1 件、振り返り 0 件」。展示モードの索引は snapshot の events.json と reflections.json だけを読む（API に行かない）。確かめたあと snapshot は空に戻した
+- 分かったこと：本番の公開イベントは2026-11-10 時点で1件（劇団四畳羊きらきらクリスマス公演・告知）。テスト公開は非公開になっていた
+- 残っていること・次にやること：見た目（種別・最終更新・本文の見出し／箇条書き）は Usami が作り込む。一覧のカードに最終更新を出すかは、データが増えてから
+- 本体側に頼むこと：なし（依頼文 `docs/requests/main-app-public-reflections.md` は実装済み）
+
 ## 2026-11-09 — 詳細に「目的」と「柱」を出す（本体からの連絡）
 
 - 元：`docs/external-site-purpose-pillars.md`（本体 `26e8c62` からの連絡。詳細の API に `purpose`・`pillars` が増えた）

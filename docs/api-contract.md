@@ -100,33 +100,70 @@
 
 ---
 
-## 本体へ依頼中・本体の変更待ち（指示書 04、2026-11-08）
+## 追加：`eventType`・`lastUpdated`・`blocks`・`/api/public/reflections`（2026-11-10 デプロイ済み）
 
-### 依頼中：`knowledge[].blocks`（見出し・箇条書きの構造）
+本体からの連絡（`docs/external-site-eventtype-lastupdated-blocks-reflections.md`）。今ある項目の形・値は変わらない。項目が無い（古い snapshot）ときは `null` / `[]` と同じに扱う。
 
-本体の指示書Bで、タスクの本文に見出し（`{{h}}…{{/h}}`）と箇条書き（`{{l}}…{{/l}}`）が入る。今の `lib/publicData.js` は公開するときに印を外して文字だけにするので、このサイトでは見出しが本文に埋もれ、箇条書きは点の無い行の連なりになる。
+### `eventType`（一覧の1件・詳細の `basic`・reflections の `items[].event`）
 
-依頼している形（`text` はそのまま残し、`blocks` を足すだけ）：
+`string | null`。次の6つの id か `null`（未設定・不明）。**表示名は本体から来ない**ので、サイト側は `assets/js/modules/eventView.js` の `EVENT_TYPE_LABEL` だけに持つ。知らない id は出さない（`eventTypeLabel()` が `null`）。
+
+| id | 表示名 |
+|---|---|
+| `exhibit` | 作品展示会・展覧会 |
+| `festival_market` | フェス・マーケット |
+| `live_performance` | ライブ・公演 |
+| `contest` | 大会・コンテスト |
+| `social` | 交流会・パーティー |
+| `other` | その他 |
+
+- 一覧の1件は平らな形なので `event.eventType`、詳細は `basic.eventType`（2026-11-10 に本番で確認）
+- サイト側：一覧のカードに表示名、一覧の2つ目の絞り込み（一覧にある種別だけボタンを出す）、詳細の「種別」の行
+
+### `lastUpdated`（一覧の1件・詳細の `basic`）
+
+`"YYYY-MM-DD" | null`。最終更新日：基礎情報（名前・概要・場所・ヘッダー画像・期間・柱）と、公開している提出物の更新のうち、いちばん新しいもの。公開フラグのオン／オフでは動かない。
+
+- サイト側：詳細の「最終更新」の行（`format.js` の `formatDate()`。年月日に分けて扱う）。一覧のカードには出していない（指示書04 §7：実際のデータを見てから決める）
+
+### `knowledge[].blocks`（詳細）
+
+```json
+"blocks": [
+  { "type": "heading", "text": "やったこと" },
+  { "type": "text",    "text": "会場の図を描いた\n入口に受付を置いた" },
+  { "type": "item",    "text": "受付は入口に置く" }
+]
+```
+
+- `type`：`heading`（見出し）／`text`（段落。中の改行は `\n`）／`item`（箇条書きの1項目）
+- `text`：太字・斜体・非公開・画像・PDF の印は外してある（そのまま表示してよい）。非公開の部分は中身ごと消してある
+- 画像だけの古い提出物は `blocks: []`。`text`（平文）は後方互換で残る
+- サイト側：`event-detail.js` の `renderKnowledgeText()` だけが描く。`blocks` があればそれ（続いた `item` は1つの箇条書き）、無ければ `text` を1段落。知らない `type` は段落として出す
+
+### `GET /api/public/reflections`
+
+全公開イベントの振り返りを1回で返す。依頼文 `docs/requests/main-app-public-reflections.md` のとおり。
 
 ```json
 {
-  "text": "初稿を共有\n…",
-  "blocks": [
-    { "type": "heading", "text": "決めたこと" },
-    { "type": "text",    "text": "3案を並べてメンバーで投票した" },
-    { "type": "item",    "text": "入稿は前日まで" }
-  ]
+  "ok": true,
+  "items": [
+    {
+      "event": { "id": "1787536757139", "title": "テスト公開", "dates": ["2026-08-31"], "eventType": null },
+      "title": "展示作品の配置図を描く",
+      "tags": ["制作"],
+      "outcome": "success",
+      "struggle": "",
+      "solution": "パネルは検証実験をメインに…"
+    }
+  ],
+  "truncated": false
 }
 ```
 
-- 印の解釈はサイト側に持たない（本体が解いて渡す）
-- サイト側：本文を描くのは `assets/js/pages/event-detail.js` の `renderKnowledgeText()` だけ。`blocks` が来たら、そこで `blocks` があれば使い、無ければ `text`
-
-### 変更待ち：`eventType`・`lastUpdated`
-
-| 項目 | 形（予定） | サイトで使う場所 |
-|---|---|---|
-| `eventType` | 種別の id か `null`。id の一覧は本体から報告が来る（来たらここに追記） | 一覧の2軸目の絞り込み（`event-log.js` の `filter` と `render()`、`pages/event-log/index.html` のボタン）。ラベルは `assets/js/modules/` に1か所だけ置き、知らない id は出さない |
-| `lastUpdated` | `"YYYY-MM-DD"` | 詳細の情報の並び（`pages/event-log/detail/index.html` の `p-event-detail__info` に行を足し、`event-detail.js` の `renderBasic()` で入れる）。日付は文字列のまま `formatEventPeriodLines` と同じく年月日に分けて扱う |
-
-- ★一覧の1件は `basic` を持たない平らな形（`{ id, title, …, status }`）。指示書04 §7 には「一覧と詳細の basic に入る」とあるが、一覧では `event.eventType`、詳細では `basic.eventType` になるはず。来たら形を確かめる
+- `items[]`：詳細の `knowledge[]` の1件と同じ値から、`event`＋`title / tags / outcome / struggle / solution` だけ。**`text / blocks / images / files` は無い**（本文は `event.id` から詳細へ）
+- `outcome` で絞らず全部（うまくいったものも）。並びは、イベントが一覧と同じ（開催の最終日が新しい順・日程未設定は最後）、同じイベントの中は詳細の `knowledge[]` と同じ
+- `truncated`：上限（1000件）で切ったときだけ `true`
+- CORS・GET 以外は 405・回数制限（60回/分/IP）・`Cache-Control: public, max-age=300` はほかの公開 API と同じ
+- サイト側：`api.js` の `listReflections()`（取り先の順は一覧・詳細と同じ。snapshot・mock は `reflections.json`）。つまずいたことの索引が1回で使う。取れない（404・古い snapshot）ときだけ、詳細を1件ずつ取る形に戻す

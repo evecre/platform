@@ -128,13 +128,14 @@ robots.txt  _headers               検索エンジン対策（§6）
   - Top 以外の無操作で戻る：`idleReturn.js`（操作に scroll も含める。`location.replace` で戻る）
   - チャットボットは開いたとき `chatbot:open`、閉じたとき `chatbot:close` を **document で**発火すること（自動送りが止まる・再開する）
   - 展示中は `<html class="is-kiosk">`
-- **イベントのデータ**：`assets/js/modules/api.js`（`listEvents()` / `getEvent(id)`）。設定は `config.js`（`API_BASE`・`USE_MOCK_DATA`）
+- **イベントのデータ**：`assets/js/modules/api.js`（`listEvents()` / `getEvent(id)` / `listReflections()`）。設定は `config.js`（`API_BASE`・`USE_MOCK_DATA`）
   - 取る順番：展示モードは snapshot → API → mock、それ以外は API → snapshot → mock。`API_BASE` が空なら API を飛ばす。snapshot の `events.json` の `events` が空なら「まだ無い」とみなして次へ
   - snapshot と mock も API と同じ形（一覧 `{ ok, events }`・詳細 `{ ok, id, status, basic, knowledge }`）。API の 429 は `RateLimitedError`（ほかの取り先でも取れなかったときだけ投げる。ページは「混み合っています」）
   - `API_BASE` は本番の Render（`https://evecre-ver-2-2-1.onrender.com`）。`USE_MOCK_DATA` は localhost のときだけ true（自動。Node から読むと false）
   - API の成功した応答は sessionStorage に `API_CACHE_MS`（5分）置いて使い回す（API は同じ IP から1分60回まで）
   - CORS：本体の Render の `PUBLIC_SITE_ORIGINS` に入っている Origin だけ読める（2026-11-06 時点：`http://localhost:5173`・`https://evecre.pages.dev`）。`127.0.0.1` や別のポートでは読めない
-  - snapshot：`npm run snapshot -- --with-images`（または `node scripts/fetch-snapshot.mjs --api <URL> --with-images`）。全部取れてから入れ替える
+  - snapshot：`npm run snapshot -- --with-images`（または `node scripts/fetch-snapshot.mjs --api <URL> --with-images`）。全部取れてから入れ替える。`reflections.json` も保存する（API に無ければ作らず、古いものは消す）
+  - snapshot の `events/`・`img/`・`reflections.json` は `.gitignore` に入れてある（`events.json` だけは空の形で commit してある）
   - カード・ナレッジ1件の HTML は各ページの `<template>` にある。文字は `textContent`、URL は `safeUrl()` を通す（`innerHTML` に API の値を入れない）
   - 表示・非表示の切り替えは `u-hidden`（`hidden` 属性は、クラスの `display` に負けるので使わない）
 - **文字サイズ**：`html` の font-size が画面に合わせて伸びる（16px → 1920×1080 で 20px → 4K で 40px）。サイズは rem で書く
@@ -175,14 +176,17 @@ robots.txt  _headers               検索エンジン対策（§6）
 - 振り返りの判定：`assets/js/modules/eventView.js` の `outcomeKey(item)`（`'success'` / `'struggle'`。`null` は struggle）。**判定の分け方はここだけ**。文言は `event-detail.js` の `REVIEW_LABELS`・`OUTCOME_LABEL`
   - 色は `--color-outcome-*`。**つまずいたを警告の色（赤・橙・黄）にしない**（いちばん読まれる記録で、悪いものとして見せない）
 - ナレッジ1件の並び：頭（判定＋タイトル＋タグ）→ 振り返り → 詳しく（本文・画像・ファイル）。**振り返りを本文より先に置く**。`knowledge[]` に日付は無いので出さない
-- 本文を描くのは `event-detail.js` の `renderKnowledgeText()` だけ。本体に `knowledge[].blocks`（見出し・箇条書き）を依頼中（`docs/api-contract.md`）。来たらここだけ差し替える。印（`{{h}}` など）の解釈はサイト側に持たない
+- 本文を描くのは `event-detail.js` の `renderKnowledgeText()` だけ。`knowledge[].blocks`（見出し・段落・箇条書き）があればそれで、無ければ `text` を1段落で描く。印（`{{h}}` など）の解釈はサイト側に持たない
+- 種別（`eventType`）の表示名は `eventView.js` の `EVENT_TYPE_LABEL` だけに書く（本体は id しか返さない）。知らない id・`null` は出さない（`eventTypeLabel()`）。一覧：カードに表示名・2つ目の絞り込み（`data-type-filter`。一覧にある種別だけボタンを足す）。詳細：「種別」の行
+- 最終更新（`lastUpdated`）は詳細の情報の行だけ（`formatDate()`）。一覧のカードには出していない
 - テンプレートの目印：カードは `data-card="…"`、ナレッジ1件は `data-knowledge="…"`、索引の1件は `data-struggle="…"`。JS は `data-*` だけを探す（クラスは見た目のため）
 - 絞り込みのボタンは `assets/js/modules/filterButtons.js` の `setupFilterButtons()`（一覧・索引で共通）
 - 一覧の件数：「2件」／絞ると「2件中 1件」。0件のときは出さない
 - つまずいたことの横断索引（`pages/event-log/struggles/`、`assets/js/pages/event-struggles.js`）
-  - 一覧に knowledge が無いので詳細を1件ずつ取る。`hasKnowledge === true` だけ・開催の最終日が新しい順に `MAX_EVENTS`（20）件まで・**順に**（並列にしない）。`getEvent()` を使うのでキャッシュと展示モードの snapshot 優先が効く
+  - ふだんは `listReflections()`（`GET /api/public/reflections`、snapshot・mock は `reflections.json`）を**1回だけ**取る。`truncated` ならお知らせ
+  - それが取れない（404・古い snapshot）ときだけ、詳細を1件ずつ取る（`collectByDetails()`）：`hasKnowledge === true` だけ・開催の最終日が新しい順に `MAX_EVENTS`（20）件まで・**順に**（並列にしない）。`getEvent()` を使うのでキャッシュと展示モードの snapshot 優先が効く
   - 載せるのは `outcomeKey === 'struggle'` かつ `solution` が空でないもの。タグ（企画／運営／制作／広報）で絞る
   - 429 が出たらそこで止めて、取れた分＋お知らせ。1件も取れていなければ「混み合っています」だけ
-  - 公開 API は同じ IP から1分60回。1回開くと「一覧1回＋詳細最大20回」。イベントが増えたら、本体に「振り返りをまとめて返すエンドポイント」を頼む
+  - 公開 API は同じ IP から1分60回。ふだんは1回開いて1回（reflections）。詳細から集める形に戻ったときは「一覧1回＋詳細最大20回」
 - 目的と柱（詳細の `purpose`・`pillars`。2026-11-09 追加）：詳細ページの**ナレッジの前**に出す。描くのは `event-detail.js` の `renderPurpose()` だけ。値が無い（`null`・空・項目自体が無い）見出しは外し、両方無ければまとまりごと外す。値が入るのは knowledge が1件以上あるときだけ（`docs/api-contract.md`）
 - `getEvent()`：API が 429 のときは、ほかの取り先に無くても「見つからない」にせず `RateLimitedError` を投げる

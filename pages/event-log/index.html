@@ -33,10 +33,14 @@
 
       <a class="p-event-log__struggles-link" href="/pages/event-log/struggles/">イベントをまたいで「つまずいたこと」を読む</a>
 
-      <div class="p-event-log__filter" role="group" aria-label="絞り込み">
+      <div class="p-event-log__filter" role="group" aria-label="告知・アーカイブで絞り込み" data-status-filter>
         <button class="p-event-log__filter-button is-active" type="button" data-filter="all" aria-pressed="true">すべて</button>
         <button class="p-event-log__filter-button" type="button" data-filter="upcoming" aria-pressed="false">告知</button>
         <button class="p-event-log__filter-button" type="button" data-filter="archive" aria-pressed="false">アーカイブ</button>
+      </div>
+      <!-- 種別で絞り込み。「すべての種別」のあとに、一覧にある種別のボタンを event-log.js が足す（種別が1つも無ければ出さない） -->
+      <div class="p-event-log__filter u-hidden" role="group" aria-label="種別で絞り込み" data-type-filter>
+        <button class="p-event-log__filter-button is-active" type="button" data-filter="all" aria-pressed="true">すべての種別</button>
       </div>
 
       <p class="p-event-log__message" data-event-log-message role="status">読み込み中…</p>
@@ -52,12 +56,18 @@
         <img class="c-event-card__thumb" src="" alt="" loading="lazy" decoding="async" data-card="thumb">
         <div class="c-event-card__body">
           <span class="c-event-card__label" data-card="label"></span>
+          <span class="c-event-card__type" data-card="type"></span>
           <h2 class="c-event-card__title" data-card="title"></h2>
           <p class="c-event-card__date" data-card="date"></p>
           <p class="c-event-card__venue" data-card="venue"></p>
         </div>
       </a>
     </li>
+  </template>
+
+  <!-- 種別の絞り込みボタン1つ。event-log.js が複製して data-filter と文字を入れる -->
+  <template data-type-filter-template>
+    <button class="p-event-log__filter-button" type="button" data-filter="" aria-pressed="false"></button>
   </template>
 
   <footer class="l-footer">

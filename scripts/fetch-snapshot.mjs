@@ -1,9 +1,10 @@
-// 公開 API から一覧と全件の詳細を取り、assets/data/snapshot/ に保存する（展示会場でネットが無くても見せるため）
+// 公開 API から一覧と全件の詳細と振り返りの一覧を取り、assets/data/snapshot/ に保存する（展示会場でネットが無くても見せるため）
 //   node scripts/fetch-snapshot.mjs                       → config.js の API_BASE から取る
 //   node scripts/fetch-snapshot.mjs --api https://…       → 取り先を指定する
 //   node scripts/fetch-snapshot.mjs --with-images         → 画像も snapshot/img/ に保存し、URL を書き換える
 // 全部取れてから古い snapshot を消して書き込む（途中で失敗したら、前の snapshot はそのまま残る）
-// 保存する形は API の応答と同じ（一覧 { ok, events }・詳細 { ok, id, status, basic, knowledge }）。サイトは API と同じ読み方をする
+// 保存する形は API の応答と同じ（一覧 { ok, events }・詳細 { ok, id, status, basic, knowledge }・
+// 振り返りの一覧 reflections.json { ok, items, truncated }。API にまだ無い（404）ときは保存しない）。サイトは API と同じ読み方をする
 // API は同じ IP から 1分 60 回まで。429 が返ったら 1分待って、もう一度だけ取る
 
 import { mkdir, rm, writeFile } from 'node:fs/promises';
@@ -40,13 +41,15 @@ async function fetchWithTimeout(url) {
   return res;
 }
 
-async function fetchJson(url, { retried = false } = {}) {
+// allowNotFound：404 を失敗にせず null を返す（API にまだ無いエンドポイント）
+async function fetchJson(url, { retried = false, allowNotFound = false } = {}) {
   const res = await fetch(url, { signal: AbortSignal.timeout(API_TIMEOUT_MS) });
   if (res.status === 429 && !retried) {
     console.log(`  回数制限にかかりました。${RATE_LIMIT_WAIT_MS / 1000} 秒待ってから取り直します…`);
     await new Promise((resolve) => setTimeout(resolve, RATE_LIMIT_WAIT_MS));
-    return fetchJson(url, { retried: true });
+    return fetchJson(url, { retried: true, allowNotFound });
   }
+  if (res.status === 404 && allowNotFound) return null;
   if (!res.ok) throw new Error(`HTTP ${res.status}: ${url}`);
   return res.json();
 }
@@ -124,6 +127,11 @@ async function main() {
     details.set(event.id, detail);
   }
 
+  console.log(`振り返りの一覧を取得：${args.api}/api/public/reflections`);
+  const reflections = await fetchJson(`${args.api}/api/public/reflections`, { allowNotFound: true });
+  if (reflections === null) console.warn('  API にまだありません（404）。reflections.json は作りません（索引は詳細から集めます）');
+  else if (reflections?.ok !== true || !Array.isArray(reflections.items)) throw new Error('振り返りの一覧の形が違います（{ ok: true, items: [...] } ではない）');
+
   const store = args.withImages ? createImageStore(args.api) : null;
   if (store) {
     console.log('画像を保存しています…');
@@ -141,9 +149,12 @@ async function main() {
   for (const [id, detail] of details) {
     await writeFile(path.join(SNAPSHOT_DIR, 'events', `${id}.json`), JSON.stringify(detail, null, 2) + '\n');
   }
+  // 古い reflections.json を残すと、今の詳細と食い違うので消す
+  if (reflections) await writeFile(path.join(SNAPSHOT_DIR, 'reflections.json'), JSON.stringify(reflections, null, 2) + '\n');
+  else await rm(path.join(SNAPSHOT_DIR, 'reflections.json'), { force: true });
   await writeFile(path.join(SNAPSHOT_DIR, 'events.json'), JSON.stringify({ ok: true, events }, null, 2) + '\n');
 
-  console.log(`保存しました：${events.length} 件${store ? `、画像 ${store.files.size} 枚` : ''}（${path.relative(ROOT, SNAPSHOT_DIR)}/）`);
+  console.log(`保存しました：${events.length} 件${reflections ? `、振り返り ${reflections.items.length} 件` : ''}${store ? `、画像 ${store.files.size} 枚` : ''}（${path.relative(ROOT, SNAPSHOT_DIR)}/）`);
 }
 
 main().catch((err) => {
