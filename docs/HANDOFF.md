@@ -18,6 +18,23 @@
 
 ---
 
+## 2026-11-11 — 05（公開イベントの閲覧を本体に移す）の調査と決定
+
+- 指示書：docs/instructions/05_move-archive.md（まだ始めない。本体の `/explore` が本番に出てから。本体は `243cbcb` でまだ無い）
+- ユーザーの決定：
+  1. 「つまずいたこと」の索引は消してよい（本体にも当面作らない）
+  2. 展示モードで `/explore` に移ったあと、しばらく操作が無ければ外部サイトの Top に戻したい（難しければ無くてもよい）。**「みんなの記録」（/explore）から Top へ移れること**は必須 → 本体への依頼文 `docs/requests/main-app-explore-kiosk-return.md`
+  3. `EXPLORE_URL` は任せる → `https://evecre-ver-2-2-1.onrender.com/explore`（config.js に1か所。独自ドメインにしたら変える）
+  4. 編集中だった Top のロゴ（`index.html`・`logo-with-tagline.svg`）は `chore/top-logo` に commit・push 済み
+- 05 で外部サイト側がやること（調査の結果。指示書への追加を含む）：
+  - ボタンの文言は「みんなの記録を見る」。展示モードのときは `EXPLORE_URL?kiosk=1` へ（依頼文 1-2）
+  - 古い URL：`_redirects` はクエリの値をパスに移せないので、詳細（`?id=`）は「id を `EVENT_ID_RE` で確かめて `EXPLORE_URL/<id>` へ `location.replace` するだけ」の小さなページにする。一覧も同じ小さなページにすれば、URL を config.js の1か所に保てる（`_redirects` を使うなら build-dist の INCLUDE に足す）。どちらも noindex を残す
+  - チャットボット：faq.json の `public-…` 項目の links `/pages/event-log/` → 本体の URL を直接書く（JSON なので config.js を読めない。ドメインを変えたらここも）
+  - 消せる：`api.js`・`eventView.js`・`filterButtons.js`・`idleReturn.js`（Top 以外のページが無くなる）・`pages/event-*.js`・`_event-*.css`・`c-event-card`・`img/event-log/`・`assets/data/mock/`・`assets/data/snapshot/`・`fetch-snapshot.mjs`・`npm run snapshot`・config.js の API 関係の定数・一覧/詳細だけのトークン
+  - 残す：`format.js`（チャットボットが `safeUrl()`。日付の関数は消せる）・`common.js`・`kiosk.js`・`EVENT_ID_RE`
+  - CLAUDE.md の §2・§5（API のキャッシュの保存）・§6・§7・§10・§12・§13、START の展示の手順（snapshot）を直す
+- 本体側に頼むこと：`docs/requests/main-app-explore-kiosk-return.md`（`/explore` のヘッダーに外部サイトの Top へのリンク、`?kiosk=1` のときの無操作で戻る・ログインの導線を隠す）。索引を消すので、本番に移ったあとは外部サイトは公開 API を読まなくなる（`PUBLIC_SITE_ORIGINS` は `publicSiteUrl` の元としては引き続き使う）
+
 ## 2026-11-10 — eventType・lastUpdated・blocks・reflections を読む（本体からの連絡）
 
 - 元：`docs/external-site-eventtype-lastupdated-blocks-reflections.md`（本体からの連絡。2026-11-10 デプロイ済み）。指示書04 §7 と §8 の続き
