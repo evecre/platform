@@ -31,3 +31,21 @@ export function setStatusLabel(el, blockClass, status) {
 export function outcomeKey(item) {
   return item?.outcome === 'success' ? 'success' : 'struggle';
 }
+
+/**
+ * イベントの種別（basic.eventType / 一覧の eventType）の表示名。id は本体の EVENT_TYPES と同じ（docs/api-contract.md）
+ * ★表示名はここだけに書く。並びは絞り込みのボタンの順
+ */
+export const EVENT_TYPE_LABEL = {
+  exhibit: '作品展示会・展覧会',
+  festival_market: 'フェス・マーケット',
+  live_performance: 'ライブ・公演',
+  contest: '大会・コンテスト',
+  social: '交流会・パーティー',
+  other: 'その他',
+};
+
+/** 種別の表示名。null・知らない id は null（推測で出さない） */
+export function eventTypeLabel(id) {
+  return typeof id === 'string' && Object.hasOwn(EVENT_TYPE_LABEL, id) ? EVENT_TYPE_LABEL[id] : null;
+}

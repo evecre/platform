@@ -2,3 +2,7 @@
 node_modules/
 dist/
 Claude outputs/
+# snapshot は実際のデータ（commit しない）。events.json だけは空の形で置いてある
+assets/data/snapshot/events/
+assets/data/snapshot/img/
+assets/data/snapshot/reflections.json

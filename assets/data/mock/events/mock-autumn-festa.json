@@ -15,7 +15,9 @@
         "start": "10:00",
         "end": "16:00"
       }
-    }
+    },
+    "eventType": "festival_market",
+    "lastUpdated": "2026-11-01"
   },
   "knowledge": null
 }

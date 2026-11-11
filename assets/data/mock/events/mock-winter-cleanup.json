@@ -11,7 +11,9 @@
       "2026-12-12",
       "2026-12-13"
     ],
-    "dateTimes": {}
+    "dateTimes": {},
+    "eventType": "other",
+    "lastUpdated": "2026-10-28"
   },
   "knowledge": null
 }

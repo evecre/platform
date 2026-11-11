@@ -1,17 +1,19 @@
 // つまずいたことの横断索引（pages/event-log/struggles/）の入口
-//   全イベントの knowledge[] から、つまずいた記録（outcomeKey が struggle）で solution が空でないものを集める
-//   一覧には knowledge が無いので、詳細を1件ずつ取る。公開 API は同じ IP から1分60回までなので：
+//   全イベントの振り返りから、つまずいた記録（outcomeKey が struggle）で solution が空でないものを集める
+//   ふだんは listReflections()（GET /api/public/reflections）を1回だけ取る。並びは API のまま（イベントは開催の最終日が新しい順）
+//   それが取れない（API がまだ持っていない・古い snapshot）ときだけ、詳細を1件ずつ取る形に戻す（collectByDetails）。
+//   公開 API は同じ IP から1分60回までなので：
 //     hasKnowledge が true のイベントだけ・開催の最終日が新しい順に MAX_EVENTS 件まで・順に（並列にしない）取る
 //     getEvent() を使うので、sessionStorage のキャッシュ（5分）と、展示モードの snapshot 優先がそのまま効く
 //   429（RateLimitedError）が出たらそこで止め、取れた分だけ出す
 import { initCommon } from '../modules/common.js';
-import { listEvents, getEvent, RateLimitedError } from '../modules/api.js';
+import { listEvents, getEvent, listReflections, RateLimitedError } from '../modules/api.js';
 import { outcomeKey } from '../modules/eventView.js';
 import { setupFilterButtons } from '../modules/filterButtons.js';
 
 initCommon({ page: 'event-struggles' });
 
-const MAX_EVENTS = 20; // 詳細を取るイベントの上限（1回開くと、一覧1回＋この数だけ API に問い合わせる）
+const MAX_EVENTS = 20; // 詳細を1件ずつ取るときの、イベントの上限（1回開くと、一覧1回＋この数だけ API に問い合わせる）
 
 const MESSAGES = {
   loading: (done, total) => `イベントを読み込み中…（${done} / ${total}件）`,
@@ -19,6 +21,7 @@ const MESSAGES = {
   busy: 'ただいま混み合っています。1分ほどおいて開き直してください。',
   busyPartial: (done, total) => `ただいま混み合っているため、${total}件のイベントのうち ${done}件から集めたところで止めました。1分ほどおいて開き直すと続きが読めます。`,
   limited: `新しい${MAX_EVENTS}件のイベントから集めています。`,
+  truncated: '記録が多いため、新しいものから集めています。古い記録の一部は出ていません。',
   empty: 'つまずいた記録は、まだ公開されていません。',
   emptyFiltered: 'このタグのつまずいた記録はありません。',
 };
@@ -100,7 +103,36 @@ setupFilterButtons(filterButtons, (value) => {
   render();
 });
 
+/** 振り返りの一覧（1回で全部）から集める */
+function collectFromReflections({ items, truncated }) {
+  for (const item of items) {
+    const event = item?.event;
+    if (event && typeof event.id === 'string' && isStruggleEntry(item)) entries.push({ event: { id: event.id, title: event.title }, item });
+  }
+  loading = false;
+  setText(messageEl, '');
+  setText(noticeEl, truncated ? MESSAGES.truncated : '');
+  render();
+}
+
 async function collect() {
+  let reflections = null;
+  try {
+    reflections = await listReflections();
+  } catch (err) {
+    // 回数制限で断られたら、詳細を1件ずつ取っても断られるので、ここで止める
+    if (err instanceof RateLimitedError) {
+      setText(messageEl, MESSAGES.busy);
+      return;
+    }
+    console.warn('[event-struggles] 振り返りの一覧を読み込めませんでした', err);
+  }
+  if (reflections) collectFromReflections(reflections);
+  else await collectByDetails();
+}
+
+/** 詳細を1件ずつ取って集める（振り返りの一覧が取れないとき） */
+async function collectByDetails() {
   let events;
   try {
     events = (await listEvents()).filter((event) => event && typeof event.id === 'string');

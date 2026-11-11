@@ -18,6 +18,54 @@
 
 ---
 
+## 2026-11-10 — eventType・lastUpdated・blocks・reflections を読む（本体からの連絡）
+
+- 元：`docs/external-site-eventtype-lastupdated-blocks-reflections.md`（本体からの連絡。2026-11-10 デプロイ済み）。指示書04 §7 と §8 の続き
+- やったこと：
+  - `eventType`：`eventView.js` に `EVENT_TYPE_LABEL`・`eventTypeLabel()`（表示名はここだけ。知らない id は出さない）。一覧のカードに表示名、一覧に2つ目の絞り込み「すべての種別＋一覧にある種別」（`data-type-filter`・`<template data-type-filter-template>`。告知・アーカイブのボタンは `data-status-filter` の中に）。詳細に「種別」の行
+  - `lastUpdated`：`format.js` に `formatDate()`。詳細に「最終更新」の行。一覧のカードには出していない（04 §7「実際のデータを見てから」）
+  - `blocks`：`renderKnowledgeText()` が見出し（h4）・段落・箇条書き（続いた item を1つの ul に）で描く。無ければ `text` を1段落。テンプレートの本文を `<p>` から `<div>` に
+  - reflections：`api.js` に `listReflections()`。つまずいたことの索引は、ふだんこれを1回だけ取る。取れない（404・古い snapshot）ときだけ今までの「詳細を1件ずつ」（`collectByDetails()`）。429 なら「混み合っています」。`truncated` ならお知らせ
+  - `fetch-snapshot.mjs`：`reflections.json` も保存（API に無い 404 なら作らず、古いものは消す）
+  - mock：一覧・詳細に eventType・lastUpdated（ワークショップは eventType null）、knowledge に blocks（サマーキャンプの1件目は見出し＋箇条書き）、`mock/reflections.json`
+  - `.gitignore`：snapshot の `events/`・`img/`・`reflections.json` を足した（実データを誤って commit しないように。今までは入っていなかった）
+  - `docs/api-contract.md` の「依頼中・変更待ち」の節を、届いた4つの取り決めに置き換えた。CLAUDE.md §10・§13
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 24 / 24 件 OK
+  - mock：種別のボタン「すべての種別／フェス・マーケット／ライブ・公演／交流会・パーティー／その他」（null のワークショップはカードに種別なし）。交流会 →「5件中 1件」、さらに告知 →「該当するイベントはありません。」。詳細：種別・最終更新「2026/7/25（土）」、本文が h4・p・h4・ul(li×2)。ワークショップは種別の行なし・本文1段落
+  - 索引（mock）：`mock/reflections.json` 1回で2件（詳細は取らない）。reflections.json を 404 にすると詳細を1件ずつ取って同じ2件
+  - 本番：索引は API に `/api/public/reflections` の1回だけ（今は振り返り0件で「まだ公開されていません」）。一覧に「ライブ・公演」、詳細に「種別 ライブ・公演」「最終更新 2026/11/6（金）」。375px で横スクロールなし
+  - reflections が 429：snapshot があればそれを使う。無ければ「ただいま混み合っています。…」だけ（API に1回だけ）
+  - `node scripts/fetch-snapshot.mjs`：「1 件、振り返り 0 件」。展示モードの索引は snapshot の events.json と reflections.json だけを読む（API に行かない）。確かめたあと snapshot は空に戻した
+- 分かったこと：本番の公開イベントは2026-11-10 時点で1件（劇団四畳羊きらきらクリスマス公演・告知）。テスト公開は非公開になっていた
+- 残っていること・次にやること：見た目（種別・最終更新・本文の見出し／箇条書き）は Usami が作り込む。一覧のカードに最終更新を出すかは、データが増えてから
+- 本体側に頼むこと：なし（依頼文 `docs/requests/main-app-public-reflections.md` は実装済み）
+
+## 2026-11-09 — 詳細に「目的」と「柱」を出す（本体からの連絡）
+
+- 元：`docs/external-site-purpose-pillars.md`（本体 `26e8c62` からの連絡。詳細の API に `purpose`・`pillars` が増えた）
+- やったこと：
+  - 詳細ページのナレッジの前に「目的」（文章）と「柱」（名前の並び）。`pages/event-log/detail/index.html` に `data-detail="purposeSection" / purposeBlock / purpose / pillarsBlock / pillars`、`event-detail.js` に `renderPurpose()`、`_event-detail.css` に `p-event-detail__purpose*` / `__pillars` / `__pillar`（仮の見た目）
+  - 値が無い（null・空・項目が無い古い snapshot）見出しは外す。両方無ければまとまりごと外す
+  - mock：サマーキャンプに目的＋柱2つ、ワークショップは `purpose: null`・`pillars: []`（出ないことの確認用）
+  - `docs/api-contract.md` に項目と「いつ値が入るか」の表、CLAUDE.md §13 に1行
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 24 / 24 件 OK
+  - mock（API_BASE を空にして）：サマーキャンプ＝目的と柱2つがナレッジの前に出る／ワークショップ・開催前のフェスタ＝まとまりごと出ない。375px で横スクロールなし
+  - 本番：テスト公開の詳細に `purpose: null`・`pillars: []` が入っている（目的が未記入なので、まだ何も出ない）
+- 分かったこと：本番に **`GET /api/public/reflections` がもう入っている**（2026-11-08 の依頼文のもの。`items[].event.eventType` も入っている）。本体からの正式な報告はまだ受け取っていない
+- 残っていること・次にやること：
+  - 索引（`event-struggles.js`）を reflections に切り替える（依頼文 §5 の「外部サイト側で変えること」）。本体の報告を `api-contract.md` に貼ってから
+  - 目的・柱の見た目は Usami が作り込む
+- 本体側に頼むこと：reflections の正式な報告（api-contract.md に貼れる形）。eventType の id と文言の対応
+
+## 2026-11-08 — 本体への依頼文：振り返りをまとめて返すエンドポイント
+
+- やったこと：`docs/requests/main-app-public-reflections.md`（本体の Claude Code に渡す指示書）。`GET /api/public/reflections`：全公開イベントの振り返り（title・tags・outcome・struggle・solution と出どころのイベント）を1回で返す。値は `buildPublicEvent()` の knowledge から作る、basic が null のイベントは出さない、text・images・files は入れない、1000件で切って truncated
+- 着手の目安：ナレッジのある公開イベントが10件を超えたら（ユーザーが本体側に渡す）
+- 分かったこと：本体（`evecre01-node 2`、`432dd15`）はすでに公開 API の basic に `eventType`（`exhibit` / `festival_market` / `live_performance` / `contest` / `social` / `other` か null）と `lastUpdated` を足していて、本番の一覧にも出ている。指示書04 §7 の作業に入れる（本体からの正式な報告と、id ごとの文言を待つ）
+- 本体側に頼むこと：上の依頼文（10件を超えたら）。eventType の id と文言の対応の報告
+
 ## 2026-11-08 — 04 §5：つまずいたことの横断索引（04 完了）
 
 - 指示書：docs/instructions/04_event-reading.md（§5・完了条件まで。ユーザーの指示「1」＝今作る）

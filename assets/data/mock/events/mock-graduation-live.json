@@ -15,7 +15,9 @@
         "start": "17:00",
         "end": "20:00"
       }
-    }
+    },
+    "eventType": "live_performance",
+    "lastUpdated": "2026-03-20"
   },
   "knowledge": null
 }

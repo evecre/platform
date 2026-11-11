@@ -1,8 +1,8 @@
 // イベント詳細（pages/event-log/detail/?id=…）の入口
 import { initCommon } from '../modules/common.js';
 import { getEvent, RateLimitedError } from '../modules/api.js';
-import { formatEventPeriodLines, formatFileSize, safeUrl } from '../modules/format.js';
-import { setImage, setStatusLabel, outcomeKey } from '../modules/eventView.js';
+import { formatEventPeriodLines, formatDate, formatFileSize, safeUrl } from '../modules/format.js';
+import { setImage, setStatusLabel, outcomeKey, eventTypeLabel } from '../modules/eventView.js';
 
 initCommon({ page: 'event-detail' });
 
@@ -68,7 +68,40 @@ function renderBasic(event) {
 
   if (basic.venue) field('venue').textContent = basic.venue;
   else field('venueRow').remove();
+  const type = eventTypeLabel(basic.eventType);
+  if (type) field('type').textContent = type;
+  else field('typeRow').remove();
+  const lastUpdated = formatDate(basic.lastUpdated);
+  if (lastUpdated) field('lastUpdated').textContent = lastUpdated;
+  else field('lastUpdatedRow').remove();
   setTextOrRemove(field('summary'), basic.summary);
+}
+
+/**
+ * 目的と柱（詳細の purpose・pillars）。knowledge が1件以上あるときだけ値が入る（docs/api-contract.md）
+ * null・空・項目が無い（古い snapshot）ときは見出しごと外し、両方無ければまとまりごと外す
+ */
+function renderPurpose(event) {
+  const purpose = typeof event.purpose === 'string' ? event.purpose.trim() : '';
+  const pillars = Array.isArray(event.pillars) ? event.pillars.filter((p) => typeof p === 'string' && p.trim()) : [];
+
+  if (purpose) field('purpose').textContent = purpose;
+  else field('purposeBlock').remove();
+
+  if (pillars.length) {
+    field('pillars').replaceChildren(
+      ...pillars.map((pillar) => {
+        const li = document.createElement('li');
+        li.className = 'p-event-detail__pillar';
+        li.textContent = pillar;
+        return li;
+      }),
+    );
+  } else {
+    field('pillarsBlock').remove();
+  }
+
+  if (!purpose && !pillars.length) field('purposeSection').remove();
 }
 
 function buildKnowledge(item) {
@@ -113,17 +146,41 @@ function buildKnowledge(item) {
 
 /**
  * 本文を描く。★本文を描くのはここだけ
- * 本体に、見出し・箇条書きを解いた knowledge[].blocks を足してもらうよう依頼中（docs/api-contract.md）。
- * 来たら、blocks があればそれで描き、無ければ今までどおり text を使う形に、ここだけを差し替える
+ * blocks（見出し heading・段落 text・箇条書きの1項目 item。印は本体が外してある）があればそれで描き、
+ * 無ければ（古い snapshot・画像だけの記録）text を1つの段落にする。知らない type は段落として出す
  * @returns {boolean} 描いたか（空なら要素ごと外して false）
  */
 function renderKnowledgeText(el, item) {
-  if (typeof item.text === 'string' && item.text.trim()) {
-    el.textContent = item.text;
-    return true;
+  const blocks = (Array.isArray(item.blocks) ? item.blocks : []).filter(
+    (block) => block && typeof block.text === 'string' && block.text.trim(),
+  );
+  if (!blocks.length && typeof item.text === 'string' && item.text.trim()) blocks.push({ type: 'text', text: item.text });
+  if (!blocks.length) {
+    el.remove();
+    return false;
   }
-  el.remove();
-  return false;
+
+  let list = null; // 続いている箇条書きは1つの ul にまとめる
+  for (const block of blocks) {
+    if (block.type === 'item') {
+      if (!list) {
+        list = document.createElement('ul');
+        list.className = 'p-event-knowledge__list';
+        el.append(list);
+      }
+      const li = document.createElement('li');
+      li.className = 'p-event-knowledge__list-item';
+      li.textContent = block.text;
+      list.append(li);
+      continue;
+    }
+    list = null;
+    const node = document.createElement(block.type === 'heading' ? 'h4' : 'p');
+    node.className = block.type === 'heading' ? 'p-event-knowledge__heading' : 'p-event-knowledge__paragraph';
+    node.textContent = block.text;
+    el.append(node);
+  }
+  return true;
 }
 
 function renderImages(list, item, title) {
@@ -237,6 +294,7 @@ try {
     showNotFound();
   } else {
     renderBasic(event);
+    renderPurpose(event);
     renderKnowledge(event);
     showMessage('');
     contentEl.classList.remove('u-hidden');
