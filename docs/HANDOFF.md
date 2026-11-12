@@ -18,6 +18,25 @@
 
 ---
 
+## 2026-11-12 — 05 Phase 2：一覧・詳細・索引を消し、古い URL から「みんなの記録」へ移す
+
+- 指示書：docs/instructions/05_move-archive.md（Phase 2・完了条件まで）
+- やったこと：
+  - 消した：`pages/event-log/` の一覧・詳細・索引の中身、`assets/js/pages/event-log.js`・`event-detail.js`・`event-struggles.js`、`modules/api.js`・`eventView.js`・`filterButtons.js`・`idleReturn.js`、`_event-log.css`・`_event-detail.css`・`_event-knowledge.css`・`_event-struggles.css`・`component/_event-card.css`、`assets/img/event-log/`、`assets/data/mock/`・`assets/data/snapshot/`、`scripts/fetch-snapshot.mjs`・`npm run snapshot`
+  - 中身を減らした：`config.js`（`EXPLORE_URL`・`EVENT_ID_RE` だけ）、`format.js`（`safeUrl()` だけ）、`kiosk.js`（`IDLE_RETURN_MS`）、`common.js`（idleReturn・`CHATBOT_TOP_ONLY`）、`_variables.css`（判定の色・`--reading-max-width`・`--card-min-width`・`--detail-header-max-height`）、`build-dist.mjs`・`.gitignore`（mock・snapshot）
+  - 使われているか確かめてから消した：Top（`top.js`）が使うのは `common.js`・`scrollStage.js`・`autoAdvance.js`、チャットボットは `format.js` の `safeUrl()`・`kiosk.js`・`character.js`・`exploreLink.js`。消したファイルを読んでいるところは残っていない（grep で0件）。`--content-max-width`・`--radius-sm`・`--space-9`・`--z-overlay` も今は使われていないが、トークンの段階として残した
+  - 古い URL：`pages/event-log/index.html`・`detail/index.html`・`struggles/index.html` を、`assets/js/pages/explore-redirect.js` で移すだけのページにした。`?id=` が `EVENT_ID_RE` に合えば `EXPLORE_URL/<id>`、それ以外は一覧。展示モードなら `?kiosk=1`。JS が動かないときのリンクも置いた。`_redirects` はクエリの値をパスに移せないので使っていない
+  - `style.css` の @import、`assets/css/README.md`（早見表・§5）、`_header.css` の説明、`docs/api-contract.md` の冒頭（もう読まない）、CLAUDE.md（§1・§2・§3・§5・§6・§7・§9・§10・§11・§12・§13）、START（展示会場の手順・表）
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 18 / 18 件 OK。`check:faq` は 26/31・到達 31/31・誤答 0
+  - `npm run build && node scripts/serve.mjs --root dist`：dist に Top・チャットボット・移すページだけ（mock・snapshot・消したファイルは無い）
+  - 移す先（本体は Playwright で止めて URL だけ確認）：一覧 → `/explore`、`detail/?id=1792979092586` → `/explore/1792979092586`、`?id=<script>`・id 無し・索引 → `/explore`、展示モードの詳細 → `/explore/1792979092586?kiosk=1`、展示モードの一覧 → `/explore?kiosk=1`
+  - Top：`X-Robots-Tag: noindex, nofollow`・meta も noindex, nofollow。チャットボットが開き、「みんなの記録って何？」のリンクが `/explore`。コンソールのエラーなし
+  - `robots.txt`・`_headers` は変えていない
+- 残っていること・次にやること：main へのマージ（ユーザーの確認待ち）。マージしたら Cloudflare Pages で `https://evecre.pages.dev/pages/event-log/detail/?id=…` が移ることを確かめる
+- ユーザーに確認したいこと：なし
+- 本体側に頼むこと：`/explore` に `X-Robots-Tag: noindex, nofollow`（本体の指示書 §2）。外部サイトはもう公開 API を読まない（`PUBLIC_SITE_ORIGINS` は本体の「イベクリについて」の戻り先として使われている）
+
 ## 2026-11-12 — 05 Phase 1：「みんなの記録」（本体の /explore）へのリンク
 
 - 指示書：docs/instructions/05_move-archive.md（Phase 1 まで。ユーザーから「本体の /explore が本番に出た」）

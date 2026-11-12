@@ -4,74 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>イベント一覧 | イベクリ</title>
-  <meta name="description" content="イベクリで公開されたイベントの一覧です。開催前の告知と、開催後のナレッジ（つまずいたこと・次にやるなら・うまくいったこと）を読めます。">
+  <title>みんなの記録に移動します | イベクリ</title>
   <link rel="icon" href="/favicon.ico" sizes="48x48">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/common/evecre-icon-32.png">
-  <link rel="apple-touch-icon" href="/assets/img/common/evecre-icon-192.png">
   <link rel="stylesheet" href="/assets/css/style.css">
-  <script type="module" src="/assets/js/pages/event-log.js"></script>
+  <!-- 公開イベントの一覧・詳細は、本体の「みんなの記録」に移した（指示書 05）。古い URL で来た人をそこへ移すだけのページ -->
+  <script type="module" src="/assets/js/pages/explore-redirect.js"></script>
 </head>
 <body>
-  <header class="l-header">
-    <!-- TODO: ロゴ画像（assets/img/common/）に差し替える -->
-    <a class="l-header__logo" href="/">イベクリ</a>
-    <nav class="l-header__nav" aria-label="サイト内">
-      <ul class="l-header__list">
-        <li class="l-header__item"><a class="l-header__link" href="/">Top</a></li>
-        <li class="l-header__item"><a class="l-header__link" href="/pages/event-log/" aria-current="page">イベント一覧</a></li>
-      </ul>
-    </nav>
-  </header>
-
   <main class="l-main">
-    <section class="p-event-log">
-      <div class="p-event-log__head">
-        <h1 class="p-event-log__title">イベント一覧</h1>
-        <p class="p-event-log__count u-hidden" data-event-log-count aria-live="polite"></p>
-      </div>
-
-      <a class="p-event-log__struggles-link" href="/pages/event-log/struggles/">イベントをまたいで「つまずいたこと」を読む</a>
-
-      <div class="p-event-log__filter" role="group" aria-label="告知・アーカイブで絞り込み" data-status-filter>
-        <button class="p-event-log__filter-button is-active" type="button" data-filter="all" aria-pressed="true">すべて</button>
-        <button class="p-event-log__filter-button" type="button" data-filter="upcoming" aria-pressed="false">告知</button>
-        <button class="p-event-log__filter-button" type="button" data-filter="archive" aria-pressed="false">アーカイブ</button>
-      </div>
-      <!-- 種別で絞り込み。「すべての種別」のあとに、一覧にある種別のボタンを event-log.js が足す（種別が1つも無ければ出さない） -->
-      <div class="p-event-log__filter u-hidden" role="group" aria-label="種別で絞り込み" data-type-filter>
-        <button class="p-event-log__filter-button is-active" type="button" data-filter="all" aria-pressed="true">すべての種別</button>
-      </div>
-
-      <p class="p-event-log__message" data-event-log-message role="status">読み込み中…</p>
-      <ul class="p-event-log__list u-hidden" data-event-log-list></ul>
-    </section>
+    <p>公開イベントは、イベクリのアプリの「みんなの記録」に移りました。移動しない場合は、<a href="https://evecre-ver-2-2-1.onrender.com/explore" data-explore-redirect>みんなの記録を開いてください</a>。</p>
   </main>
-
-  <!-- イベントカード。event-log.js が複製して、文字は textContent で入れる
-       JS が探すのは data-card="…" だけ。クラスは見た目のためのもので、変えてよい -->
-  <template data-event-card-template>
-    <li class="p-event-log__item">
-      <a class="c-event-card" href="" data-card="link">
-        <img class="c-event-card__thumb" src="" alt="" loading="lazy" decoding="async" data-card="thumb">
-        <div class="c-event-card__body">
-          <span class="c-event-card__label" data-card="label"></span>
-          <span class="c-event-card__type" data-card="type"></span>
-          <h2 class="c-event-card__title" data-card="title"></h2>
-          <p class="c-event-card__date" data-card="date"></p>
-          <p class="c-event-card__venue" data-card="venue"></p>
-        </div>
-      </a>
-    </li>
-  </template>
-
-  <!-- 種別の絞り込みボタン1つ。event-log.js が複製して data-filter と文字を入れる -->
-  <template data-type-filter-template>
-    <button class="p-event-log__filter-button" type="button" data-filter="" aria-pressed="false"></button>
-  </template>
-
-  <footer class="l-footer">
-    <small class="l-footer__copyright">&copy; イベクリ</small>
-  </footer>
 </body>
 </html>

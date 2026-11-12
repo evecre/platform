@@ -4,76 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>つまずいたこと | イベクリ</title>
-  <meta name="description" content="イベクリで公開されたイベントの「つまずいたこと」と「次にやるなら」を、イベントをまたいで集めたページです。タグで絞り込めます。">
+  <title>みんなの記録に移動します | イベクリ</title>
   <link rel="icon" href="/favicon.ico" sizes="48x48">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/common/evecre-icon-32.png">
-  <link rel="apple-touch-icon" href="/assets/img/common/evecre-icon-192.png">
   <link rel="stylesheet" href="/assets/css/style.css">
-  <script type="module" src="/assets/js/pages/event-struggles.js"></script>
+  <!-- 公開イベントの一覧・詳細は、本体の「みんなの記録」に移した（指示書 05）。古い URL で来た人をそこへ移すだけのページ -->
+  <script type="module" src="/assets/js/pages/explore-redirect.js"></script>
 </head>
 <body>
-  <header class="l-header">
-    <!-- TODO: ロゴ画像（assets/img/common/）に差し替える -->
-    <a class="l-header__logo" href="/">イベクリ</a>
-    <nav class="l-header__nav" aria-label="サイト内">
-      <ul class="l-header__list">
-        <li class="l-header__item"><a class="l-header__link" href="/">Top</a></li>
-        <li class="l-header__item"><a class="l-header__link" href="/pages/event-log/">イベント一覧</a></li>
-      </ul>
-    </nav>
-  </header>
-
   <main class="l-main">
-    <section class="p-event-struggles">
-      <div class="p-event-struggles__head">
-        <h1 class="p-event-struggles__title">つまずいたこと</h1>
-        <p class="p-event-struggles__count u-hidden" data-struggles-count aria-live="polite"></p>
-      </div>
-      <p class="p-event-struggles__lead">公開されたイベントの振り返りから、つまずいた記録と「次にやるなら」を集めました。自分の困りごとに近いものから読めます。</p>
-
-      <div class="p-event-struggles__filter" role="group" aria-label="タグで絞り込み">
-        <button class="p-event-struggles__filter-button is-active" type="button" data-filter="all" aria-pressed="true">すべて</button>
-        <button class="p-event-struggles__filter-button" type="button" data-filter="企画" aria-pressed="false">企画</button>
-        <button class="p-event-struggles__filter-button" type="button" data-filter="運営" aria-pressed="false">運営</button>
-        <button class="p-event-struggles__filter-button" type="button" data-filter="制作" aria-pressed="false">制作</button>
-        <button class="p-event-struggles__filter-button" type="button" data-filter="広報" aria-pressed="false">広報</button>
-      </div>
-
-      <!-- 読み込みの進み具合・0件・失敗のメッセージ -->
-      <p class="p-event-struggles__message" data-struggles-message role="status">読み込み中…</p>
-      <ol class="p-event-struggles__list u-hidden" data-struggles-list></ol>
-      <!-- 取れた分だけで止まったとき（混み合い・上限） -->
-      <p class="p-event-struggles__notice u-hidden" data-struggles-notice></p>
-
-      <a class="p-event-struggles__back" href="/pages/event-log/">イベント一覧へ戻る</a>
-    </section>
+    <p>公開イベントは、イベクリのアプリの「みんなの記録」に移りました。移動しない場合は、<a href="https://evecre-ver-2-2-1.onrender.com/explore" data-explore-redirect>みんなの記録を開いてください</a>。</p>
   </main>
-
-  <!-- つまずいた記録1件。event-struggles.js が複製して、文字は textContent で入れる
-       JS が探すのは data-struggle="…" だけ。クラスは見た目のためのもので、変えてよい -->
-  <template data-struggle-template>
-    <li class="p-event-struggles__item">
-      <dl class="p-event-struggles__review">
-        <div class="p-event-struggles__review-row" data-struggle="struggleRow">
-          <dt class="p-event-struggles__review-term">困ったこと</dt>
-          <dd class="p-event-struggles__review-desc" data-struggle="struggle"></dd>
-        </div>
-        <div class="p-event-struggles__review-row">
-          <dt class="p-event-struggles__review-term">次にやるなら</dt>
-          <dd class="p-event-struggles__review-desc" data-struggle="solution"></dd>
-        </div>
-      </dl>
-      <p class="p-event-struggles__source">
-        <a class="p-event-struggles__event" href="" data-struggle="event"></a>
-        <span class="p-event-struggles__task" data-struggle="task"></span>
-      </p>
-      <ul class="p-event-struggles__tags" data-struggle="tags"></ul>
-    </li>
-  </template>
-
-  <footer class="l-footer">
-    <small class="l-footer__copyright">&copy; イベクリ</small>
-  </footer>
 </body>
 </html>

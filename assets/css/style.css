@@ -18,16 +18,11 @@
 
 /* Component（c-） */
 @import url("object/component/_step-indicator.css");
-@import url("object/component/_event-card.css");
 @import url("object/component/_character.css");
 @import url("object/component/_chatbot.css");
 
 /* Project（p-） */
 @import url("object/project/_hero.css");
-@import url("object/project/_event-log.css");
-@import url("object/project/_event-detail.css");
-@import url("object/project/_event-knowledge.css");
-@import url("object/project/_event-struggles.css");
 
 /* Utility（u-） */
 @import url("object/utility/_hidden.css");

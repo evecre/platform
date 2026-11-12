@@ -4,119 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <!-- title は読み込み中に見えるもの。読み込めたら event-detail.js がイベント名に書き換える -->
-  <title>イベントの記録 | イベクリ</title>
-  <meta name="description" content="イベクリで公開されたイベントの記録です。開催の情報と、開催後のナレッジ（つまずいたこと・次にやるなら・うまくいったこと）を読めます。">
+  <title>みんなの記録に移動します | イベクリ</title>
   <link rel="icon" href="/favicon.ico" sizes="48x48">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/common/evecre-icon-32.png">
-  <link rel="apple-touch-icon" href="/assets/img/common/evecre-icon-192.png">
   <link rel="stylesheet" href="/assets/css/style.css">
-  <script type="module" src="/assets/js/pages/event-detail.js"></script>
+  <!-- 公開イベントの一覧・詳細は、本体の「みんなの記録」に移した（指示書 05）。古い URL で来た人をそこへ移すだけのページ -->
+  <script type="module" src="/assets/js/pages/explore-redirect.js"></script>
 </head>
 <body>
-  <header class="l-header">
-    <!-- TODO: ロゴ画像（assets/img/common/）に差し替える -->
-    <a class="l-header__logo" href="/">イベクリ</a>
-    <nav class="l-header__nav" aria-label="サイト内">
-      <ul class="l-header__list">
-        <li class="l-header__item"><a class="l-header__link" href="/">Top</a></li>
-        <li class="l-header__item"><a class="l-header__link" href="/pages/event-log/">イベント一覧</a></li>
-      </ul>
-    </nav>
-  </header>
-
   <main class="l-main">
-    <article class="p-event-detail">
-      <p class="p-event-detail__message" data-detail-message role="status">読み込み中…</p>
-
-      <!-- event-detail.js が API の値を textContent で入れてから表示する -->
-      <div class="p-event-detail__content u-hidden" data-detail-content>
-        <img class="p-event-detail__header-image" data-detail="headerImage" src="" alt="">
-        <span class="p-event-detail__label" data-detail="label"></span>
-        <h1 class="p-event-detail__title" data-detail="title"></h1>
-        <p class="p-event-detail__summary" data-detail="summary"></p>
-
-        <dl class="p-event-detail__info">
-          <div class="p-event-detail__info-row">
-            <dt class="p-event-detail__info-term">開催日時</dt>
-            <dd class="p-event-detail__info-desc">
-              <ul class="p-event-detail__dates" data-detail="dates"></ul>
-            </dd>
-          </div>
-          <div class="p-event-detail__info-row" data-detail="venueRow">
-            <dt class="p-event-detail__info-term">場所</dt>
-            <dd class="p-event-detail__info-desc" data-detail="venue"></dd>
-          </div>
-          <div class="p-event-detail__info-row" data-detail="typeRow">
-            <dt class="p-event-detail__info-term">種別</dt>
-            <dd class="p-event-detail__info-desc" data-detail="type"></dd>
-          </div>
-          <!-- 最終更新日：この記録の新しさ（基礎情報か、公開している記録が最後に変わった日） -->
-          <div class="p-event-detail__info-row" data-detail="lastUpdatedRow">
-            <dt class="p-event-detail__info-term">最終更新</dt>
-            <dd class="p-event-detail__info-desc" data-detail="lastUpdated"></dd>
-          </div>
-        </dl>
-
-        <!-- 目的と柱。ナレッジの前に置く（本体のアーカイブと同じ並び）。値が無い項目は event-detail.js が外す -->
-        <section class="p-event-detail__purpose" data-detail="purposeSection" aria-label="このイベントの目的">
-          <div class="p-event-detail__purpose-block" data-detail="purposeBlock">
-            <h2 class="p-event-detail__purpose-title">目的</h2>
-            <p class="p-event-detail__purpose-text" data-detail="purpose"></p>
-          </div>
-          <div class="p-event-detail__purpose-block" data-detail="pillarsBlock">
-            <h2 class="p-event-detail__purpose-title">柱</h2>
-            <ul class="p-event-detail__pillars" data-detail="pillars"></ul>
-          </div>
-        </section>
-
-        <section class="p-event-detail__knowledge">
-          <div class="p-event-detail__knowledge-head">
-            <h2 class="p-event-detail__knowledge-title">ナレッジ</h2>
-            <p class="p-event-detail__knowledge-count u-hidden" data-detail="knowledgeCount"></p>
-          </div>
-          <p class="p-event-detail__knowledge-message u-hidden" data-detail="knowledgeMessage"></p>
-          <ol class="p-event-detail__knowledge-list" data-detail="knowledgeList"></ol>
-          <a class="p-event-detail__struggles-link" href="/pages/event-log/struggles/">ほかのイベントの「つまずいたこと」も読む</a>
-        </section>
-      </div>
-
-      <a class="p-event-detail__back" href="/pages/event-log/">イベント一覧へ戻る</a>
-    </article>
+    <p>公開イベントは、イベクリのアプリの「みんなの記録」に移りました。移動しない場合は、<a href="https://evecre-ver-2-2-1.onrender.com/explore" data-explore-redirect>みんなの記録を開いてください</a>。</p>
   </main>
-
-  <!-- ナレッジ（タスクと振り返り）1件分。event-detail.js が複製して使う
-       JS が探すのは data-knowledge="…" だけ。クラスは見た目のためのもので、変えてよい
-       並び：頭（判定・タイトル・タグ）→ 振り返り → 詳しく（本文・画像・ファイル）。振り返りを本文より先に置く -->
-  <template data-knowledge-template>
-    <li class="p-event-knowledge">
-      <div class="p-event-knowledge__head">
-        <span class="p-event-knowledge__outcome" data-knowledge="outcome"></span>
-        <h3 class="p-event-knowledge__title" data-knowledge="title"></h3>
-        <ul class="p-event-knowledge__tags" data-knowledge="tags"></ul>
-      </div>
-      <dl class="p-event-knowledge__review">
-        <div class="p-event-knowledge__review-row" data-knowledge="struggleRow">
-          <dt class="p-event-knowledge__review-term" data-knowledge="firstLabel"></dt>
-          <dd class="p-event-knowledge__review-desc" data-knowledge="struggle"></dd>
-        </div>
-        <div class="p-event-knowledge__review-row">
-          <dt class="p-event-knowledge__review-term" data-knowledge="secondLabel"></dt>
-          <dd class="p-event-knowledge__review-desc" data-knowledge="solution"></dd>
-        </div>
-      </dl>
-      <div class="p-event-knowledge__detail" data-knowledge="detail">
-        <p class="p-event-knowledge__detail-label">詳しく</p>
-        <!-- 本文。見出し・段落・箇条書きは event-detail.js の renderKnowledgeText() が中に作る -->
-        <div class="p-event-knowledge__text" data-knowledge="text"></div>
-        <ul class="p-event-knowledge__images" data-knowledge="images"></ul>
-        <ul class="p-event-knowledge__files" data-knowledge="files"></ul>
-      </div>
-    </li>
-  </template>
-
-  <footer class="l-footer">
-    <small class="l-footer__copyright">&copy; イベクリ</small>
-  </footer>
 </body>
 </html>

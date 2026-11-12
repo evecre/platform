@@ -1,16 +1,13 @@
 // 全ページ共通の初期化。各ページの入口（pages/*.js）の最初で呼ぶ。
 //   展示モードの判定（kiosk.js）。展示中は <html> に .is-kiosk
-//   Top 以外で無操作なら Top に戻る（idleReturn.js。展示モードのときだけ）
-//   チャットボットの起動（chatbot/chatbot.js。config.js の CHATBOT_TOP_ONLY で Top だけにできる）
+//   チャットボットの起動（chatbot/chatbot.js）
 //   「みんなの記録」（本体の /explore）へのリンク（exploreLink.js。展示モードなら ?kiosk=1）
 import { isKiosk } from './kiosk.js';
-import { startIdleReturn } from './idleReturn.js';
 import { startChatbot } from './chatbot/chatbot.js';
-import { CHATBOT_TOP_ONLY } from './config.js';
 import { setupExploreLinks } from './exploreLink.js';
 
 /**
- * @param {{ page: 'top' | 'event-log' | 'event-detail' | 'event-struggles' }} options
+ * @param {{ page: 'top' }} options
  * @returns {{ kiosk: boolean }}
  */
 export function initCommon({ page }) {
@@ -20,8 +17,7 @@ export function initCommon({ page }) {
   root.classList.toggle('is-kiosk', kiosk);
 
   setupExploreLinks();
-  if (kiosk && page !== 'top') startIdleReturn();
-  if (!CHATBOT_TOP_ONLY || page === 'top') startChatbot({ kiosk });
+  startChatbot({ kiosk });
 
   return { kiosk };
 }
