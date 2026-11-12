@@ -7,6 +7,7 @@
 import { createEngine } from './engine.js';
 import { createCharacter, pickCharacter } from '../character.js';
 import { safeUrl } from '../format.js';
+import { exploreHref } from '../exploreLink.js';
 import { CHATBOT_RESET_MS, kioskTime } from '../kiosk.js';
 
 const DATA_BASE = '/assets/data';
@@ -131,7 +132,7 @@ export function startChatbot({ kiosk }) {
     const message = botMessage(item.answer);
 
     const links = (item.links || [])
-      .map((link) => ({ label: link.label, href: safeUrl(link.href) }))
+      .map((link) => ({ label: link.label, href: exploreHref(safeUrl(link.href)) })) // みんなの記録へは、展示モードなら ?kiosk=1
       .filter((link) => link.label && link.href);
     if (links.length) {
       const list = document.createElement('ul');

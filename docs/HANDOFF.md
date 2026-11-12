@@ -18,6 +18,24 @@
 
 ---
 
+## 2026-11-12 — 05 Phase 1：「みんなの記録」（本体の /explore）へのリンク
+
+- 指示書：docs/instructions/05_move-archive.md（Phase 1 まで。ユーザーから「本体の /explore が本番に出た」）
+- ブランチ：`feature/05-move-archive`（main ＋ `chore/top-logo`（Top のロゴ）＋ `docs/explore-kiosk-request` を取り込んで始めた）
+- やったこと：
+  - `config.js` に `EXPLORE_URL`（`https://evecre-ver-2-2-1.onrender.com/explore`）
+  - `assets/js/modules/exploreLink.js`：`exploreHref()`（展示モードなら `?kiosk=1` を足す。EXPLORE_URL の下だけ）・`setupExploreLinks()`（`[data-explore-link]` の href を書き直す。`common.js` から）
+  - Top：ヘッダー「イベント一覧」→「みんなの記録」、アーカイブの画面のボタン「みんなの記録を見る」と、アプリに移ることが分かる文（仮の文言）。同じタブ
+  - チャットボット：`knowledge-public` の links を本番の /explore（faq.json に URL を直接）・「みんなの記録を見る」。`chatbot.js` は links を `exploreHref()` に通す。patterns に「みんなの記録って何」、keywords に「みんなの記録」
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 25 / 25 件 OK。`check:faq` は 26/31・到達 31/31・誤答 0（変化なし）
+  - ふだん：ヘッダー・ボタン・チャットボットのリンクが `…/explore`。展示モード：3つとも `…/explore?kiosk=1`
+  - 本番の /explore に移ると、本体が `evecre:explore-kiosk` を保存して URL から kiosk を消し、ヘッダーの「イベクリについて」が `https://evecre.pages.dev/?kiosk=1`
+  - コンソールのエラーなし
+- 本体の確認で分かったこと：本体の依頼文（kiosk で戻る・ログインの導線を隠す）は実装済み（`public/js/views/explore.js`）。**`/explore` の応答に `X-Robots-Tag` が付いていない**（本体の指示書 §2）。本体の `index.html` 全体に `<meta name="robots" content="noindex">` があるので検索には載らないが、nofollow とヘッダーが無い
+- 次にやること：Phase 2（一覧・詳細・索引を消す、古い URL から移す小さなページ、使わなくなった JS・CSS・データを消す）
+- 本体側に頼むこと：`/explore` に `X-Robots-Tag: noindex, nofollow`（本体の指示書 §2 のとおり）
+
 ## 2026-11-11 — 05（公開イベントの閲覧を本体に移す）の調査と決定
 
 - 指示書：docs/instructions/05_move-archive.md（まだ始めない。本体の `/explore` が本番に出てから。本体は `243cbcb` でまだ無い）
