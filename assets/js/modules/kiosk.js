@@ -2,7 +2,7 @@
 //   ?kiosk=1 で開始、?kiosk=0 で解除。sessionStorage に残すので、ページを移っても続く
 //   ?kiosk=1&fast=1 で時間を 10 分の 1 にする（確認用）
 
-export const AUTO_ADVANCE_MS = 30000; // Top：次の画面へ自動で進む間隔
+export const AUTO_ADVANCE_MS = 15000; // Top：次の画面へ自動で進む間隔（2026-11-14 に 30秒 → 15秒）
 export const RESUME_AFTER_MS = 30000; // Top：操作が止まってから自動送りを再開するまで
 export const IDLE_RETURN_MS = 180000; // Top 以外（ヘルプ）：操作が無ければ Top に戻るまで
 export const CHATBOT_RESET_MS = 180000; // チャットボット：操作が無ければ閉じて最初の状態に戻すまで
