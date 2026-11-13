@@ -1,51 +1,77 @@
 /* ==========================================================================
-   Layout / stage — Top のスクロールの舞台（仕組みに必要な最小限だけ）
-   scene（section）はスクロールの長さだけを持ち、中身（__frame）は画面に固定する。
-   どの scene を見せるかは JS（scrollStage.js）が付ける data-state で決まる。
-   ★JS が動く前（.is-ready が無いとき）は、普通の縦並びのページとして読める。
+   Layout / stage — Top の舞台（紙芝居。1回の操作で1画面ずつ切り替わる。仕組みは scrollStage.js）
+   画面（__scene）の状態：data-state="before | entering | active | leaving | after"
+   舞台（l-stage）に付く：.is-ready（JS が動いた）・data-current（今の画面の data-scene）・data-direction（forward / back / loop）
+   ★JS が動く前（.is-ready が無いとき）は、普通の縦並びのページとして読める
+   画面の中の要素の出現・後退は layout/_stage-motion.css、値は foundation/_motion.css
    ========================================================================== */
 
-/* 最後の scene も最後のステップまでスクロールできるように、一画面分の余白を足す */
-.l-stage.is-ready {
-  padding-bottom: 100svh;
+/* ページ自体はスクロールさせない（Top だけ。scrollStage.js が <html> に付ける） */
+.is-stage-locked,
+.is-stage-locked body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
-/* --- scene のスクロールの長さ（data-steps × 100svh）---------------------
-   ★data-steps を 9 以上にするときは、ここに行を足す */
-.l-stage.is-ready .l-stage__scene { height: 100svh; }
-.l-stage.is-ready .l-stage__scene[data-steps="2"] { height: 200svh; }
-.l-stage.is-ready .l-stage__scene[data-steps="3"] { height: 300svh; }
-.l-stage.is-ready .l-stage__scene[data-steps="4"] { height: 400svh; }
-.l-stage.is-ready .l-stage__scene[data-steps="5"] { height: 500svh; }
-.l-stage.is-ready .l-stage__scene[data-steps="6"] { height: 600svh; }
-.l-stage.is-ready .l-stage__scene[data-steps="7"] { height: 700svh; }
-.l-stage.is-ready .l-stage__scene[data-steps="8"] { height: 800svh; }
+/* 舞台は画面いっぱいに固定。背景は1枚で、色だけが画面ごとに替わる（--stage-bg は object/project/_top.css） */
+.l-stage.is-ready {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none; /* スワイプは scrollStage.js が受ける */
+  background-color: var(--stage-bg, var(--color-bg));
+  transition: background-color var(--motion-bg-duration) var(--motion-bg-ease);
+}
 
-/* --- 画面に固定する中身 -------------------------------------------------- */
+/* --- 画面 -------------------------------------------------------------------- */
+.l-stage.is-ready .l-stage__scene {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.l-stage.is-ready .l-stage__scene:is([data-state="entering"], [data-state="active"], [data-state="leaving"]) {
+  visibility: visible;
+}
+
+.l-stage.is-ready .l-stage__scene:is([data-state="entering"], [data-state="active"]) {
+  z-index: 2; /* 出てくる画面を、去る画面の上に */
+  pointer-events: auto;
+}
+
+.l-stage.is-ready .l-stage__scene[data-state="leaving"] {
+  z-index: 1;
+}
+
+/* 画面の中身の枠。画面いっぱい */
 .l-stage__frame {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: var(--space-5);
+  position: relative;
   min-height: 100svh;
-  /* 右は現在位置のドットに重ならない幅を空ける */
-  padding: var(--space-8) var(--space-7) var(--space-8) var(--space-5);
 }
 
 .l-stage.is-ready .l-stage__frame {
-  position: fixed;
-  inset: 0;
-  height: 100svh;
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
 }
 
-/* active 以外は隠す。ただし隠すのを --duration-slow だけ遅らせ、引いていく動きを見せられるようにする。
-   ★scene や __frame 自体に transition を書くときは、visibility を消さないように
-     「transition: opacity …, visibility 0s linear var(--duration-slow);」のように並べて書く */
-.l-stage.is-ready .l-stage__scene:not([data-state="active"]) .l-stage__frame {
-  visibility: hidden;
+/* --- 画面をまたいで残る要素の層（キャラクター・howtouse のスマホ） ---
+   重なり：去る画面（1）＜ この層（1。HTML で後ろにあるので上）＜ 今の画面（2）。
+   画面は背景を持たない（舞台の背景が見える）ので、この層は今の画面の後ろから透けて見える。
+   背景を持つ画面（09 の円など）は、この層を覆い隠せる。
+   位置・大きさは、画面ごとの CSS 変数で object/project/_top.css が決める（l-stage[data-current="…"]） */
+.l-stage__persistent {
+  display: none;
+}
+
+.l-stage.is-ready .l-stage__persistent {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
   pointer-events: none;
-  transition: visibility 0s linear var(--duration-slow);
 }
 
 /* --- 現在位置のドット（c-step-indicator）の置き場所 ----------------------- */

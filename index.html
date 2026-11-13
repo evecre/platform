@@ -11,115 +11,151 @@
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/common/evecre-icon-32.png">
   <link rel="apple-touch-icon" href="/assets/img/common/evecre-icon-192.png">
+  <!-- 英字の見出しのフォント（Ultra）。日本語（Adobe Fonts）は JS で読む（assets/js/modules/webfonts.js） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ultra&display=swap">
   <link rel="stylesheet" href="/assets/css/style.css">
   <script type="module" src="/assets/js/pages/top.js"></script>
 </head>
 
 <body>
-  <header class="l-header">
-    <!-- TODO: ロゴ画像（assets/img/common/）に差し替える -->
-    <a class="l-header__logo" href="/">イベクリ</a>
+  <!-- Top のヘッダーは画面の上に重ねる（l-header--overlay）。ロゴは置かない（Figma のとおり） -->
+  <header class="l-header l-header--overlay">
     <nav class="l-header__nav" aria-label="サイト内">
       <ul class="l-header__list">
-        <li class="l-header__item"><a class="l-header__link" href="/" aria-current="page">Top</a></li>
+        <li class="l-header__item"><a class="l-header__link" href="/" aria-current="page">TOP</a></li>
         <li class="l-header__item"><a class="l-header__link" href="https://evecre-ver-2-2-1.onrender.com/explore" data-explore-link>みんなの記録</a></li>
         <li class="l-header__item"><a class="l-header__link" href="/pages/help/">ヘルプ</a></li>
       </ul>
     </nav>
   </header>
 
+  <!-- Top の舞台（紙芝居）。仕組みは scrollStage.js、動きの付け方は assets/css/README.md §4
+       ★見える要素には data-enter（出現）を付ける。data-order＝順番、data-leave＝後退
+       ★Phase 1（2026-11-13）：画像の場所は仮の四角（p-top-ph）。Phase 2〜4 で画像に置き換える -->
   <main class="l-main l-stage" data-stage>
-    <!-- scene の足し方・data-state / --progress / data-step の使い方は assets/css/README.md -->
 
-    <section class="p-hero l-stage__scene" data-scene="hero" data-steps="1">
+    <!-- 01-hero -->
+    <section class="p-top-hero l-stage__scene" data-scene="hero">
       <div class="l-stage__frame">
-        <!-- TODO: ロゴ画像 -->
-        <!-- TODO: 文言 -->
-        <h1 class="p-hero__title"><img src="assets/img/common/logo-with-tagline.svg" alt="イベクリ"></h1>
-        <p class="p-hero__lead">目的を見失わない、学生のイベントづくり。</p>
+        <h1 class="p-top-at p-top-hero__title" data-enter="fade-up" data-order="1">
+          <img class="p-top-hero__logo" src="/assets/img/common/logo-with-tagline.svg" alt="イベクリ イベントづくりを楽しく" fetchpriority="high">
+        </h1>
+        <div class="p-top-at p-top-ph p-top-hero__landform p-top-hero__landform--1" data-enter="slide-left" data-order="2">landform01</div>
+        <div class="p-top-at p-top-ph p-top-hero__landform p-top-hero__landform--2" data-enter="slide-right" data-order="2">landform02</div>
+        <div class="p-top-at p-top-ph p-top-hero__landform p-top-hero__landform--3" data-enter="slide-left" data-order="2">landform03</div>
+        <div class="p-top-at p-top-ph p-top-hero__ipad" data-enter="fade-up" data-order="5">ipad</div>
+        <div class="p-top-at p-top-ph p-top-hero__chara" data-enter="pop" data-order="2">キャラクター＋mizu-phone</div>
       </div>
     </section>
 
-    <section class="p-top-problem l-stage__scene" data-scene="problem" data-steps="2">
+    <!-- 02-about（キャラクターは画面をまたぐので l-stage__persistent にある） -->
+    <section class="p-top-about l-stage__scene" data-scene="about">
       <div class="l-stage__frame">
-        <!-- TODO: 文言 -->
-        <h2 class="p-top-problem__title">「終わらせること」が目的になっていませんか</h2>
-        <p class="p-top-problem__text">準備に追われるうちに、なぜこのイベントをやるのかが見えなくなる。</p>
-        <p class="p-top-problem__text">気づけば「とにかく終わらせること」が目的になってしまう。</p>
+        <div class="p-top-at p-top-about__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
+          <h2 class="p-top-about__title">イベクリとは？</h2>
+          <p class="p-top-about__lead">イベントづくりを支えて、その経験を次へつなぐ。<br>イベントをつくる人のためのプラットフォームです。</p>
+        </div>
       </div>
     </section>
 
-    <section class="p-top-concept l-stage__scene" data-scene="concept" data-steps="3">
+    <!-- 03-about（キャラクターは 02 から縮小しながら移る） -->
+    <section class="p-top-team l-stage__scene" data-scene="team">
       <div class="l-stage__frame">
-        <!-- TODO: 文言 -->
-        <h2 class="p-top-concept__title">イベクリがすること</h2>
-        <ol class="p-top-concept__list">
-          <li class="p-top-concept__item">目的を定める</li>
-          <li class="p-top-concept__item">目的を見失わない</li>
-          <li class="p-top-concept__item">目的を共有する</li>
-        </ol>
+        <div class="p-top-at p-top-ph p-top-team__landform" data-enter="fade-up" data-order="2">about-landform</div>
+        <div class="p-top-at p-top-team__text" data-enter="fade-up" data-order="3" data-leave="fade-up-out">
+          <p class="p-top-team__paragraph">学園祭、展示会、ワークショップ。<br>はじめてイベントをつくるチームも、<br>毎年つづくイベントを受け継ぐチームも。</p>
+          <p class="p-top-team__paragraph">イベクリは、そんなつくり手たちがチームで<br>迷わず進み、つくったものを誰かに届け、<br>得た経験を次の誰かに渡せるよう支えます。</p>
+        </div>
+        <div class="p-top-at p-top-ph p-top-team__ui" data-enter="slide-right" data-order="3">UI（スマホ＋PC）</div>
       </div>
     </section>
 
-    <section class="p-top-world l-stage__scene" data-scene="world" data-steps="1">
+    <!-- 04〜08 howtouse（スマホは画面をまたぐので l-stage__persistent にある） -->
+    <section class="p-top-step p-top-step--1 l-stage__scene" id="how-to" data-scene="step-1">
       <div class="l-stage__frame">
-        <!-- TODO: 文言 -->
-        <h2 class="p-top-world__title">イベントという山を、3体の仲間と登る</h2>
-        <p class="p-top-world__text">水・森・岩のキャラクターが、山登りに付き添います。</p>
-        <!-- TODO: キャラクターの画像（assets/img/top/） -->
-        <div class="p-top-world__visual" role="img" aria-label="水・森・岩のキャラクター（画像は準備中）"></div>
+        <div class="p-top-at p-top-ph p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out">mountaineering</div>
+        <div class="p-top-at p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
+          <p class="p-top-step__number">STEP 1</p>
+          <h2 class="p-top-step__title">イベントをつくる</h2>
+          <p class="p-top-step__paragraph">イベントの名前や開催日など、<br>いくつかの質問に答えるだけ。</p>
+          <p class="p-top-step__paragraph">あなたのチームのイベントページが<br>できあがります。</p>
+        </div>
       </div>
     </section>
 
-    <section class="p-top-howto l-stage__scene" id="how-to" data-scene="how-to" data-steps="4">
+    <section class="p-top-step p-top-step--2 l-stage__scene" data-scene="step-2">
       <div class="l-stage__frame">
-        <!-- TODO: 文言 -->
-        <h2 class="p-top-howto__title">使い方</h2>
-        <ol class="p-top-howto__list">
-          <li class="p-top-howto__item">イベントを作る</li>
-          <li class="p-top-howto__item">目的を決める</li>
-          <li class="p-top-howto__item">タスクを進める</li>
-          <li class="p-top-howto__item">振り返る</li>
-        </ol>
+        <div class="p-top-at p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
+          <p class="p-top-step__number">STEP 2</p>
+          <h2 class="p-top-step__title">仲間を招待する</h2>
+          <p class="p-top-step__paragraph">招待リンクを送って、<br>メンバーを集めましょう。</p>
+          <p class="p-top-step__paragraph">参加するときに得意なことを答えて<br>もらえるので、チームのことがよく<br>分かります。</p>
+        </div>
+        <div class="p-top-at p-top-ph p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out">role</div>
       </div>
     </section>
 
-    <section class="p-top-features l-stage__scene" data-scene="features" data-steps="1">
+    <section class="p-top-step p-top-step--3 l-stage__scene" data-scene="step-3">
       <div class="l-stage__frame">
-        <!-- TODO: 文言 -->
-        <h2 class="p-top-features__title">できること</h2>
-        <ul class="p-top-features__list">
-          <li class="p-top-features__item">タスクの管理</li>
-          <li class="p-top-features__item">山で進み具合が見える</li>
-          <li class="p-top-features__item">振り返り・引き継ぎ</li>
-          <li class="p-top-features__item">通知</li>
-        </ul>
+        <div class="p-top-at p-top-ph p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out">planning</div>
+        <div class="p-top-at p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
+          <p class="p-top-step__number">STEP 3</p>
+          <h2 class="p-top-step__title">やることを決める</h2>
+          <p class="p-top-step__paragraph">イベントに必要なやることを書き出します。</p>
+          <p class="p-top-step__paragraph">何から手をつければいいか迷ったら、<br>キャラクターたちが次にやることを<br>提案してくれます。</p>
+        </div>
       </div>
     </section>
 
-    <section class="p-top-archive l-stage__scene" data-scene="archive" data-steps="1">
+    <section class="p-top-step p-top-step--4 l-stage__scene" data-scene="step-4">
       <div class="l-stage__frame">
-        <!-- TODO: 文言 -->
-        <h2 class="p-top-archive__title">公開されたイベント</h2>
-        <p class="p-top-archive__text">イベクリで作られたイベントの告知と、開催後の振り返りを、イベクリのアプリの「みんなの記録」で見られます。いいねやコメントもできます。</p>
-        <!-- 本体（イベクリのアプリ）に移る。href は common.js が config.js の EXPLORE_URL で書き直す（展示モードなら ?kiosk=1） -->
-        <a class="p-top-archive__link" href="https://evecre-ver-2-2-1.onrender.com/explore" data-explore-link>みんなの記録を見る</a>
+        <div class="p-top-at p-top-ph p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out">summit</div>
+        <div class="p-top-at p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
+          <p class="p-top-step__number">STEP 4</p>
+          <h2 class="p-top-step__title">分担して進める</h2>
+          <p class="p-top-step__paragraph">担当を決めて、締め切りを設定。<br>終わったら完了を報告します。</p>
+          <p class="p-top-step__paragraph">やることが片付くたびに、<br>チームは山の頂上（イベント当日）<br>へ近づいていきます。</p>
+        </div>
       </div>
     </section>
 
-    <section class="p-top-closing l-stage__scene" data-scene="closing" data-steps="1">
+    <section class="p-top-step p-top-step--5 l-stage__scene" data-scene="step-5">
       <div class="l-stage__frame">
-        <!-- TODO: 文言 -->
-        <h2 class="p-top-closing__title">イベクリについて</h2>
-        <p class="p-top-closing__text">イベクリは、学生のイベントづくりの研究から生まれました。</p>
+        <div class="p-top-at p-top-ph p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out">writing</div>
+        <div class="p-top-at p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
+          <p class="p-top-step__number">STEP 5</p>
+          <h2 class="p-top-step__title">イベントを振り返る</h2>
+          <p class="p-top-step__paragraph">イベントが終わったら、<br>困ったこととその乗り越え方を残しましょう。</p>
+          <p class="p-top-step__paragraph">つまずいた経験こそ、<br>次につくる人にとっていちばんのヒントになります。</p>
+        </div>
       </div>
     </section>
+
+    <!-- 09（STEP 6）。中の要素は個別の出現なし（元からある感じ）。円形の出現は Phase 4 -->
+    <section class="p-top-connect l-stage__scene" data-scene="connect">
+      <div class="l-stage__frame">
+        <div class="p-top-at p-top-connect__content" data-enter="none">
+          <p class="p-top-step__number">STEP 6</p>
+          <h2 class="p-top-step__title">公開して、つなぐ</h2>
+          <p class="p-top-step__paragraph">イベントを告知として公開したり、振り返りをナレッジとして公開したりできます。次の代は、公開されたアーカイブを引き継いで新しいイベントをはじめられます。</p>
+          <!-- 本体の「みんなの記録」。href は common.js が config.js の EXPLORE_URL で書き直す（展示モードなら ?kiosk=1） -->
+          <a class="p-top-connect__button" href="https://evecre-ver-2-2-1.onrender.com/explore" data-explore-link>みんなの記録</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 画面をまたいで残る要素。位置・大きさは画面ごとの CSS 変数（object/project/_top.css の .l-stage[data-current="…"]） -->
+    <div class="l-stage__persistent" aria-hidden="true">
+      <div class="p-top-at p-top-ph p-top-chara">キャラクター（02→03）</div>
+      <div class="p-top-at p-top-ph p-top-phone">スマホ（04〜08）</div>
+    </div>
 
     <nav class="c-step-indicator l-stage__indicator" data-stage-indicator aria-label="画面の位置"></nav>
   </main>
 
   <footer class="l-footer">
-    <!-- TODO: 文言 -->
     <small class="l-footer__copyright">&copy; イベクリ</small>
   </footer>
 </body>

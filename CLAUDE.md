@@ -66,7 +66,7 @@ robots.txt  _headers               検索エンジン対策（§6）
 - Project から Component の中身を直接上書きしない。必要なら `c-` に modifier を足す
 - `!important` 禁止（`u-hidden` だけ例外）。CSS Nesting を使わない。`id` にスタイルを当てない
 - 色・サイズを直書きしない。`foundation/_variables.css` に名前を付けてから使う
-- 状態は `is-` クラス（`is-active` / `is-open`）または `data-state` 属性。JS からスタイルを直接書かない（例外：スクロール量を渡す CSS 変数 `--progress`）
+- 状態は `is-` クラス（`is-active` / `is-open`）または `data-state` 属性。JS からスタイルを直接書かない
 - HTML に `<style>` / `style=""` を書かない
 - 命名は BEM（`p-hero__title` / `c-button--primary`）
 - **見た目はユーザー（Usami）が作り込む**。Claude Code は構造と動きの仕組みを作り、装飾は最小限（仮の配置・仮の文字サイズ）に留める
@@ -92,7 +92,7 @@ robots.txt  _headers               検索エンジン対策（§6）
 ## 7. 展示モード
 
 - URL に `?kiosk=1` が付いたときだけ有効。`sessionStorage` に保存し、ページを移っても続く（`?kiosk=0` で解除）
-- **Top**：30秒ごとに次の画面へ自動で進む。最後まで行ったら最初へ。ユーザーが操作したら止め、30秒操作が無ければ再開
+- **Top**：30秒ごとに次の画面へ自動で進む。最後（09）まで行ったら最初（01）へ（スクロールでは 09 の次へ進まない）。ユーザーが操作したら止め、30秒操作が無ければ再開
 - **Top 以外（ヘルプ）**：3分間操作（スクロール・タッチ・クリック・キー入力）が無ければ Top に戻る（`idleReturn.js`・`IDLE_RETURN_MS`。05 で一度消し、ヘルプで戻した）
 - **みんなの記録（本体）**：リンクに `?kiosk=1` を付けて移る（`exploreLink.js`）。本体が3分操作が無ければ `https://evecre.pages.dev/?kiosk=1` に戻す。展示中はログイン・コメントの入力欄を出さない（本体の `public/js/views/explore.js`、依頼文 `docs/requests/main-app-explore-kiosk-return.md`）
   - ★本体が戻す先は `PUBLIC_SITE_ORIGINS` の localhost でない値（今は本番の pages.dev）。会場でローカル（localhost:5173）で動かしても、戻る先は本番の Top になる
@@ -117,12 +117,9 @@ robots.txt  _headers               検索エンジン対策（§6）
 
 ## 10. 作った仕組み（01 で追加）
 
-- **Top のスクロールの舞台**：`assets/js/modules/scrollStage.js` ＋ `assets/css/layout/_stage.css`
-  - `section.l-stage__scene` はスクロールの長さだけ（`data-steps` × 100svh）。中の `.l-stage__frame` を画面に固定して見せる（指示書の「section を sticky」だと scene の境目で画面がスライドするため、こうした）
-  - JS が付けるのは `data-state`（before / active / after）、`--progress`、`data-step` だけ。見せ方は `p-` の CSS で作る。使い方と scene の足し方は `assets/css/README.md` §4
-  - `createScrollStage()` は `{ goTo, next, prev, current, count }` を返す（展示モードの自動送りで使う）
+- **Top の舞台**：06 で紙芝居（1回の操作で1画面）に作り直した。§15
 - **展示モード**：`assets/js/modules/kiosk.js` に判定と時間の定数（`AUTO_ADVANCE_MS` / `RESUME_AFTER_MS` / `CHATBOT_RESET_MS`）。sessionStorage のキーは `evecre:kiosk`（値 `1` / `fast`）。`?kiosk=1&fast=1` で時間が 10 分の 1
-  - Top の自動送り：`autoAdvance.js`（操作＝wheel / touchstart / pointerdown / keydown。scroll は自動送り自身が起こすので含めない）。最後から最初へは瞬時に戻す
+  - Top の自動送り：`autoAdvance.js`（操作＝wheel / touchstart / pointerdown / keydown）。最後の次は `goTo(0, { direction: 'loop' })`（09 → 01 の見せ方は CSS の `[data-direction="loop"]`。06 Phase 5）。最初の画面が出てから始める（`stage.ready`）
   - Top 以外の無操作で戻る：`idleReturn.js`（操作に scroll も含める。`location.replace` で戻る。`common.js` が page が top 以外のとき起動）
   - チャットボットは開いたとき `chatbot:open`、閉じたとき `chatbot:close` を **document で**発火すること（自動送りが止まる・再開する）
   - 展示中は `<html class="is-kiosk">`
@@ -177,4 +174,20 @@ robots.txt  _headers               検索エンジン対策（§6）
 - 検索：空白で区切った語が**すべて**含まれる記事。重みはタイトル 3・キーワード 2・概要と本文 1。文字はチャットボットと同じ normalize（ひらがな・カタカナ・全角半角・`synonyms.json` の類義語と読みがな・語尾）でそろえる。日本語は単語に分けないので、「招待リンク」は1つの語として探す
 - CSS：`component/_help-search.css`（検索の欄。`--compact`）・`_help-list.css`（記事の一覧）・`_breadcrumb.css`（パンくず）・`project/_help.css`（3ページ）
 - お問い合わせのボタンは置いていない（行き先が無い。できたら足す）
+
+## 15. Top の見た目と画面の切り替え（06 で作り直し）
+
+- 指示書：`docs/instructions/06_top-visual.md`（Usami の回答を入れた版。`docs/` 直下にあった新しい版を写した）。デザインは Figma の comp（基準のフレーム **1728×1117**）。Figma の MCP は月の回数制限があるので、ふだんは Usami が書き出した PDF（`docs/evecre-web.pdf`。commit していない）を見る
+- 画面：`hero`（01）／`about`（02）／`team`（03）／`step-1`〜`step-5`（04〜08。`step-1` は `id="how-to"`）／`connect`（09 STEP 6）
+- 仕組み：`assets/js/modules/scrollStage.js`（`createScrollStage()` が `{ goTo, next, prev, current, count, ready }` を返す）
+  - 1回の操作（ホイール・スワイプ・↓↑ PageDown/Up Space・ドット）で1画面。切り替え中（行き先の画面の CSS 変数 `--scene-lock` の間）は次の入力を受けない。ホイールはひと続きの回転（`WHEEL_GESTURE_GAP` の間が空くまで）で1画面だけ（トラックパッドの慣性で飛ばない）
+  - 画面の `data-state`：before → entering → active → leaving → after。舞台の `data-current`（今の画面）・`data-direction`（forward / back / loop）
+  - ページはスクロールさせない（`<html class="is-stage-locked">`）。フッターは出さない。JS が動かなければ縦並び
+  - `#how-to` など（`id` か `data-scene`）でその画面から開く・移る（チャットボットの `/#how-to`）
+  - ★JS に動きの時間・距離の数字を書かない。値は `foundation/_motion.css`、プリセットは `layout/_stage-motion.css`（`data-enter` / `data-leave` / `data-order`）、位置は `object/project/_top.css`（Figma の座標 `--x/--y/--w/--h`・`--top-u`）。**調整の仕方は `assets/css/README.md` §4**
+  - 舞台の背景は1枚で、色だけが画面ごとに替わる（`--stage-bg`）。画面は背景を持たない（09 だけ持つ）
+  - 画面をまたぐ要素（キャラクター・howtouse のスマホ）は `l-stage__persistent` の1つの要素を、画面ごとの変数で動かす
+- フォント：日本語＝りょうゴシック PlusN（Adobe Fonts の kit `jtx8lwo`。JS だけの kit なので `assets/js/modules/webfonts.js` が読む。★kit のドメインに localhost と evecre.pages.dev が要る）、英字の見出し＝Ultra（Google Fonts。Top の `<head>`）。`--font-family-base` / `--font-family-display`
+- ヘッダー：TOP / みんなの記録 / ヘルプ。ロゴは置かない（全ページ）。Top は舞台の上に重ねる（`l-header--overlay`）
+- Usami の決定（2026-11-13）：08 の文は PDF のとおり（「イベントが終わったら、困ったこととその乗り越え方を残しましょう。」を入れる）／03 の背景は `about-landform`（PDF と違うがこちら）／02 の斜めの線は CSS で描く／04〜08 の丸いイラストと role はテキストと一緒に出る・消える／目の位置は PDF から測る／背景色は PDF から測った値（`--color-top-*`）
 

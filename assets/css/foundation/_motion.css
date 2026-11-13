@@ -1,0 +1,54 @@
+/* ==========================================================================
+   Foundation / motion — Top の動きの値（速さ・距離・イージング・順番の間隔）。★動きの調整はまずここを触る
+   使い方・プリセットの一覧は assets/css/README.md §4
+   ・要素ごとに変えたいときは、その要素の CSS でこの変数を上書きする（例：landform だけ --motion-distance-slide を小さく）
+   ・JS はここの値を数字で持たない（切り替え中の入力の止め方は --scene-lock を JS が読む）
+   ========================================================================== */
+
+:root {
+  /* --- 出現・後退の基本 --- */
+  --motion-duration-enter: 0.8s;    /* 出現（fade-up・slide-left・slide-right）の長さ */
+  --motion-duration-pop: 0.7s;      /* ポンッ（pop / pop-out）の長さ */
+  --motion-duration-leave: 0.6s;    /* 後退（fade-up-out）の長さ */
+  --motion-duration-fade-out: 0.3s; /* 後退の指定が無い要素・戻る（上へ）ときの、短いフェード */
+  --motion-stagger: 0.25s;          /* 順番（data-order）1つぶんの遅れ。順番 n の遅れ＝(n - 1) × これ */
+  --motion-ease-enter: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --motion-ease-leave: cubic-bezier(0.4, 0, 1, 1);
+  --motion-ease-pop: cubic-bezier(0.3, 0.7, 0.4, 1);
+
+  /* --- 距離・大きさ --- */
+  --motion-distance-up: 2.5rem;     /* フェードアップ（下から上へ）・fade-up-out の移動量 */
+  --motion-distance-slide: 2rem;    /* 横からのスライド（landform は要素側で短くする） */
+  --motion-pop-from: 0.6;           /* ポンッの始まりの大きさ */
+  --motion-pop-over: 1.08;          /* ポンッで行き過ぎる大きさ */
+
+  /* --- 画面の切り替え --- */
+  --scene-lock: 1.6s;               /* 切り替え中に次の入力を受け付けない長さ。★その画面の出現が終わる時間（最後の順番の遅れ＋出現の長さ）以上にする。画面ごとに上書きできる */
+  --motion-bg-duration: 0.8s;       /* 背景色が替わる長さ（舞台の背景は1枚で、色だけ替わる） */
+  --motion-bg-ease: ease;
+  --motion-persist-duration: 0.9s;  /* 画面をまたぐ要素（キャラクター・howtouse のスマホ）が次の位置へ移る長さ */
+  --motion-persist-ease: cubic-bezier(0.6, 0, 0.2, 1);
+  --motion-curtain-duration: 0.9s;  /* hero → 02 の白い幕 */
+  --motion-iris-duration: 1.2s;     /* 08 → 09 の円形の出現 */
+  --motion-shrink-duration: 0.9s;   /* 09 → 01 の収縮（展示モード） */
+
+  /* --- hero の雲・09 のスライダー --- */
+  --hero-cloud-speed: 60s;          /* 雲が横断にかかる時間（遅め） */
+  --slider-speed: 40s;              /* スライダーが1周する時間 */
+}
+
+/* 動きを減らす設定：移動・拡大縮小をやめてフェードだけにする（雲・スライダー・目は各画面の CSS / JS で止める） */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-distance-up: 0px;
+    --motion-distance-slide: 0px;
+    --motion-pop-from: 1;
+    --motion-pop-over: 1;
+    --motion-stagger: 0s;
+    --motion-duration-enter: 0.3s;
+    --motion-duration-pop: 0.3s;
+    --motion-duration-leave: 0.2s;
+    --motion-persist-duration: 0s;
+    --scene-lock: 0.5s; /* 0 にしない（トラックパッドの慣性で何画面も進まないように） */
+  }
+}

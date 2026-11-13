@@ -5,6 +5,7 @@
 /* Foundation */
 @import url("foundation/_reset.css");
 @import url("foundation/_variables.css");
+@import url("foundation/_motion.css");
 @import url("foundation/_base.css");
 @import url("foundation/_typography.css");
 @import url("foundation/_animation.css");
@@ -14,6 +15,7 @@
 @import url("layout/_main.css");
 @import url("layout/_footer.css");
 @import url("layout/_stage.css");
+@import url("layout/_stage-motion.css");
 @import url("layout/_chatbot.css");
 
 /* Component（c-） */
@@ -25,7 +27,7 @@
 @import url("object/component/_breadcrumb.css");
 
 /* Project（p-） */
-@import url("object/project/_hero.css");
+@import url("object/project/_top.css");
 @import url("object/project/_help.css");
 
 /* Utility（u-） */

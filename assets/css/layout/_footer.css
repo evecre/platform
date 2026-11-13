@@ -3,8 +3,6 @@
    ========================================================================== */
 
 .l-footer {
-  /* Top では、画面に固定した scene の上に重ねて出す */
-  position: relative;
   background-color: var(--color-bg);
   padding: var(--space-5) var(--space-4);
   text-align: center;
@@ -13,4 +11,9 @@
 .l-footer__copyright {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
+}
+
+/* Top（紙芝居）ではページがスクロールしないので出さない */
+.is-stage-locked .l-footer {
+  display: none;
 }

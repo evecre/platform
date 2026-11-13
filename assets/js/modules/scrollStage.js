@@ -1,170 +1,129 @@
-// Top のスクロールの舞台。スクロール量に応じて各 scene に状態を付ける。
-//   data-state="before | active | after"、CSS 変数 --progress（0〜1）、data-step="0 | 1 | …"
-// scene（section）はスクロールの長さ（data-steps × 100svh）だけを持ち、
-// 見える中身（.l-stage__frame）は画面に固定してある（layout/_stage.css）。
-// 見せ方は CSS 側が data-state / --progress / data-step を見て作る。
+// Top の舞台。1回のスクロール操作で1画面ずつ切り替える（紙芝居。スクロール量にアニメーションを連動させない）
+//   入力：ホイール／トラックパッド、タッチのスワイプ、キー（↓ PageDown Space で次・↑ PageUp Shift+Space で前）、現在位置のドット
+//   画面（[data-scene]）に data-state を付ける：before → entering → active → leaving → after（戻るときは after → entering … → before）
+//   舞台（[data-stage]）に付ける：data-current（今の画面の data-scene）・data-direction（forward / back / loop）
+//   見せ方はすべて CSS（layout/_stage.css・_stage-motion.css・foundation/_motion.css）。JS はアニメーションの時間を持たない
+//   ★切り替え中は次の入力を受け付けない。その長さは行き先の画面の CSS 変数 --scene-lock（foundation/_motion.css）
+//   JS が動かないときは、ふつうの縦に並んだページとして読める（.is-ready が付かないため）
+//   URL の #…（画面の id か data-scene）で、その画面から始める・移る（チャットボットの「/#how-to」など）
 
 const KEYS_NEXT = new Set(['ArrowDown', 'PageDown']);
 const KEYS_PREV = new Set(['ArrowUp', 'PageUp']);
-// 端数でステップの境目を取り違えないための余裕（px）
-const EDGE_PX = 1;
+// ホイール：これだけ回したら1回の操作とみなす（px）。トラックパッドの小さな揺れで動かないように
+const WHEEL_THRESHOLD = 24;
+// ホイール：この間（ms）イベントが途切れたら、次の回転を新しい操作とみなす（慣性で何画面も進まないように。動きの時間ではない）
+const WHEEL_GESTURE_GAP = 180;
+// スワイプ：これだけ動かしたら1回の操作とみなす（px）
+const SWIPE_THRESHOLD = 40;
 
 /**
  * @param {HTMLElement} stage  [data-stage] の要素
  * @param {{ indicator?: HTMLElement | null }} [options]  現在位置のドットを入れる要素
+ * @returns {{ goTo: Function, next: Function, prev: Function, current: () => number, count: number, ready: Promise<void> } | null}
  */
 export function createScrollStage(stage, { indicator = null } = {}) {
-  const scenes = [...stage.querySelectorAll('[data-scene]')].map((el) => ({
-    el,
-    steps: Math.max(1, Number.parseInt(el.dataset.steps, 10) || 1),
-    top: 0,
-    length: 0,
-    state: null,
-    step: null,
-    progress: null,
-  }));
+  const scenes = [...stage.querySelectorAll('[data-scene]')];
   if (!scenes.length) return null;
 
-  // ステップの一覧（scene × step）。goTo / next / current の番号はこの並び
-  const stepList = scenes.flatMap((scene, sceneIndex) =>
-    Array.from({ length: scene.steps }, (_, step) => ({ sceneIndex, step })),
-  );
-  const firstStepOf = scenes.map((_, i) => stepList.findIndex((s) => s.sceneIndex === i));
-
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let activeScene = -1;
-  let currentIndex = 0;
-  let pendingIndex = null; // goTo で移動中の行き先（連打しても飛ばさないように）
-  let frameRequested = false;
+  let current = -1;
+  let busy = false;
+  let lockTimer = 0;
   const dots = indicator ? buildIndicator(indicator) : [];
 
   stage.classList.add('is-ready');
+  document.documentElement.classList.add('is-stage-locked'); // ページ自体はスクロールさせない（_stage.css）
+  for (const scene of scenes) scene.dataset.state = 'before';
 
-  function measure() {
-    const y = window.scrollY;
-    for (const scene of scenes) {
-      const rect = scene.el.getBoundingClientRect();
-      scene.top = rect.top + y;
-      scene.length = rect.height;
-    }
+  function setState(index, state) {
+    scenes[index].dataset.state = state;
   }
 
-  function update() {
-    frameRequested = false;
-    const y = window.scrollY;
-
-    // 上端が通り過ぎた最後の scene が今の scene（最初の scene より上にいるときは最初）
-    let index = 0;
-    for (let i = 0; i < scenes.length; i++) {
-      if (scenes[i].top <= y + EDGE_PX) index = i;
-    }
-
-    scenes.forEach((scene, i) => {
-      const progress = clamp((y + EDGE_PX - scene.top) / scene.length, 0, 1);
-      let state = 'active';
-      if (i < index) state = 'after';
-      else if (i > index) state = 'before';
-      else if (y >= scene.top + scene.length) state = 'after'; // 最後の scene を通り過ぎた
-
-      const step = Math.min(scene.steps - 1, Math.floor(progress * scene.steps));
-      const rounded = Math.round(progress * 10000) / 10000;
-
-      if (scene.state !== state) {
-        scene.state = state;
-        scene.el.dataset.state = state;
-      }
-      if (scene.steps > 1 && scene.step !== step) {
-        scene.step = step;
-        scene.el.dataset.step = String(step);
-      }
-      if (scene.progress !== rounded) {
-        scene.progress = rounded;
-        scene.el.style.setProperty('--progress', String(rounded));
-      }
+  function markCurrent(index) {
+    stage.dataset.current = scenes[index].dataset.scene;
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('is-active', i === index);
+      if (i === index) dot.setAttribute('aria-current', 'step');
+      else dot.removeAttribute('aria-current');
     });
-
-    currentIndex = firstStepOf[index] + (scenes[index].steps > 1 ? scenes[index].step : 0);
-    if (pendingIndex === currentIndex) pendingIndex = null;
-
-    if (activeScene !== index) {
-      activeScene = index;
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('is-active', i === index);
-        if (i === index) dot.setAttribute('aria-current', 'step');
-        else dot.removeAttribute('aria-current');
-      });
-    }
-  }
-
-  function requestUpdate() {
-    if (frameRequested) return;
-    frameRequested = true;
-    window.requestAnimationFrame(update);
-  }
-
-  function relayout() {
-    measure();
-    requestUpdate();
   }
 
   /**
-   * @param {number} index  ステップの番号
-   * @param {{ instant?: boolean }} [options]  instant：なめらかに動かさず瞬時に移動する
+   * @param {number} index  画面の番号（0 から）
+   * @param {{ direction?: 'forward' | 'back' | 'loop' }} [options]  省略時は番号の大小で決める
+   * @returns {boolean} 切り替えを始めたか（切り替え中・同じ画面なら false）
    */
-  function goTo(index, { instant = false } = {}) {
-    const target = clamp(index, 0, stepList.length - 1);
-    const { sceneIndex, step } = stepList[target];
-    const scene = scenes[sceneIndex];
-    measure();
-    const top = target === 0 ? 0 : Math.ceil(scene.top + (scene.length / scene.steps) * step);
-    pendingIndex = target;
-    window.scrollTo({ top, behavior: instant || reducedMotion.matches ? 'instant' : 'smooth' });
+  function goTo(index, { direction } = {}) {
+    const target = clamp(index, 0, scenes.length - 1);
+    if (busy || target === current) return false;
+
+    const from = current;
+    const dir = direction ?? (target > from ? 'forward' : 'back');
+    stage.dataset.direction = dir;
+    if (from >= 0) setState(from, 'leaving');
+    setState(target, 'entering');
+    markCurrent(target);
+    current = target;
+
+    busy = true;
+    window.clearTimeout(lockTimer);
+    lockTimer = window.setTimeout(() => {
+      if (from >= 0) setState(from, dir === 'back' ? 'before' : 'after');
+      setState(target, 'active');
+      busy = false;
+    }, readTime(scenes[target], '--scene-lock'));
+    return true;
   }
 
-  function current() {
-    return currentIndex;
+  const next = () => goTo(current + 1);
+  const prev = () => goTo(current - 1);
+
+  // --- 入力 ---------------------------------------------------------------
+  let wheelSum = 0;
+  let wheelLast = 0;
+  let wheelUsed = false; // この操作（ひと続きの回転）で、もう1画面動かしたか
+
+  function onWheel(event) {
+    if (isInsideScrollable(event.target)) return;
+    event.preventDefault();
+    const now = event.timeStamp;
+    if (now - wheelLast > WHEEL_GESTURE_GAP) {
+      wheelSum = 0;
+      wheelUsed = false;
+    }
+    wheelLast = now;
+    if (wheelUsed) return; // 慣性の続きは捨てる
+    wheelSum += event.deltaY;
+    if (Math.abs(wheelSum) < WHEEL_THRESHOLD) return;
+    const moved = wheelSum > 0 ? next() : prev();
+    // 切り替え中で動けなかったときは、この操作を使い切ったことにしない（止まってから回し直せば動く）
+    wheelUsed = moved || busy;
+    wheelSum = 0;
   }
 
-  function next() {
-    goTo((pendingIndex ?? currentIndex) + 1);
+  let touchStartY = null;
+  function onTouchStart(event) {
+    touchStartY = event.touches.length === 1 ? event.touches[0].clientY : null;
   }
-
-  function prev() {
-    goTo((pendingIndex ?? currentIndex) - 1);
-  }
-
-  function isPastStage() {
-    return scenes[scenes.length - 1].state === 'after';
+  function onTouchEnd(event) {
+    if (touchStartY === null) return;
+    const dy = touchStartY - event.changedTouches[0].clientY;
+    touchStartY = null;
+    if (Math.abs(dy) < SWIPE_THRESHOLD) return;
+    if (dy > 0) next();
+    else prev();
   }
 
   function onKeydown(event) {
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
     if (isEditable(event.target)) return;
-
     let dir = 0;
     if (KEYS_NEXT.has(event.key)) dir = 1;
     else if (KEYS_PREV.has(event.key)) dir = -1;
     else if (event.key === ' ' && !isClickable(event.target)) dir = event.shiftKey ? -1 : 1;
     if (!dir) return;
-
-    // 舞台より下（フッター）にいるとき：↓ は普段どおり、↑ は最後の画面へ
-    if (isPastStage()) {
-      if (dir < 0) {
-        event.preventDefault();
-        goTo(stepList.length - 1);
-      }
-      return;
-    }
-
-    const target = (pendingIndex ?? currentIndex) + dir;
-    // 最初より前・最後より後は、普段のスクロールに任せる（最後の次はフッターへ）
-    if (target < 0 || target >= stepList.length) return;
     event.preventDefault();
-    goTo(target);
-  }
-
-  function onUserScrollInput() {
-    pendingIndex = null;
+    if (dir > 0) next();
+    else prev();
   }
 
   function buildIndicator(container) {
@@ -176,9 +135,9 @@ export function createScrollStage(stage, { indicator = null } = {}) {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'c-step-indicator__dot';
-      const heading = scene.el.querySelector('h1, h2');
-      button.setAttribute('aria-label', heading ? heading.textContent.trim() : scene.el.dataset.scene);
-      button.addEventListener('click', () => goTo(firstStepOf[i]));
+      const heading = scene.querySelector('h1, h2');
+      button.setAttribute('aria-label', heading ? heading.textContent.trim() : scene.dataset.scene);
+      button.addEventListener('click', () => goTo(i));
       item.append(button);
       list.append(item);
       return button;
@@ -187,22 +146,63 @@ export function createScrollStage(stage, { indicator = null } = {}) {
     return buttons;
   }
 
-  window.addEventListener('scroll', requestUpdate, { passive: true });
-  window.addEventListener('resize', relayout);
-  window.addEventListener('load', relayout);
-  window.addEventListener('wheel', onUserScrollInput, { passive: true });
-  window.addEventListener('touchstart', onUserScrollInput, { passive: true });
+  // #… の画面の番号。無ければ -1
+  function indexFromHash(hash) {
+    const name = decodeURIComponent(String(hash || '').replace(/^#/, ''));
+    if (!name) return -1;
+    return scenes.findIndex((scene) => scene.id === name || scene.dataset.scene === name);
+  }
+
+  // 同じページの中の #… へのリンク（すでに同じ # のときは hashchange が起きないので、クリックで受ける）
+  function onLinkClick(event) {
+    const link = event.target instanceof Element ? event.target.closest('a[href*="#"]') : null;
+    if (!link || link.origin !== window.location.origin || link.pathname !== window.location.pathname) return;
+    const index = indexFromHash(link.hash);
+    if (index < 0) return;
+    event.preventDefault();
+    window.history.replaceState(null, '', link.hash);
+    goTo(index);
+  }
+
+  stage.addEventListener('wheel', onWheel, { passive: false });
+  stage.addEventListener('touchstart', onTouchStart, { passive: true });
+  stage.addEventListener('touchend', onTouchEnd, { passive: true });
   document.addEventListener('keydown', onKeydown);
-  if ('ResizeObserver' in window) new ResizeObserver(relayout).observe(stage);
+  document.addEventListener('click', onLinkClick);
+  window.addEventListener('hashchange', () => {
+    const index = indexFromHash(window.location.hash);
+    if (index >= 0) goTo(index);
+  });
 
-  measure();
-  update();
+  // 最初の画面の画像が読めてから、最初の出現を始める（読み込み中に出現が空振りしないように）
+  const first = Math.max(0, indexFromHash(window.location.hash));
+  const ready = waitForImages(scenes[first]).then(() => {
+    goTo(first, { direction: 'forward' });
+  });
 
-  return { goTo, next, prev, current, count: stepList.length };
+  return { goTo, next, prev, current: () => current, count: scenes.length, ready };
+}
+
+/** CSS の時間の変数（"0.8s" / "800ms"）を ms にする。無い・読めないときは 0 */
+function readTime(el, name) {
+  const value = getComputedStyle(el).getPropertyValue(name).trim();
+  const n = Number.parseFloat(value);
+  if (!Number.isFinite(n)) return 0;
+  return value.endsWith('ms') ? n : n * 1000;
+}
+
+function waitForImages(root) {
+  const images = [...root.querySelectorAll('img')];
+  return Promise.all(images.map((img) => (img.decode ? img.decode().catch(() => {}) : Promise.resolve()))).then(() => {});
 }
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
+}
+
+// 中でスクロールできる場所（チャットボットのパネルなど）のホイールは横取りしない
+function isInsideScrollable(el) {
+  return el instanceof Element && Boolean(el.closest('[data-stage-scrollable]'));
 }
 
 function isEditable(el) {

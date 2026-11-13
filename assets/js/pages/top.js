@@ -10,4 +10,5 @@ const stage = stageEl
   ? createScrollStage(stageEl, { indicator: document.querySelector('[data-stage-indicator]') })
   : null;
 
-if (kiosk && stage) startAutoAdvance(stage);
+// 自動送りは、最初の画面が出てから始める
+if (kiosk && stage) stage.ready.then(() => startAutoAdvance(stage));

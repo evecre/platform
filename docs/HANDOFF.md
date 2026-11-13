@@ -18,6 +18,29 @@
 
 ---
 
+## 2026-11-13 — 06 Phase 0・1：Top の切り替えの仕組みと、動きの変数・プリセット
+
+- 指示書：docs/instructions/06_top-visual.md（Usami の回答を入れた版。`docs/` 直下の新しい版を写した）。Phase 1 まで
+- Phase 0：Figma は MCP の月の回数制限があるので使わず、Usami の PDF（`docs/evecre-web.pdf`、9画面・1728×1117。commit していない）から、素材の使い道・背景色・文字を確かめた
+- Usami の決定（2026-11-13）：ヘルプを先に main へ（`aed9e89`）／英字は Ultra（Google Fonts）・日本語はりょうゴシック PlusN（Adobe Fonts）／03 の背景は `about-landform`／02 の斜めの線は CSS／04〜08 のイラストと role はテキストと一緒／08 の文は PDF のとおり／ヘッダーのロゴは消す／目の位置は PDF から／背景色は PDF から測った値
+- やったこと（Phase 1）：
+  - `scrollStage.js` を作り直した：1回の操作で1画面（ホイールはひと続きの回転で1画面・スワイプ・キー・ドット）。`data-state` は before / entering / active / leaving / after、舞台に `data-current`・`data-direction`。切り替え中は `--scene-lock`（CSS）の間、入力を受けない。`#how-to` など（id か data-scene）で開く・移る（チャットボットの `/#how-to` のため）。最初の画面の画像を読んでから出す（`ready`）
+  - `autoAdvance.js`：最後の次は `goTo(0, { direction: 'loop' })`。`top.js` は `stage.ready` のあとで自動送りを始める
+  - CSS：`foundation/_motion.css`（動きの値）・`_animation.css` に `motion-*`（形）・`layout/_stage.css`（作り直し）・`layout/_stage-motion.css`（プリセット）・`object/project/_top.css`（位置は Figma の座標 `--x/--y/--w/--h`、`--top-u`。背景色・画面をまたぐ要素）。`_hero.css` は消した
+  - `index.html`：9画面（hero / about / team / step-1〜5 / connect）。テキストは指示書と PDF のとおり。画像の場所は仮の四角（`p-top-ph`）。画面をまたぐキャラクターとスマホは `l-stage__persistent`
+  - ヘッダー：ロゴを消した（Top・ヘルプ）。Top は舞台の上に重ねる（`l-header--overlay`）。「Top」→「TOP」
+  - フォント：`assets/js/modules/webfonts.js`（Adobe Fonts の kit は JS だけ。インラインスクリプトの代わり）・Top の `<head>` に Ultra。`--font-family-base` / `--font-family-display`
+  - トークン：`--color-top-sky/cream/butter/mint/green`、`--top-frame-w/h`・`--top-u`
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 25 / 25 件 OK
+  - 1728×1117：hero から出現。トラックパッドの慣性（60回の小さなホイール）で1画面だけ進む。切り替え中の ↓ の連打は無視。↑ で戻ると去る画面は短いフェード。ドットで飛べる。09 から ↓ で進まない。`/#how-to` で STEP 1 から開く。タッチのスワイプで次へ。ページの scrollY は 0 のまま
+  - 02 → 03 でキャラクター（仮の四角）が1つのまま縮みながら移る。04 → 05 でスマホが右から左へ移り、背景色がなめらかに替わる。09 はスマホを覆う
+  - 展示モード（fast）：09 → 01（direction loop）→ 02 と回る
+  - 動きを減らす設定で `--scene-lock` が 0.5s・距離 0
+  - 1280×720 で全体が縮んで構図が保たれる。コンソールのエラーなし。りょうゴシック・Ultra が localhost で読めた
+- 残っていること・次にやること：Phase 2（01-hero：マスク・雲・出現・白い幕の切り替え、素材の読み込み）
+- 本体側に頼むこと：なし
+
 ## 2026-11-13 — ヘルプのページ（仕組みと記事の下書き）・05 のマージ
 
 - 依頼：「ヘルプページを新しく作成して。https://aday.hitotabi.design/help を参考に」（指示書なし）。05 は main にマージ済み（`cd3172a`）

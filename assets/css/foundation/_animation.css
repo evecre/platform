@@ -12,3 +12,38 @@
   from { opacity: 0; transform: translateY(var(--space-6)); }
   to { opacity: 1; transform: none; }
 }
+
+/* --- Top の動きのプリセット（layout/_stage-motion.css が使う。値は foundation/_motion.css）--------
+   from だけ / to だけを書いたものは、反対側が要素のふだんの見た目になる */
+
+@keyframes motion-fade-up {
+  from { opacity: 0; translate: 0 var(--motion-distance-up); }
+}
+
+@keyframes motion-slide-left {
+  from { opacity: 0; translate: calc(-1 * var(--motion-distance-slide)) 0; }
+}
+
+@keyframes motion-slide-right {
+  from { opacity: 0; translate: var(--motion-distance-slide) 0; }
+}
+
+@keyframes motion-pop {
+  0% { opacity: 0; scale: var(--motion-pop-from); }
+  60% { opacity: 1; scale: var(--motion-pop-over); }
+  100% { opacity: 1; scale: 1; }
+}
+
+@keyframes motion-fade-up-out {
+  to { opacity: 0; translate: 0 calc(-1 * var(--motion-distance-up)); }
+}
+
+@keyframes motion-pop-out {
+  0% { opacity: 1; scale: 1; }
+  30% { opacity: 1; scale: var(--motion-pop-over); }
+  100% { opacity: 0; scale: var(--motion-pop-from); }
+}
+
+@keyframes motion-fade-out {
+  to { opacity: 0; }
+}

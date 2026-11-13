@@ -1,23 +1,23 @@
 // Top の自動送り（展示モードのときだけ使う）
-//   一定間隔で次の画面へ。最後まで行ったら最初へ
+//   一定間隔で次の画面へ。最後まで行ったら最初へ（direction: 'loop'。見せ方は CSS の [data-direction="loop"]）
 //   ユーザーが操作したら止め、操作が止まって一定時間たったら再開する
 //   チャットボットを開いている間は止める（chatbot:open / chatbot:close を document で聞く）
-// 操作に scroll を含めないのは、自動送り自身のスクロールで止まらないようにするため
+// 操作に scroll を含めないのは、念のため（Top はページをスクロールさせないが、自動送りで止まらないように）
 import { AUTO_ADVANCE_MS, RESUME_AFTER_MS, kioskTime } from './kiosk.js';
 
 const ACTIVITY_EVENTS = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
 
 /**
- * @param {{ next: () => void, goTo: (index: number, options?: { instant?: boolean }) => void, current: () => number, count: number }} stage
+ * @param {{ next: () => boolean, goTo: (index: number, options?: { direction?: string }) => boolean, current: () => number, count: number }} stage
  */
 export function startAutoAdvance(stage) {
   let advanceTimer = 0;
   let resumeTimer = 0;
   let chatbotOpen = false;
 
-  // 最初へ戻るときは瞬時に（なめらかに戻すと、途中の画面が全部流れて見えるため）
+  // 最後の次は最初へ（途中の画面は通らない）
   function advance() {
-    if (stage.current() >= stage.count - 1) stage.goTo(0, { instant: true });
+    if (stage.current() >= stage.count - 1) stage.goTo(0, { direction: 'loop' });
     else stage.next();
   }
 

@@ -1,0 +1,149 @@
+/* ==========================================================================
+   Project / top — Top の画面（Figma の comp：01-hero / 02・03-about / 04〜08 howtouse / 09）
+   マークアップ：index.html の l-stage。切り替えの仕組みは layout/_stage.css、出現・後退は layout/_stage-motion.css
+
+   ■ 位置と大きさは Figma の座標で書く（基準のフレーム 1728×1117）
+     .p-top-at の要素は --x / --y（左上）・--w / --h（幅・高さ）を Figma の px の数字（単位なし）で持つ。
+     画面の大きさに合わせて全体が拡大縮小される（--top-u ＝ 画面に収まる 1px の大きさ。foundation/_variables.css。基準のフレームを画面の中央に置く）
+   ■ 画面をまたぐ要素（.p-top-chara・.p-top-phone）は、画面ごとに .l-stage[data-current="…"] で --x などを替える。
+     移る速さは foundation/_motion.css の --motion-persist-*
+   ========================================================================== */
+
+/* Figma の座標で置く */
+.l-stage.is-ready .p-top-at {
+  position: absolute;
+  left: calc(50% + (var(--x, 0) - var(--top-frame-w) / 2) * var(--top-u));
+  top: calc(50% + (var(--y, 0) - var(--top-frame-h) / 2) * var(--top-u));
+  width: calc(var(--w, 100) * var(--top-u));
+  height: calc(var(--h, 100) * var(--top-u));
+}
+
+/* --- 背景色（舞台の背景は1枚。画面ごとに色だけ替わる） --- */
+.l-stage[data-current="hero"] { --stage-bg: var(--color-top-sky); }
+.l-stage[data-current="about"],
+.l-stage[data-current="team"] { --stage-bg: var(--color-top-cream); }
+.l-stage[data-current="step-1"],
+.l-stage[data-current="step-4"] { --stage-bg: var(--color-top-sky); }
+.l-stage[data-current="step-2"],
+.l-stage[data-current="step-5"] { --stage-bg: var(--color-top-butter); }
+.l-stage[data-current="step-3"],
+.l-stage[data-current="connect"] { --stage-bg: var(--color-top-mint); }
+
+/* --- 仮の四角（Phase 1。画像に置き換えたら消す） --- */
+.p-top-ph {
+  display: grid;
+  place-items: center;
+  border: 2px dashed var(--color-text-muted);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* --- 文字 --- */
+.p-top-about__title,
+.p-top-step__title {
+  font-weight: 700;
+  font-size: calc(48 * var(--top-u));
+  line-height: var(--line-height-tight);
+}
+
+.p-top-about__lead,
+.p-top-team__paragraph,
+.p-top-step__paragraph {
+  font-size: calc(28 * var(--top-u));
+  line-height: 1.9;
+}
+
+.p-top-team__paragraph + .p-top-team__paragraph,
+.p-top-step__paragraph + .p-top-step__paragraph {
+  margin-top: calc(28 * var(--top-u));
+}
+
+.p-top-step__number {
+  font-family: var(--font-family-display);
+  font-size: calc(64 * var(--top-u));
+  line-height: 1.2;
+}
+
+/* --- 01-hero --- */
+.p-top-hero__title { --x: 533; --y: 147; --w: 673; --h: 227; }
+.p-top-hero__logo { width: 100%; height: 100%; object-fit: contain; }
+.p-top-hero__landform--1 { --x: 313; --y: 627; --w: 440; --h: 387; --motion-distance-slide: 1rem; }
+.p-top-hero__landform--2 { --x: 1147; --y: 640; --w: 273; --h: 347; --motion-distance-slide: 1rem; }
+.p-top-hero__landform--3 { --x: 747; --y: 480; --w: 400; --h: 267; --motion-distance-slide: 1rem; }
+.p-top-hero__ipad { --x: 600; --y: 531; --w: 500; --h: 347; }
+.p-top-hero__chara { --x: 447; --y: 727; --w: 847; --h: 307; }
+
+/* --- 02-about --- */
+.p-top-about__text { --x: 460; --y: 260; --w: 813; --h: 240; text-align: center; }
+
+/* --- 03-about --- */
+.p-top-team__landform { --x: 0; --y: 507; --w: 1728; --h: 610; }
+.p-top-team__text { --x: 180; --y: 320; --w: 693; --h: 453; }
+.p-top-team__ui { --x: 967; --y: 220; --w: 761; --h: 587; }
+
+/* --- 04〜08 howtouse（テキストと丸いイラスト） --- */
+.p-top-step--1 .p-top-step__text { --x: 423; --y: 287; --w: 533; --h: 453; }
+.p-top-step--1 .p-top-step__illust { --x: 420; --y: 460; --w: 580; --h: 580; }
+.p-top-step--2 .p-top-step__text { --x: 960; --y: 173; --w: 560; --h: 520; }
+.p-top-step--2 .p-top-step__illust { --x: 960; --y: 753; --w: 500; --h: 193; }
+.p-top-step--3 .p-top-step__text { --x: 929; --y: 173; --w: 620; --h: 453; }
+.p-top-step--3 .p-top-step__illust { --x: 953; --y: 493; --w: 520; --h: 520; }
+.p-top-step--4 .p-top-step__text { --x: 963; --y: 173; --w: 560; --h: 520; }
+.p-top-step--4 .p-top-step__illust { --x: 1133; --y: 593; --w: 520; --h: 400; }
+.p-top-step--5 .p-top-step__text { --x: 213; --y: 173; --w: 800; --h: 453; }
+.p-top-step--5 .p-top-step__illust { --x: 220; --y: 620; --w: 660; --h: 407; }
+
+/* --- 09（STEP 6）。この画面だけ背景を持ち、08 とスマホを覆う（円形の出現は Phase 4） --- */
+.p-top-connect .l-stage__frame { background-color: var(--color-top-mint); }
+
+.p-top-connect__content { --x: 400; --y: 290; --w: 928; --h: 560; text-align: center; color: var(--color-top-green); }
+
+.p-top-connect__button {
+  display: inline-block;
+  margin-top: calc(56 * var(--top-u));
+  padding: calc(24 * var(--top-u)) calc(48 * var(--top-u));
+  border-radius: var(--radius-full);
+  background-color: var(--color-top-green);
+  color: var(--color-text-inverse);
+  font-size: calc(40 * var(--top-u));
+  font-weight: 700;
+}
+
+/* --- 画面をまたぐ要素：キャラクター（02 → 03。03 → 04 でポンッと消える） ---
+   位置は画面ごとの --x / --y / --w / --h。見えるかは --persist-opacity */
+.p-top-chara,
+.p-top-phone {
+  opacity: var(--persist-opacity, 0);
+  transition:
+    left var(--motion-persist-duration) var(--motion-persist-ease),
+    top var(--motion-persist-duration) var(--motion-persist-ease),
+    width var(--motion-persist-duration) var(--motion-persist-ease),
+    height var(--motion-persist-duration) var(--motion-persist-ease),
+    opacity var(--motion-duration-fade-out) ease;
+}
+
+.p-top-chara { --x: 0; --y: 553; --w: 1728; --h: 563; }
+.l-stage[data-current="about"] .p-top-chara { --persist-opacity: 1; }
+.l-stage[data-current="team"] .p-top-chara { --x: 671; --y: 896; --w: 387; --h: 173; --persist-opacity: 1; }
+/* hero から来たときはポンッと出る（戻ってきたときは位置が移るだけ） */
+.l-stage[data-current="about"][data-direction="forward"] .p-top-chara {
+  animation: motion-pop var(--motion-duration-pop) var(--motion-ease-pop) both;
+}
+/* 03 → 04：その場でポンッと消える */
+.l-stage[data-current="step-1"][data-direction="forward"] .p-top-chara {
+  --x: 671; --y: 896; --w: 387; --h: 173;
+  animation: motion-pop-out var(--motion-duration-pop) var(--motion-ease-leave) both;
+}
+
+/* --- 画面をまたぐ要素：howtouse のスマホ（04〜08。09 の円の下にもそのまま残る） --- */
+.p-top-phone { --x: 1067; --y: 160; --w: 380; --h: 800; }
+.l-stage:is([data-current="step-1"], [data-current="step-2"], [data-current="step-3"], [data-current="step-4"], [data-current="step-5"], [data-current="connect"]) .p-top-phone {
+  --persist-opacity: 1;
+}
+.l-stage:is([data-current="step-2"], [data-current="step-3"], [data-current="step-4"]) .p-top-phone { --x: 364; }
+/* 03 から来たときは下から出る */
+.l-stage[data-current="step-1"][data-direction="forward"] .p-top-phone {
+  animation: motion-fade-up var(--motion-duration-enter) var(--motion-ease-enter) both;
+}
