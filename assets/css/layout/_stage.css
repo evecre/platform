@@ -24,25 +24,48 @@
   transition: background-color var(--motion-bg-duration) var(--motion-bg-ease);
 }
 
-/* --- 画面 -------------------------------------------------------------------- */
+/* --- 画面 --------------------------------------------------------------------
+   重なり（下から）：去る画面 1 ＜ 幕 2 ＜ 画面をまたぐ要素 3 ＜ 今の画面 4
+   見えない画面は display: none（中の loading="lazy" の画像を読ませない）。
+   今の画面の前後（.is-preload）は、隠したまま描いて画像を先に読ませる */
 .l-stage.is-ready .l-stage__scene {
   position: absolute;
   inset: 0;
-  visibility: hidden;
+  display: none;
   pointer-events: none;
 }
 
+.l-stage.is-ready .l-stage__scene.is-preload {
+  display: block;
+  visibility: hidden;
+}
+
 .l-stage.is-ready .l-stage__scene:is([data-state="entering"], [data-state="active"], [data-state="leaving"]) {
+  display: block;
   visibility: visible;
 }
 
 .l-stage.is-ready .l-stage__scene:is([data-state="entering"], [data-state="active"]) {
-  z-index: 2; /* 出てくる画面を、去る画面の上に */
+  z-index: 4; /* 出てくる画面を、いちばん上に */
   pointer-events: auto;
 }
 
 .l-stage.is-ready .l-stage__scene[data-state="leaving"] {
   z-index: 1;
+}
+
+/* --- 幕（画面と画面のあいだに被さる1枚。hero → 02 の白い幕など。いつ・どう動かすかは object/project/_top.css） --- */
+.l-stage__curtain {
+  display: none;
+}
+
+.l-stage.is-ready .l-stage__curtain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  pointer-events: none;
+  visibility: hidden;
 }
 
 /* 画面の中身の枠。画面いっぱい */
@@ -58,7 +81,7 @@
 }
 
 /* --- 画面をまたいで残る要素の層（キャラクター・howtouse のスマホ） ---
-   重なり：去る画面（1）＜ この層（1。HTML で後ろにあるので上）＜ 今の画面（2）。
+   重なり：去る画面・幕 ＜ この層（3）＜ 今の画面（4）。
    画面は背景を持たない（舞台の背景が見える）ので、この層は今の画面の後ろから透けて見える。
    背景を持つ画面（09 の円など）は、この層を覆い隠せる。
    位置・大きさは、画面ごとの CSS 変数で object/project/_top.css が決める（l-stage[data-current="…"]） */
@@ -69,7 +92,7 @@
 .l-stage.is-ready .l-stage__persistent {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 3;
   display: block;
   pointer-events: none;
 }

@@ -5,7 +5,10 @@
 //   見せ方はすべて CSS（layout/_stage.css・_stage-motion.css・foundation/_motion.css）。JS はアニメーションの時間を持たない
 //   ★切り替え中は次の入力を受け付けない。その長さは行き先の画面の CSS 変数 --scene-lock（foundation/_motion.css）
 //   JS が動かないときは、ふつうの縦に並んだページとして読める（.is-ready が付かないため）
+//   今の画面の前後の画面に .is-preload を付ける（隠したまま描いておき、loading="lazy" の画像を先に読ませる。_stage.css）
 //   URL の #…（画面の id か data-scene）で、その画面から始める・移る（チャットボットの「/#how-to」など）
+
+import { readCssTime } from './cssVars.js';
 
 const KEYS_NEXT = new Set(['ArrowDown', 'PageDown']);
 const KEYS_PREV = new Set(['ArrowUp', 'PageUp']);
@@ -40,6 +43,7 @@ export function createScrollStage(stage, { indicator = null } = {}) {
 
   function markCurrent(index) {
     stage.dataset.current = scenes[index].dataset.scene;
+    scenes.forEach((scene, i) => scene.classList.toggle('is-preload', Math.abs(i - index) === 1));
     dots.forEach((dot, i) => {
       dot.classList.toggle('is-active', i === index);
       if (i === index) dot.setAttribute('aria-current', 'step');
@@ -70,7 +74,7 @@ export function createScrollStage(stage, { indicator = null } = {}) {
       if (from >= 0) setState(from, dir === 'back' ? 'before' : 'after');
       setState(target, 'active');
       busy = false;
-    }, readTime(scenes[target], '--scene-lock'));
+    }, readCssTime(scenes[target], '--scene-lock'));
     return true;
   }
 
@@ -181,14 +185,6 @@ export function createScrollStage(stage, { indicator = null } = {}) {
   });
 
   return { goTo, next, prev, current: () => current, count: scenes.length, ready };
-}
-
-/** CSS の時間の変数（"0.8s" / "800ms"）を ms にする。無い・読めないときは 0 */
-function readTime(el, name) {
-  const value = getComputedStyle(el).getPropertyValue(name).trim();
-  const n = Number.parseFloat(value);
-  if (!Number.isFinite(n)) return 0;
-  return value.endsWith('ms') ? n : n * 1000;
 }
 
 function waitForImages(root) {

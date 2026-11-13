@@ -7,6 +7,7 @@
      data-leave-order="1〜8"  後退の順番（省略は 1＝遅れなし）
    ★画面の中で見える要素には、すべて data-enter を付ける（付けない要素は、後退のときにアニメーションせず、最後に急に消える）
    ★戻る（上へ）ときは、去る画面の要素は data-leave にかかわらず短いフェードで消える
+   ★画面全体の出現を遅らせたいとき（幕が被さるのを待つなど）は、その画面に --motion-delay-base を付ける
    値（長さ・距離・イージング）は foundation/_motion.css、動きの形は foundation/_animation.css の motion-*
    ========================================================================== */
 
@@ -26,19 +27,19 @@
 
 /* --- 出現（entering） ------------------------------------------------------- */
 .l-stage__scene[data-state="entering"] [data-enter="fade-up"] {
-  animation: motion-fade-up var(--motion-duration-enter) var(--motion-ease-enter) var(--motion-delay, 0s) both;
+  animation: motion-fade-up var(--motion-duration-enter) var(--motion-ease-enter) calc(var(--motion-delay-base, 0s) + var(--motion-delay, 0s)) both;
 }
 
 .l-stage__scene[data-state="entering"] [data-enter="slide-left"] {
-  animation: motion-slide-left var(--motion-duration-enter) var(--motion-ease-enter) var(--motion-delay, 0s) both;
+  animation: motion-slide-left var(--motion-duration-enter) var(--motion-ease-enter) calc(var(--motion-delay-base, 0s) + var(--motion-delay, 0s)) both;
 }
 
 .l-stage__scene[data-state="entering"] [data-enter="slide-right"] {
-  animation: motion-slide-right var(--motion-duration-enter) var(--motion-ease-enter) var(--motion-delay, 0s) both;
+  animation: motion-slide-right var(--motion-duration-enter) var(--motion-ease-enter) calc(var(--motion-delay-base, 0s) + var(--motion-delay, 0s)) both;
 }
 
 .l-stage__scene[data-state="entering"] [data-enter="pop"] {
-  animation: motion-pop var(--motion-duration-pop) var(--motion-ease-pop) var(--motion-delay, 0s) both;
+  animation: motion-pop var(--motion-duration-pop) var(--motion-ease-pop) calc(var(--motion-delay-base, 0s) + var(--motion-delay, 0s)) both;
 }
 
 /* --- 後退（leaving） -------------------------------------------------------- */

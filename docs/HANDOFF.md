@@ -18,6 +18,25 @@
 
 ---
 
+## 2026-11-14 — 06 Phase 2：01-hero（マスク・雲・出現・白い幕）
+
+- 指示書：docs/instructions/06_top-visual.md（Phase 2 まで）
+- やったこと：
+  - 位置は PDF（`.tmp-measure/` に書き出して方眼を重ねて測った。`.tmp-measure/` は .gitignore）：ロゴ x536 y152 w670／マスク x315 y343 w1105 h707／landform03（奥の三角）x528 y483 w700／landform02（青い山並み）x315 y640 w1105／landform01（手前の緑）x315 y680 w1105／iPad x600 y532 w500／キャラクター x448 y726 w844／mizu-phone x444 y930 w87。雲の幅は 108 / 62 / 78
+  - マスク：`hero-mask.svg` を CSS の `mask`（`-webkit-mask` も）。中の要素は `.p-top-box` で、数字は Figma の座標のまま
+  - 出現：ロゴ fade-up 1／キャラクター pop 2（mizu-phone も pop 2。ふくらむ中心をキャラクターの中心にした）／landform 01・03 slide-left 2・02 slide-right 2（距離 0.75rem）／iPad fade-up 5
+  - 雲：`assets/js/modules/heroClouds.js`。はじめから2つ（途中の位置から）、そのあと 8〜18 秒おきに1つ、同時に4つまで。右の外 → 左の外、60 秒 ±15%。高さはマスクの上 40% のどこか。hero 以外では新しく出さず、出ている雲は CSS で止める。動きを減らす設定では止めて置くだけ
+  - hero → 02：幕（`l-stage__curtain`。02 の背景色）が下からせり上がる。hero の要素は消さずに残す。舞台の背景色は被さりきってから替える。02 の要素とキャラクターの出現は幕のあと（`--motion-delay-base`）。02 の `--scene-lock` は幕＋1.4s（`@property` で `calc()` を時間として読めるようにした）
+  - 読み込み：hero の画像は `fetchpriority="high"`・srcset/sizes。見えない画面は `display: none`、前後の画面は `.is-preload`（隠したまま描く）。共通の `assets/js/modules/cssVars.js`
+  - 重なりを 去る画面 1 ＜ 幕 2 ＜ 画面をまたぐ要素 3 ＜ 今の画面 4 にした
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 27 / 27 件 OK、コンソールのエラーなし
+  - 1728×1117 で PDF とほぼ同じ構図（目は Phase 3）。幕：450ms で半分まで上がり、hero は下に残る／1050ms で被さりきり、02 のテキストはまだ（このあと出る）。`--scene-lock` は 2.3s として読めた
+  - 読む画像：1280×800 で landform 768w・1536w、3840×2160 で 1920w・2560w（5120w は読まない）、iPad は avif。開いた時点で読むのは hero の画像だけ
+  - 1280×800 で構図が保たれる。動きを減らす設定で雲が止まる
+- 残っていること・次にやること：Phase 3（02・03 のキャラクター、目の動き、03 の素材）
+- 本体側に頼むこと：なし
+
 ## 2026-11-13 — 06 Phase 0・1：Top の切り替えの仕組みと、動きの変数・プリセット
 
 - 指示書：docs/instructions/06_top-visual.md（Usami の回答を入れた版。`docs/` 直下の新しい版を写した）。Phase 1 まで

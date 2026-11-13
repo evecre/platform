@@ -2,8 +2,15 @@
    Foundation / motion — Top の動きの値（速さ・距離・イージング・順番の間隔）。★動きの調整はまずここを触る
    使い方・プリセットの一覧は assets/css/README.md §4
    ・要素ごとに変えたいときは、その要素の CSS でこの変数を上書きする（例：landform だけ --motion-distance-slide を小さく）
-   ・JS はここの値を数字で持たない（切り替え中の入力の止め方は --scene-lock を JS が読む）
+   ・JS はここの値を数字で持たない（切り替え中の入力の止め方は --scene-lock、雲は --hero-cloud-* を JS が読む）
    ========================================================================== */
+
+/* JS が読む変数のうち calc() で書けるものは、型を登録する（登録しないと計算前の文字のまま JS に渡る） */
+@property --scene-lock {
+  syntax: "<time>";
+  inherits: true;
+  initial-value: 1.6s;
+}
 
 :root {
   /* --- 出現・後退の基本 --- */
@@ -28,12 +35,18 @@
   --motion-bg-ease: ease;
   --motion-persist-duration: 0.9s;  /* 画面をまたぐ要素（キャラクター・howtouse のスマホ）が次の位置へ移る長さ */
   --motion-persist-ease: cubic-bezier(0.6, 0, 0.2, 1);
-  --motion-curtain-duration: 0.9s;  /* hero → 02 の白い幕 */
+  --motion-curtain-duration: 0.9s;  /* hero → 02 の白い幕がせり上がる長さ。02 の出現はこのあとに始まる */
+  --motion-ease-curtain: cubic-bezier(0.7, 0, 0.2, 1);
   --motion-iris-duration: 1.2s;     /* 08 → 09 の円形の出現 */
   --motion-shrink-duration: 0.9s;   /* 09 → 01 の収縮（展示モード） */
 
   /* --- hero の雲・09 のスライダー --- */
-  --hero-cloud-speed: 60s;          /* 雲が横断にかかる時間（遅め） */
+  --hero-cloud-speed: 60s;          /* 雲がマスクの右の外から左の外まで流れる時間（遅め）。雲ごとに ±15% ばらつく */
+  --hero-cloud-interval-min: 8s;    /* 次の雲が出るまでの間隔（この間でランダム） */
+  --hero-cloud-interval-max: 18s;
+  --hero-cloud-max: 4;              /* 同時に出す雲の数の上限（重なりすぎないように） */
+  --hero-cloud-initial: 2;          /* hero を開いたとき、はじめから流れている雲の数 */
+  --hero-cloud-band: 0.4;           /* 雲が出る高さの範囲（マスクの上から、この割合まで） */
   --slider-speed: 40s;              /* スライダーが1周する時間 */
 }
 
@@ -49,6 +62,7 @@
     --motion-duration-pop: 0.3s;
     --motion-duration-leave: 0.2s;
     --motion-persist-duration: 0s;
+    --motion-curtain-duration: 0.3s;
     --scene-lock: 0.5s; /* 0 にしない（トラックパッドの慣性で何画面も進まないように） */
   }
 }

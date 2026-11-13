@@ -36,17 +36,33 @@
        ★Phase 1（2026-11-13）：画像の場所は仮の四角（p-top-ph）。Phase 2〜4 で画像に置き換える -->
   <main class="l-main l-stage" data-stage>
 
-    <!-- 01-hero -->
+    <!-- 01-hero
+         マスク（hero-mask.svg の形）の中：雲・landform03〜01・iPad・キャラクター。mizu-phone はマスクの外で上に重ねる
+         雲は assets/js/modules/heroClouds.js が [data-hero-clouds] の中に出す -->
     <section class="p-top-hero l-stage__scene" data-scene="hero">
       <div class="l-stage__frame">
         <h1 class="p-top-at p-top-hero__title" data-enter="fade-up" data-order="1">
-          <img class="p-top-hero__logo" src="/assets/img/common/logo-with-tagline.svg" alt="イベクリ イベントづくりを楽しく" fetchpriority="high">
+          <img class="p-top-hero__logo" src="/assets/img/common/logo-with-tagline.svg" alt="イベクリ イベントづくりを楽しく" width="351" height="115" fetchpriority="high">
         </h1>
-        <div class="p-top-at p-top-ph p-top-hero__landform p-top-hero__landform--1" data-enter="slide-left" data-order="2">landform01</div>
-        <div class="p-top-at p-top-ph p-top-hero__landform p-top-hero__landform--2" data-enter="slide-right" data-order="2">landform02</div>
-        <div class="p-top-at p-top-ph p-top-hero__landform p-top-hero__landform--3" data-enter="slide-left" data-order="2">landform03</div>
-        <div class="p-top-at p-top-ph p-top-hero__ipad" data-enter="fade-up" data-order="5">ipad</div>
-        <div class="p-top-at p-top-ph p-top-hero__chara" data-enter="pop" data-order="2">キャラクター＋mizu-phone</div>
+
+        <div class="p-top-at p-top-box p-top-hero__mask">
+          <div class="p-top-hero__clouds" data-hero-clouds data-enter="none"></div>
+          <img class="p-top-at p-top-hero__landform p-top-hero__landform--3" data-enter="slide-left" data-order="2"
+            srcset="/assets/img/top/hero-landform03-768w.webp 768w, /assets/img/top/hero-landform03-1536w.webp 1536w, /assets/img/top/hero-landform03-1920w.webp 1920w, /assets/img/top/hero-landform03-2560w.webp 2560w, /assets/img/top/hero-landform03-3840w.webp 3840w, /assets/img/top/hero-landform03-5120w.webp 5120w" sizes="41vw" src="/assets/img/top/hero-landform03-1536w.webp" width="2688" height="1354" alt="" fetchpriority="high">
+          <img class="p-top-at p-top-hero__landform p-top-hero__landform--2" data-enter="slide-right" data-order="2"
+            srcset="/assets/img/top/hero-landform02-768w.webp 768w, /assets/img/top/hero-landform02-1536w.webp 1536w, /assets/img/top/hero-landform02-1920w.webp 1920w, /assets/img/top/hero-landform02-2560w.webp 2560w, /assets/img/top/hero-landform02-3840w.webp 3840w, /assets/img/top/hero-landform02-5120w.webp 5120w" sizes="64vw" src="/assets/img/top/hero-landform02-1536w.webp" width="2825" height="1087" alt="" fetchpriority="high">
+          <img class="p-top-at p-top-hero__landform p-top-hero__landform--1" data-enter="slide-left" data-order="2"
+            srcset="/assets/img/top/hero-landform01-768w.webp 768w, /assets/img/top/hero-landform01-1536w.webp 1536w, /assets/img/top/hero-landform01-1920w.webp 1920w, /assets/img/top/hero-landform01-2560w.webp 2560w, /assets/img/top/hero-landform01-3840w.webp 3840w, /assets/img/top/hero-landform01-5120w.webp 5120w" sizes="64vw" src="/assets/img/top/hero-landform01-1536w.webp" width="2825" height="864" alt="" fetchpriority="high">
+          <picture class="p-top-at p-top-hero__ipad" data-enter="fade-up" data-order="5">
+            <source type="image/avif" srcset="/assets/img/top/ipad-mainboard.avif">
+            <img class="p-top-hero__ipad-img" src="/assets/img/top/ipad-mainboard.png" width="2960" height="2290" alt="iPad で開いたイベクリのメインボード" fetchpriority="high">
+          </picture>
+          <!-- ★目は 06 Phase 3 で動かす（SVG をページに直接書き込む） -->
+          <img class="p-top-at p-top-hero__chara" data-enter="pop" data-order="2" src="/assets/img/top/hero-charcters.svg" width="2020" height="824" alt="イベクリのキャラクター（水・森・岩）">
+        </div>
+
+        <!-- キャラクターと一緒にポンッと出る（ふくらむ中心はキャラクターの中心。_top.css の transform-origin） -->
+        <img class="p-top-at p-top-hero__phone" data-enter="pop" data-order="2" src="/assets/img/top/hero-mizu-phone.svg" width="205" height="254" alt="">
       </div>
     </section>
 
@@ -145,6 +161,9 @@
         </div>
       </div>
     </section>
+
+    <!-- 幕（hero → 02 の白い幕など）。いつ・どう動くかは object/project/_top.css -->
+    <div class="l-stage__curtain" aria-hidden="true"></div>
 
     <!-- 画面をまたいで残る要素。位置・大きさは画面ごとの CSS 変数（object/project/_top.css の .l-stage[data-current="…"]） -->
     <div class="l-stage__persistent" aria-hidden="true">

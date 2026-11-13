@@ -92,7 +92,9 @@ Top は、**1回のスクロール操作（ホイール・スワイプ・↓↑ 
 | 動く距離・ポンッの大きさ | `--motion-distance-up`・`--motion-distance-slide`・`--motion-pop-from`・`--motion-pop-over` |
 | 背景色が替わる速さ | `--motion-bg-duration`・`--motion-bg-ease` |
 | キャラクター・スマホが次の位置へ移る速さ | `--motion-persist-duration`・`--motion-persist-ease` |
-| 切り替え中に次の操作を受け付けない長さ | `--scene-lock`（★その画面の出現が終わるまで以上にする。画面ごとに `.p-top-○○ { --scene-lock: 2s; }` で上書きできる） |
+| 切り替え中に次の操作を受け付けない長さ | `--scene-lock`（★その画面の出現が終わるまで以上にする。画面ごとに `.p-top-○○ { --scene-lock: 2s; }` で上書きできる。`calc()` も使える） |
+| hero → 02 の白い幕 | `--motion-curtain-duration`（02 の出現はこのあとに始まる）・`--motion-ease-curtain` |
+| hero の雲 | `--hero-cloud-speed`（横断の時間）・`--hero-cloud-interval-min` / `-max`（出る間隔）・`--hero-cloud-max`（同時の上限）・`--hero-cloud-initial`（はじめから流れている数）・`--hero-cloud-band`（出る高さ：マスクの上からこの割合まで）。雲の大きさは `heroClouds.js` の `CLOUDS`（Figma の幅） |
 | ある要素だけ距離・速さを変える | その要素の CSS で変数を上書き（例：`_top.css` の landform は `--motion-distance-slide: 1rem`） |
 | 要素の順番・動きの種類 | `index.html` の属性（下の 4-2） |
 | 要素の位置・大きさ | `object/project/_top.css` の `--x` / `--y` / `--w` / `--h`（Figma の座標。下の 4-3） |
@@ -133,6 +135,14 @@ HTML の属性で選ぶ（`layout/_stage-motion.css`）。
 
 - 画面の大きさに合わせて、基準のフレームごと拡大縮小し、画面の中央に置く（`--top-u`＝画面に収まる 1px の大きさ）
 - 文字の大きさなども `calc(28 * var(--top-u))` のように Figma の px で書ける
+- 箱（`.p-top-box`。例：hero のマスク）の中の `.p-top-at` も、数字は Figma の座標のまま書く（箱の左上からの位置に直すのは CSS がする）
+- 画像は `.p-top-at` の箱いっぱいに広がる。`--h` は画像の縦横比に合わせる
+
+### 4-3-2. 画像の書き方（読み込みを最小限に）
+
+- 形式が複数ある素材は `<picture>` の `<source type="image/avif">` → `<img>`（png）。幅違いがある素材は `srcset` に `768w`〜`5120w`、`sizes` は**その画像の表示幅**（画面幅の何割か。例：幅 1105 / 1728 ≒ `64vw`）
+- `<img>` に `width` / `height`（元の画像の大きさ）を書く
+- hero の画像は `fetchpriority="high"`。**hero 以外の画面の画像は `loading="lazy"`**。見えない画面は `display: none` なので読まれず、今の画面の前後の画面（`.is-preload`）だけ隠したまま描かれて、先に読まれる
 
 ### 4-4. 画面をまたぐ要素（キャラクター・howtouse のスマホ）
 
@@ -145,11 +155,20 @@ HTML の属性で選ぶ（`layout/_stage-motion.css`）。
 - 見えるかは `--persist-opacity`（1 で見える）
 - 進んで来たときだけの動き（例：02 でポンッと出る、04 でポンッと消える）は `[data-direction="forward"]` で書く
 
+### 4-4-2. 画面と画面のあいだの幕（hero → 02 の白い幕）
+
+`l-stage__curtain` は、去る画面の上・画面をまたぐ要素の下に重なる1枚。`_top.css` で、いつ・どう動かすかを書く。hero → 02 では：
+
+- 幕を 02 の背景色にして、下からせり上げる（`top-curtain-up`）
+- hero の要素は消さずに残す（幕の下に隠れる）。舞台の背景色は幕が被さりきってから替える
+- 02 の出現を幕の長さだけ遅らせる：`.p-top-about { --motion-delay-base: var(--motion-curtain-duration); }`（`--motion-delay-base` は画面全体の出現の遅れ。プリセットの遅れに足される）
+
 ### 4-5. JS が付けるもの（CSS が見るもの）
 
 | どこに | 付くもの | 値 |
 |---|---|---|
 | 画面（`l-stage__scene`） | `data-state` | `before`（まだ）→ `entering`（出現中）→ `active`（表示中）→ `leaving`（後退中）→ `after`（通り過ぎた）。戻るときは去る画面が `before` に戻る |
+| 画面 | `.is-preload` | 今の画面の前後。隠したまま描いて、中の画像を先に読ませる |
 | 舞台（`l-stage`） | `data-current` | 今の画面の `data-scene` |
 | | `data-direction` | `forward`（進む）／`back`（戻る）／`loop`（展示モードで最後 → 最初） |
 | | `.is-ready` | JS が動いた（無いときは、ふつうの縦並びのページ） |

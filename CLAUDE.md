@@ -66,7 +66,7 @@ robots.txt  _headers               検索エンジン対策（§6）
 - Project から Component の中身を直接上書きしない。必要なら `c-` に modifier を足す
 - `!important` 禁止（`u-hidden` だけ例外）。CSS Nesting を使わない。`id` にスタイルを当てない
 - 色・サイズを直書きしない。`foundation/_variables.css` に名前を付けてから使う
-- 状態は `is-` クラス（`is-active` / `is-open`）または `data-state` 属性。JS からスタイルを直接書かない
+- 状態は `is-` クラス（`is-active` / `is-open`）または `data-state` 属性。JS からスタイルを直接書かない（例外：Top の雲の高さ・大きさ・速さを渡す CSS 変数 `--cloud-*`。heroClouds.js）
 - HTML に `<style>` / `style=""` を書かない
 - 命名は BEM（`p-hero__title` / `c-button--primary`）
 - **見た目はユーザー（Usami）が作り込む**。Claude Code は構造と動きの仕組みを作り、装飾は最小限（仮の配置・仮の文字サイズ）に留める
@@ -187,6 +187,10 @@ robots.txt  _headers               検索エンジン対策（§6）
   - ★JS に動きの時間・距離の数字を書かない。値は `foundation/_motion.css`、プリセットは `layout/_stage-motion.css`（`data-enter` / `data-leave` / `data-order`）、位置は `object/project/_top.css`（Figma の座標 `--x/--y/--w/--h`・`--top-u`）。**調整の仕方は `assets/css/README.md` §4**
   - 舞台の背景は1枚で、色だけが画面ごとに替わる（`--stage-bg`）。画面は背景を持たない（09 だけ持つ）
   - 画面をまたぐ要素（キャラクター・howtouse のスマホ）は `l-stage__persistent` の1つの要素を、画面ごとの変数で動かす
+  - 重なり：去る画面 1 ＜ 幕（`l-stage__curtain`）2 ＜ 画面をまたぐ要素 3 ＜ 今の画面 4
+  - 見えない画面は `display: none`。今の画面の前後に `.is-preload`（隠したまま描いて画像を先に読む）。hero 以外の画像は `loading="lazy"`
+  - JS が読む CSS の時間・数は `assets/js/modules/cssVars.js`（`readCssTime` / `readCssNumber`）。`calc()` で書く変数は `_motion.css` の `@property` で型を登録する（`--scene-lock`）
+- 01-hero（Phase 2）：マスク（`hero-mask.svg` を CSS の mask に。中の要素は `.p-top-box` の中で Figma の座標）。雲は `assets/js/modules/heroClouds.js`（マスクの右の外から左へ。種類・高さ・速さ・間隔はランダム、値は `--hero-cloud-*`。hero 以外では新しく出さず、CSS で止まる）。hero → 02 は 02 の背景色の幕が下からせり上がる（hero の要素は残す・背景色は被さりきってから替える・02 の出現は `--motion-delay-base` で幕のあと）
 - フォント：日本語＝りょうゴシック PlusN（Adobe Fonts の kit `jtx8lwo`。JS だけの kit なので `assets/js/modules/webfonts.js` が読む。★kit のドメインに localhost と evecre.pages.dev が要る）、英字の見出し＝Ultra（Google Fonts。Top の `<head>`）。`--font-family-base` / `--font-family-display`
 - ヘッダー：TOP / みんなの記録 / ヘルプ。ロゴは置かない（全ページ）。Top は舞台の上に重ねる（`l-header--overlay`）
 - Usami の決定（2026-11-13）：08 の文は PDF のとおり（「イベントが終わったら、困ったこととその乗り越え方を残しましょう。」を入れる）／03 の背景は `about-landform`（PDF と違うがこちら）／02 の斜めの線は CSS で描く／04〜08 の丸いイラストと role はテキストと一緒に出る・消える／目の位置は PDF から測る／背景色は PDF から測った値（`--color-top-*`）
