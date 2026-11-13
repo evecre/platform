@@ -1,5 +1,6 @@
 /* ==========================================================================
-   Layout / header — ロゴと、Top・みんなの記録（本体の /explore）へのリンク（Top の HTML に直接書いてある）
+   Layout / header — TOP・みんなの記録（本体の /explore）・ヘルプへのリンク（各ページの HTML に直接書いてある）
+   ロゴは置かない（06：Figma のとおり）。Top は画面の上に重ねる（--overlay）
    ========================================================================== */
 
 .l-header {
@@ -8,15 +9,10 @@
   z-index: var(--z-header);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: var(--space-4);
   padding: var(--space-3) var(--space-4);
   background-color: var(--color-bg);
-}
-
-.l-header__logo {
-  font-size: var(--font-size-lg);
-  font-weight: 700;
 }
 
 .l-header__list {
@@ -30,4 +26,35 @@
 
 .l-header__link[aria-current="page"] {
   color: var(--color-accent);
+}
+
+/* Top：舞台の上に重ねる（背景なし）。位置は Figma（基準のフレーム 1728×1117）に合わせて --top-u で伸び縮みする */
+.l-header--overlay {
+  position: fixed;
+  inset: 0 0 auto;
+  padding: calc(64 * var(--top-u)) calc(120 * var(--top-u)) 0 0;
+  background-color: transparent;
+}
+
+.l-header--overlay .l-header__list {
+  gap: calc(44 * var(--top-u));
+}
+
+.l-header--overlay .l-header__link {
+  font-size: calc(24 * var(--top-u));
+}
+
+/* 縦長の画面（基準のフレーム 390×844） */
+@media (max-aspect-ratio: 4/5) {
+  .l-header--overlay {
+    padding: calc(18 * var(--top-u)) calc(20 * var(--top-u)) 0 0;
+  }
+
+  .l-header--overlay .l-header__list {
+    gap: calc(18 * var(--top-u));
+  }
+
+  .l-header--overlay .l-header__link {
+    font-size: calc(14 * var(--top-u));
+  }
 }

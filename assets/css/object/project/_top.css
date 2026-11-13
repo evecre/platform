@@ -1,0 +1,529 @@
+/* ==========================================================================
+   Project / top — Top の画面（Figma の comp：01-hero / 02・03-about / 04〜08 howtouse / 09）
+   マークアップ：index.html の l-stage。切り替えの仕組みは layout/_stage.css、出現・後退は layout/_stage-motion.css
+
+   ■ 位置と大きさは Figma の座標で書く（基準のフレーム 1728×1117）
+     .p-top-at の要素は --x / --y（左上）・--w / --h（幅・高さ）を Figma の px の数字（単位なし）で持つ。
+     画面の大きさに合わせて全体が拡大縮小される（--top-u ＝ 画面に収まる 1px の大きさ。foundation/_variables.css。基準のフレームを画面の中央に置く）
+   ■ 画面をまたぐ要素（.p-top-chara・.p-top-phone）は、画面ごとに .l-stage[data-current="…"] で --x などを替える。
+     移る速さは foundation/_motion.css の --motion-persist-*
+   ========================================================================== */
+
+/* Figma の座標で置く */
+.l-stage.is-ready .p-top-at {
+  position: absolute;
+  left: calc(50% + (var(--x, 0) - var(--top-frame-w) / 2) * var(--top-u));
+  top: calc(50% + (var(--y, 0) - var(--top-frame-h) / 2) * var(--top-u));
+  width: calc(var(--w, 100) * var(--top-u));
+  height: calc(var(--h, 100) * var(--top-u));
+}
+
+/* 箱（.p-top-box）の中の .p-top-at は、箱の左上からの位置で置く（数字は同じく Figma の座標のまま書く）
+   箱だけを縦長の画面で別の大きさにするときは、箱に --box-u（中身の 1px）を付けると中身がまとめて縮む
+   ★縦長の画面で箱の --x / --y を変える箱は、横長での左上を --ox / --oy にはっきり書いておく（中身の座標は横長のままなので） */
+.p-top-box {
+  --ox: var(--x);
+  --oy: var(--y);
+}
+
+.l-stage.is-ready .p-top-box > .p-top-at {
+  left: calc((var(--x, 0) - var(--ox)) * var(--box-u, var(--top-u)));
+  top: calc((var(--y, 0) - var(--oy)) * var(--box-u, var(--top-u)));
+  width: calc(var(--w, 100) * var(--box-u, var(--top-u)));
+  height: calc(var(--h, 100) * var(--box-u, var(--top-u)));
+}
+
+/* 画像は箱いっぱいに */
+.p-top-at > img,
+img.p-top-at {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --- 背景色（舞台の背景は1枚。画面ごとに色だけ替わる） --- */
+.l-stage[data-current="hero"] { --stage-bg: var(--color-top-sky); }
+.l-stage[data-current="about"],
+.l-stage[data-current="team"] { --stage-bg: var(--color-top-cream); }
+.l-stage[data-current="step-1"],
+.l-stage[data-current="step-4"] { --stage-bg: var(--color-top-sky); }
+.l-stage[data-current="step-2"],
+.l-stage[data-current="step-5"] { --stage-bg: var(--color-top-butter); }
+.l-stage[data-current="step-3"],
+.l-stage[data-current="connect"] { --stage-bg: var(--color-top-mint); }
+
+/* --- 文字（04〜09 の STEP） --- */
+.p-top-step__number {
+  font-family: var(--font-family-display);
+  font-size: calc(64 * var(--top-u));
+  line-height: 1;
+}
+
+.p-top-step__title {
+  margin-top: calc(45 * var(--top-u));
+  font-weight: 700;
+  font-size: calc(46 * var(--top-u));
+  line-height: 1.3;
+}
+
+.p-top-step__paragraph {
+  font-size: calc(31 * var(--top-u));
+  line-height: 2.1;
+}
+
+.p-top-step__title + .p-top-step__paragraph {
+  margin-top: calc(18 * var(--top-u));
+}
+
+.p-top-step__paragraph + .p-top-step__paragraph {
+  margin-top: calc(20 * var(--top-u));
+}
+
+/* --- 01-hero ------------------------------------------------------------------
+   マスク（hero-mask.svg）の中に、雲・landform03〜01・iPad・キャラクター。mizu-phone はマスクの外で上に重ねる */
+.p-top-hero__title { --x: 536; --y: 152; --w: 670; --h: 220; }
+
+.p-top-hero__mask {
+  --x: 315; --y: 343; --w: 1105; --h: 707; --ox: 315; --oy: 343;
+  -webkit-mask: url("/assets/img/top/hero-mask.svg") center / 100% 100% no-repeat;
+  mask: url("/assets/img/top/hero-mask.svg") center / 100% 100% no-repeat;
+}
+
+.p-top-hero__landform--3 { --x: 528; --y: 483; --w: 700; --h: 353; }
+.p-top-hero__landform--2 { --x: 315; --y: 640; --w: 1105; --h: 425; }
+.p-top-hero__landform--1 { --x: 315; --y: 680; --w: 1105; --h: 338; }
+/* landform の横の移動は短く */
+.p-top-hero__landform { --motion-distance-slide: 0.75rem; }
+.p-top-hero__ipad { --x: 600; --y: 532; --w: 500; --h: 387; }
+.p-top-hero__chara { --x: 448; --y: 726; --w: 844; --h: 344; }
+
+/* hero のキャラクターの目（PDF から測った位置。キャラクターの箱に対する %。傾き・ふだんの目線も PDF のとおり） */
+.p-top-hero__eyes {
+  position: absolute;
+  left: var(--eyes-left);
+  top: var(--eyes-top);
+  width: var(--eyes-width);
+  rotate: var(--eyes-rotate, 0deg);
+}
+.p-top-hero__eyes--mizu { --eyes-left: 9.88%; --eyes-top: 32.91%; --eyes-width: 12.52%; --eyes-rotate: -9.1deg; --gaze-x: 14.3%; --gaze-y: -33.7%; }
+.p-top-hero__eyes--mori { --eyes-left: 42.10%; --eyes-top: 23.34%; --eyes-width: 14.10%; --gaze-x: 4%; --gaze-y: 36.9%; }
+.p-top-hero__eyes--iwa { --eyes-left: 76.39%; --eyes-top: 34.17%; --eyes-width: 12.50%; --eyes-rotate: 10.8deg; --gaze-x: -12.1%; --gaze-y: 33.7%; }
+
+/* mizu-phone：キャラクターと一緒にふくらむよう、ふくらむ中心をキャラクターの中心（870, 898）に置く */
+.p-top-hero__phone {
+  --x: 444; --y: 930; --w: 87; --h: 108;
+  transform-origin: calc((870 - var(--x)) * var(--top-u)) calc((898 - var(--y)) * var(--top-u));
+}
+
+/* 雲（heroClouds.js が出す）。マスクの右の外から左の外へ流れる。高さ・大きさ・速さは JS が雲ごとに変数で渡す */
+.p-top-hero__clouds {
+  position: absolute;
+  inset: 0;
+}
+
+.p-top-hero__cloud {
+  position: absolute;
+  top: var(--cloud-top, 0%);
+  left: 100%;
+  width: calc(var(--cloud-w, 200) * var(--top-u));
+  animation: top-hero-cloud var(--cloud-duration, var(--hero-cloud-speed)) linear var(--cloud-delay, 0s) both;
+}
+
+@keyframes top-hero-cloud {
+  from { left: 100%; translate: 0 0; }
+  to { left: 0%; translate: -100% 0; }
+}
+
+/* hero が見えていないときと、動きを減らす設定では止める */
+.l-stage:not([data-current="hero"]) .p-top-hero__cloud {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-top-hero__cloud {
+    animation-play-state: paused;
+  }
+}
+
+/* --- hero → 02：下から白い（02 の背景色の）幕がせり上がって hero に被さる。被さってから 02 の出現が始まる ---
+   ・hero の要素は消さずに残す（幕の下に隠れる）
+   ・舞台の背景色は、幕が被さりきってから替える（替わるのが見えないように）
+   ・02 の要素とキャラクターの出現を、幕の長さだけ遅らせる（--motion-delay-base） */
+.l-stage[data-current="about"][data-direction="forward"] .l-stage__curtain {
+  visibility: visible;
+  background-color: var(--color-top-cream);
+  animation: top-curtain-up var(--motion-curtain-duration) var(--motion-ease-curtain) both;
+}
+
+@keyframes top-curtain-up {
+  from { translate: 0 100%; }
+  to { translate: 0 0; }
+}
+
+.l-stage[data-current="about"][data-direction="forward"] .p-top-hero[data-state="leaving"] [data-enter] {
+  animation: none;
+}
+
+.l-stage.is-ready[data-current="about"][data-direction="forward"] {
+  transition-duration: 0s;
+  transition-delay: var(--motion-curtain-duration);
+}
+
+.l-stage[data-current="about"][data-direction="forward"] .p-top-about {
+  --motion-delay-base: var(--motion-curtain-duration);
+  --scene-lock: calc(var(--motion-curtain-duration) + 1.4s);
+}
+
+/* --- 02-about（キャラクターは画面をまたぐので下の .p-top-chara） --- */
+.p-top-about__text { --x: 400; --y: 262; --w: 928; --h: 240; text-align: center; }
+
+.p-top-about__title {
+  font-size: calc(60 * var(--top-u));
+}
+
+.p-top-about__lead {
+  margin-top: calc(28 * var(--top-u));
+  font-size: calc(32 * var(--top-u));
+  line-height: 2.1;
+}
+
+/* 斜めの線。--w が長さ、--line-angle が傾き（中心で回す） */
+.p-top-about__line {
+  --h: 6;
+  border-radius: var(--radius-full);
+  rotate: var(--line-angle);
+}
+.p-top-about__line--left { --x: 258; --y: 420; --w: 206; --line-angle: 70.7deg; background-color: var(--color-chara-mizu); }
+.p-top-about__line--right { --x: 1244.5; --y: 431; --w: 244; --line-angle: 118.7deg; background-color: var(--color-chara-iwa); }
+
+/* --- 03-about（キャラクターは 02 から縮みながら移る） --- */
+.p-top-team__landform { --x: 0; --y: 529; --w: 1728; --h: 588; object-fit: cover; }
+.p-top-team__text { --x: 178; --y: 320; --w: 720; --h: 470; }
+
+.p-top-team__paragraph {
+  font-size: calc(33 * var(--top-u));
+  line-height: 2.05;
+}
+
+.p-top-team__paragraph + .p-top-team__paragraph {
+  margin-top: calc(66 * var(--top-u));
+}
+
+/* UI：ノート PC（画面の右に切れる）＋ スマホ（PC の手前） */
+.p-top-team__ui { --x: 965; --y: 222; --w: 1198; --h: 586; --ox: 965; --oy: 222; }
+.p-top-team__pc { --x: 1195; --y: 222; --w: 968; --h: 586; }
+.p-top-team__phone { --x: 965; --y: 316; --w: 235; --h: 487; }
+
+/* --- 04〜08 howtouse（テキストと丸いイラスト。スマホは画面をまたぐので下の .p-top-phone） --- */
+.p-top-step__text { --w: 560; --h: 470; }
+.p-top-step--1 .p-top-step__text { --x: 423; --y: 292; }
+.p-top-step--1 .p-top-step__illust { --x: 422; --y: 467; --w: 578; --h: 578; }
+.p-top-step--2 .p-top-step__text { --x: 960; --y: 177; }
+.p-top-step--2 .p-top-step__illust { --x: 957; --y: 752; --w: 502; --h: 203; }
+.p-top-step--3 .p-top-step__text { --x: 930; --y: 177; --w: 640; }
+.p-top-step--3 .p-top-step__illust { --x: 955; --y: 493; --w: 513; --h: 513; }
+.p-top-step--4 .p-top-step__text { --x: 963; --y: 177; }
+.p-top-step--4 .p-top-step__illust { --x: 1138; --y: 594; --w: 517; --h: 404; }
+.p-top-step--5 .p-top-step__text { --x: 215; --y: 177; --w: 800; }
+.p-top-step--5 .p-top-step__illust { --x: 222; --y: 520; --w: 656; --h: 512; }
+
+/* --- 09（STEP 6）。この画面だけ背景を持ち、08 とスマホを覆う（画面をまたぐ要素の層 5 より上に重ねる） --- */
+.p-top-connect .l-stage__frame { background-color: var(--color-top-mint); }
+
+.l-stage.is-ready .p-top-connect:is([data-state="entering"], [data-state="active"]) {
+  z-index: 6;
+}
+
+.p-top-connect__content { --x: 414; --y: 305; --w: 900; --h: 560; text-align: center; color: var(--color-top-green); }
+
+.p-top-connect__content .p-top-step__title {
+  margin-top: calc(23 * var(--top-u));
+}
+
+.p-top-connect__content .p-top-step__paragraph {
+  margin-inline: auto;
+  margin-top: calc(3 * var(--top-u));
+  max-width: calc(860 * var(--top-u));
+}
+
+.p-top-connect__button {
+  display: inline-grid;
+  place-items: center;
+  width: calc(384 * var(--top-u));
+  height: calc(119 * var(--top-u));
+  margin-top: calc(80 * var(--top-u));
+  border-radius: var(--radius-full);
+  background-color: var(--color-top-green);
+  color: var(--color-text-inverse);
+  font-size: calc(46 * var(--top-u));
+  font-weight: 700;
+}
+
+/* 08 → 09：08 はそのままの位置に残り、その上に画面の中央から円が広がって 09 が被さる。背景色は被さりきってから替える */
+.l-stage[data-current="connect"][data-direction="forward"] .p-top-connect .l-stage__frame {
+  animation: top-iris var(--motion-iris-duration) var(--motion-ease-iris) both;
+}
+
+@keyframes top-iris {
+  from { clip-path: circle(0% at 50% 50%); }
+  to { clip-path: circle(72% at 50% 50%); } /* 72%：画面の四隅まで届く大きさ */
+}
+
+.l-stage[data-current="connect"] .p-top-step--5[data-state="leaving"] [data-enter] {
+  animation: none;
+}
+
+.l-stage.is-ready[data-current="connect"][data-direction="forward"] {
+  transition-duration: 0s;
+  transition-delay: var(--motion-iris-duration);
+}
+
+.l-stage[data-current="connect"][data-direction="forward"] .p-top-connect {
+  --scene-lock: calc(var(--motion-iris-duration) + 0.2s);
+}
+
+/* 09 → 01（展示モードだけ。direction loop）：09 が画面の中央へシュッと縮んで消え、その下で 01 の出現が同時に起きる
+   ・去る 09 を、出てくる 01 より上に重ねる（ふだんは出てくる画面が上）
+   ・09 の要素は個別に消さない（縮む円の中にそのまま残る） */
+.l-stage.is-ready[data-direction="loop"] .p-top-connect[data-state="leaving"] {
+  z-index: 6;
+}
+
+.l-stage.is-ready[data-direction="loop"] .p-top-connect[data-state="leaving"] .l-stage__frame {
+  animation: top-shrink var(--motion-shrink-duration) var(--motion-ease-shrink) both;
+}
+
+.l-stage[data-direction="loop"] .p-top-connect[data-state="leaving"] [data-enter] {
+  animation: none;
+}
+
+@keyframes top-shrink {
+  from { clip-path: circle(72% at 50% 50%); }
+  to { clip-path: circle(0% at 50% 50%); }
+}
+
+/* hero の出現が終わるまで（iPad は順番 5）次の操作を受け付けない */
+.p-top-hero {
+  --scene-lock: calc(var(--motion-stagger) * 4 + var(--motion-duration-enter));
+}
+
+/* スライダー：同じ文を6つ並べた帯を、3つ分（半分）動かして繰り返す（継ぎ目が見えない） */
+.p-top-connect__slider {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.p-top-connect__slider--top { top: calc(50% + (115 - var(--top-frame-h) / 2) * var(--top-u)); }
+.p-top-connect__slider--bottom { top: calc(50% + (870 - var(--top-frame-h) / 2) * var(--top-u)); }
+
+.p-top-connect__track {
+  display: flex;
+  width: max-content;
+  animation: top-slide-left var(--slider-speed) linear infinite;
+}
+
+.p-top-connect__slider--bottom .p-top-connect__track {
+  animation-name: top-slide-right;
+}
+
+.p-top-connect__slide {
+  flex-shrink: 0;
+  font-weight: 200;
+  font-size: calc(140 * var(--top-u));
+  line-height: 1;
+  white-space: pre;
+  color: var(--color-top-slider);
+}
+
+@keyframes top-slide-left {
+  from { translate: 0 0; }
+  to { translate: -50% 0; }
+}
+
+@keyframes top-slide-right {
+  from { translate: -50% 0; }
+  to { translate: 0 0; }
+}
+
+/* 09 が見えていないときと、動きを減らす設定では止める */
+.l-stage:not([data-current="connect"]) .p-top-connect__track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-top-connect__track {
+    animation-play-state: paused;
+  }
+}
+
+/* --- 画面をまたぐ要素：キャラクター（02 → 03。03 → 04 でポンッと消える） ---
+   3体で1つの箱。箱の中の位置・目は % なので、箱ごと縮めると 03 の姿になる（02 は 03 の 4.82 倍）。値は PDF から測った
+   位置は画面ごとの --x / --y / --w / --h。見えるかは --persist-opacity */
+.p-top-chara,
+.p-top-phone {
+  opacity: var(--persist-opacity, 0);
+  transition:
+    left var(--motion-persist-duration) var(--motion-persist-ease),
+    top var(--motion-persist-duration) var(--motion-persist-ease),
+    width var(--motion-persist-duration) var(--motion-persist-ease),
+    height var(--motion-persist-duration) var(--motion-persist-ease),
+    opacity var(--motion-duration-fade-out) ease;
+}
+
+/* 02 の位置（画面の下に切れる大きな3体） */
+.p-top-chara { --x: -96.8; --y: 525.5; --w: 1920; --h: 909.9; }
+.l-stage[data-current="about"] .p-top-chara { --persist-opacity: 1; }
+/* 03 の位置 */
+.l-stage[data-current="team"] .p-top-chara { --x: 663.8; --y: 889.6; --w: 398.3; --h: 188.8; --persist-opacity: 1; }
+/* hero から来たときはポンッと出る（幕が被さってから。戻ってきたときは位置が移るだけ） */
+.l-stage[data-current="about"][data-direction="forward"] .p-top-chara {
+  animation: motion-pop var(--motion-duration-pop) var(--motion-ease-pop) var(--motion-curtain-duration) both;
+}
+/* 03 → 04：その場（03 の位置）でポンッと消える */
+.l-stage[data-current="step-1"][data-direction="forward"] .p-top-chara {
+  --x: 663.8; --y: 889.6; --w: 398.3; --h: 188.8;
+  animation: motion-pop-out var(--motion-duration-pop) var(--motion-ease-leave) both;
+}
+
+/* 1体（箱に対する %）。体の素材は四辺に約 4% の余白がある（素材の viewBox ごと置く） */
+.p-top-chara__member {
+  position: absolute;
+  left: var(--member-left);
+  top: var(--member-top);
+  width: var(--member-width);
+}
+.p-top-chara__member--mizu { --member-left: 0%; --member-top: 0%; --member-width: 41.32%; }
+.p-top-chara__member--mori { --member-left: 28.05%; --member-top: 11.58%; --member-width: 44.66%; }
+.p-top-chara__member--iwa { --member-left: 61.69%; --member-top: 2.77%; --member-width: 38.31%; }
+
+.p-top-chara__body {
+  display: block;
+  width: 100%;
+}
+
+/* 目（体の箱に対する %。ふだんの目線は PDF のとおり） */
+.p-top-chara__eyes {
+  position: absolute;
+  left: var(--eyes-left);
+  top: var(--eyes-top);
+  width: var(--eyes-width);
+}
+.p-top-chara__eyes--mizu { --eyes-left: 34.72%; --eyes-top: 30.47%; --eyes-width: 35.42%; --gaze-x: 20.1%; --gaze-y: -44.9%; }
+.p-top-chara__eyes--mori { --eyes-left: 33.03%; --eyes-top: 29.01%; --eyes-width: 33.94%; --gaze-x: 0%; --gaze-y: -74.8%; }
+.p-top-chara__eyes--iwa { --eyes-left: 30.05%; --eyes-top: 30.87%; --eyes-width: 35.72%; --gaze-x: -20.2%; --gaze-y: -44.9%; }
+
+/* --- 画面をまたぐ要素：howtouse のスマホ（04〜08。09 の円の下にもそのまま残る） ---
+   1つのまま位置が移る。画面の中身（5枚）は、移りながら替わる：新しい中身を上に重ねてフェードで出し、出しきってから古い中身を消す（白く抜けない） */
+.p-top-phone { --x: 1065; --y: 165; --w: 378; --h: 783; }
+.l-stage:is([data-current="step-1"], [data-current="step-2"], [data-current="step-3"], [data-current="step-4"], [data-current="step-5"], [data-current="connect"]) .p-top-phone {
+  --persist-opacity: 1;
+}
+.l-stage:is([data-current="step-2"], [data-current="step-3"], [data-current="step-4"]) .p-top-phone { --x: 365; }
+/* 03 から来たときは下から出る */
+.l-stage[data-current="step-1"][data-direction="forward"] .p-top-phone {
+  animation: motion-fade-up var(--motion-duration-enter) var(--motion-ease-enter) both;
+}
+/* 03 より前の画面（と、最初の画面が決まる前）では描かない（中の画像を先に読まない。03 にいる間に読み始める） */
+.l-stage.is-ready .p-top-phone {
+  display: none;
+}
+
+.l-stage.is-ready:is([data-current="team"], [data-current="step-1"], [data-current="step-2"], [data-current="step-3"], [data-current="step-4"], [data-current="step-5"], [data-current="connect"]) .p-top-phone {
+  display: block;
+}
+
+.p-top-phone__screen {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0s linear var(--motion-phone-screen-duration);
+}
+
+.p-top-phone__screen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.l-stage:is([data-current="step-1"]) .p-top-phone__screen[data-screen="step-1"],
+.l-stage:is([data-current="step-2"]) .p-top-phone__screen[data-screen="step-2"],
+.l-stage:is([data-current="step-3"]) .p-top-phone__screen[data-screen="step-3"],
+.l-stage:is([data-current="step-4"]) .p-top-phone__screen[data-screen="step-4"],
+.l-stage:is([data-current="step-5"], [data-current="connect"]) .p-top-phone__screen[data-screen="step-5"] {
+  z-index: 1;
+  opacity: 1;
+  transition: opacity var(--motion-phone-screen-duration) ease;
+}
+
+/* ==========================================================================
+   縦長の画面（スマホ・縦に持ったタブレット。max-aspect-ratio 4/5）
+   基準のフレームは 390×844（foundation/_variables.css）。構図を縦に組み替える。数字は 390×844 の座標
+   ・改行（<br>）は外して、自然に折り返す
+   ・箱（hero のマスク・03 の UI）は --box-u で中身をまとめて縮める
+   ========================================================================== */
+@media (max-aspect-ratio: 4/5) {
+  .l-stage br {
+    display: none;
+  }
+
+  /* --- 01-hero --- */
+  .p-top-hero__title { --x: 45; --y: 170; --w: 300; --h: 98; }
+  .p-top-hero__mask { --x: -60; --y: 380; --w: 510; --h: 326; --box-u: calc(var(--top-u) * 510 / 1105); }
+  .p-top-hero__phone {
+    --x: -0.5; --y: 650.9; --w: 40.2; --h: 49.8;
+    transform-origin: calc(196.7 * var(--top-u)) calc(-14.7 * var(--top-u));
+  }
+
+  /* --- 02-about --- */
+  .p-top-about__text { --x: 24; --y: 150; --w: 342; --h: 280; }
+  .p-top-about__title { font-size: calc(32 * var(--top-u)); }
+  .p-top-about__lead { margin-top: calc(16 * var(--top-u)); font-size: calc(16 * var(--top-u)); line-height: 2; }
+  .p-top-about__line--left { --x: 10; --y: 175; --w: 70; --h: 3; }
+  .p-top-about__line--right { --x: 312; --y: 175; --w: 80; --h: 3; }
+
+  /* --- 03-about --- */
+  .p-top-team__text { --x: 24; --y: 110; --w: 342; --h: 300; }
+  .p-top-team__paragraph { font-size: calc(15 * var(--top-u)); line-height: 1.9; }
+  .p-top-team__paragraph + .p-top-team__paragraph { margin-top: calc(14 * var(--top-u)); }
+  .p-top-team__landform { --x: 0; --y: 560; --w: 390; --h: 284; }
+  .p-top-team__ui { --x: 40; --y: 420; --w: 420; --h: 205; --box-u: calc(var(--top-u) * 420 / 1198); }
+
+  /* --- 04〜08（上にテキスト、下にスマホとイラストを並べる。スマホは 04・08 が右、05〜07 が左） --- */
+  .p-top-step .p-top-step__text { --x: 24; --y: 90; --w: 342; --h: 290; }
+  .p-top-step__number { font-size: calc(34 * var(--top-u)); }
+  .p-top-step__title { margin-top: calc(14 * var(--top-u)); font-size: calc(24 * var(--top-u)); }
+  .p-top-step__paragraph { font-size: calc(15 * var(--top-u)); line-height: 1.9; }
+  .p-top-step__title + .p-top-step__paragraph { margin-top: calc(8 * var(--top-u)); }
+  .p-top-step__paragraph + .p-top-step__paragraph { margin-top: calc(8 * var(--top-u)); }
+  .p-top-step--1 .p-top-step__illust { --x: 15; --y: 470; --w: 190; --h: 190; }
+  .p-top-step--2 .p-top-step__illust { --x: 192; --y: 520; --w: 180; --h: 73; }
+  .p-top-step--3 .p-top-step__illust { --x: 190; --y: 470; --w: 185; --h: 185; }
+  .p-top-step--4 .p-top-step__illust { --x: 188; --y: 480; --w: 190; --h: 148; }
+  .p-top-step--5 .p-top-step__illust { --x: 12; --y: 470; --w: 195; --h: 152; }
+
+  .p-top-phone { --x: 215; --y: 380; --w: 150; --h: 311; }
+  .l-stage:is([data-current="step-2"], [data-current="step-3"], [data-current="step-4"]) .p-top-phone { --x: 25; }
+
+  /* --- 02 → 03 のキャラクター --- */
+  .p-top-chara { --x: -60; --y: 470; --w: 510; --h: 241.7; }
+  .l-stage[data-current="team"] .p-top-chara,
+  .l-stage[data-current="step-1"][data-direction="forward"] .p-top-chara { --x: 120; --y: 690; --w: 150; --h: 71.1; }
+
+  /* --- 09 --- */
+  .p-top-connect__content { --x: 24; --y: 250; --w: 342; --h: 400; }
+  .p-top-connect__content .p-top-step__title { margin-top: calc(14 * var(--top-u)); }
+  .p-top-connect__content .p-top-step__paragraph { margin-top: calc(8 * var(--top-u)); max-width: none; text-align: left; }
+  .p-top-connect__button {
+    width: calc(220 * var(--top-u));
+    height: calc(64 * var(--top-u));
+    margin-top: calc(32 * var(--top-u));
+    font-size: calc(22 * var(--top-u));
+  }
+  .p-top-connect__slide { font-size: calc(64 * var(--top-u)); }
+  .p-top-connect__slider--top { top: calc(50% + (110 - var(--top-frame-h) / 2) * var(--top-u)); }
+  .p-top-connect__slider--bottom { top: calc(50% + (700 - var(--top-frame-h) / 2) * var(--top-u)); }
+}
+

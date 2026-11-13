@@ -18,6 +18,110 @@
 
 ---
 
+## 2026-11-14 — 06 Phase 5：展示モードの 09 → 01、縦長の画面、仕上げ（06 完了）
+
+- 指示書：docs/instructions/06_top-visual.md（Phase 5・完了条件まで）
+- やったこと：
+  - 09 → 01（展示モード）：去る 09 を 01 より上（z-index 6）に重ね、09 の枠を `clip-path: circle()` で中央へ縮める。09 の要素は個別に消さない。その下で 01 の出現が同時に起きる（`--motion-shrink-duration`・`--motion-ease-shrink`）。01 の `--scene-lock` は出現の終わり（順番 5 の iPad）まで
+  - 縦長の画面（`max-aspect-ratio: 4/5`）：基準のフレームを 390×844 にし、`_top.css` の末尾で全画面の位置を組み替えた（上にテキスト、下にスマホとイラスト。hero のマスクと 03 の UI は `--box-u` で中身ごと縮める）。`<br>` を外す、ヘッダーを小さく、現在位置のドットを出さない
+  - 重なりを直した：画面をまたぐ要素（キャラクター・スマホ）を今の画面より上（5）にした（03 の丘の絵がキャラクターを覆っていた）。09 は 6 にしてスマホを覆う
+  - 不具合を直した：`#team` など画像のある画面から開くと真っ白のままだった（最初の画面が `display: none` のままで lazy の画像が読まれず、`decode()` を待ち続けた）。最初の画面に `.is-preload` を付けてから待つ
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 28 / 28 件 OK
+  - `npm run build && node scripts/serve.mjs --root dist`、1920×1080、`?kiosk=1&fast=1`：hero → about → … → connect → hero（loop）→ about → … と回る。チャットボットを開くと止まる。コンソールのエラーなし
+  - 09 → 01 の途中：09 の円が中央へ縮む
+  - 縦長：390×844・375×667・768×1024 で全画面を確かめた（横スクロールなし）。横長（1728）の位置は変わっていない（iPad x600 y532 w500）
+  - `#team` / `#how-to` / `#step-5` / `#about` で開ける。03 のキャラクターが丘の上に見える
+  - noindex：meta・`robots.txt`・`X-Robots-Tag`（dist）
+- 残っていること：
+  - Usami の調整（速さ・距離・イージング。`assets/css/README.md` §4）と、縦長の構図の確認
+  - ユーザーに確認したいこと：09 のスライダーの文（指示書は上「Knowledge Platform」下「Evecre」、PDF は上下とも「Evecre　Knowledge Platform」。今は PDF）／02 の岩の形が素材と PDF で少し違う
+  - main へのマージ（ユーザーの確認待ち）。マージしたら本番（evecre.pages.dev）で Adobe Fonts が読めるか確かめる（kit のドメイン）
+- 本体側に頼むこと：なし
+
+## 2026-11-14 — 06 Phase 4：04〜08（スマホの持ち越し・中身・背景色）と 09（円形の出現・スライダー）
+
+- 指示書：docs/instructions/06_top-visual.md（Phase 4 まで）
+- やったこと：
+  - 位置（PDF に方眼を重ねて測った）：スマホ x1065（04・08）/ x365（05〜07）y165 w378。テキストは STEP の上端から、見出し +115・本文 +205（STEP 64・見出し 46・本文 31、行の高さ 2.1）。イラスト：04 mountaineering x422 y467 w578／05 role x957 y752 w502／06 planning x955 y493 w513／07 summit x1138 y594 w517／08 writing x222 y520 w656
+  - スマホ（`.p-top-phone`）：1つのまま位置が移る（`--motion-persist-*`）。中身5枚は新しい中身を上に重ねてフェードで出し、出しきってから古い中身を消す（`--motion-phone-screen-duration`）。03 より前（と最初の画面が決まる前）は `display: none` にして、画像を hero で読まないようにした
+  - 背景色は Phase 1 の仕組み（1枚の背景の色が替わる）のまま
+  - 09：枠を `clip-path: circle()` で中央から広げる（`--motion-iris-duration`・`--motion-ease-iris`）。08 の要素は消さずに残し、背景色は被さりきってから替える。スマホは 09 の下に残る。中身は個別の出現なし
+  - スライダー：「Evecre　Knowledge Platform　」を6つ並べた帯を半分ずらして無限に流す（上は右から左・下は左から右、`--slider-speed`）。文字は 140・細い（200）・白 35%。2つ目からの文と下の帯は読み上げない。09 以外・動きを減らす設定では止める
+  - ★スライダーの文：指示書は「上：Knowledge Platform／下：Evecre」だが、PDF は上下とも「Evecre　Knowledge Platform」なので PDF に合わせた（ユーザーに確認したい）
+  - 仮の四角（`p-top-ph`）はすべて画像に置き換えて、CSS も消した
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 28 / 28 件 OK、コンソールのエラーなし
+  - PDF を半透明で重ねて、04〜09 の位置がほぼ一致（STEP の文字は Ultra なので形が違う）
+  - 04 → 05 の途中：スマホが右から左へ移りながら、中身が create-event → invite に重なって替わる
+  - 08 → 09 の途中：08（テキスト・イラスト・スマホ）がそのまま残り、中央の円が広がる
+  - スライダー：1秒で上は左へ、下は右へ動く
+  - hero を開いた時点で読む画像は hero のものだけ（スマホの中身は 03 で読み始める）
+  - 09 から ↑ で 08 に戻ると、スマホは 08 の中身
+- 残っていること・次にやること：Phase 5（展示モードの 09 → 01 のループ、スマホの見せ方、仕上げ、ドキュメント）
+- ユーザーに確認したいこと：スライダーの文（上記）
+- 本体側に頼むこと：なし
+
+## 2026-11-14 — 06 Phase 3：02・03（キャラクターの持ち越し）とキャラクターの目
+
+- 指示書：docs/instructions/06_top-visual.md（Phase 3 まで）
+- やったこと：
+  - 測り方：PDF を 3 倍で書き出し、色の外接矩形で測った（白目・黒目・体）。体の素材（`character-*-body.svg`）は四辺に約 4% の余白があるので、その分を足して置いた
+  - 02 と 03 のキャラクターは同じ並びで、02 は 03 の 4.82 倍（白目の幅で確かめた）。3体を1つの箱（`.p-top-chara`。森がいちばん手前）にして、02（x-96.8 y525.5 w1920）→ 03（x663.8 y889.6 w398.3）へ縮みながら移る。03 → 04 で 03 の位置のままポンッと消える
+  - 目：`object/component/_eyes.css`（`c-eyes`：白目＋黒目を `<img>` で重ねる。瞬き `.is-blink`、目線 `data-look` 8方向、白目からはみ出さないよう clamp）・`assets/js/modules/eyes.js`（目ごとに別々のタイマー。`data-eyes` の画面が今の画面のときだけ動く。値は `--eye-*`）。SVG をページに書き込まないので、Illustrator の id・色の干渉は起きない
+  - 目の位置・ふだんの目線（PDF）：02/03 は 水 20.1%/-44.9%・森 0/-74.8%・岩 -20.2%/-44.9%。hero は目が傾いている（水 -9.1°・岩 10.8°）ので `--eyes-rotate` で合わせた。目線は 水 14.3%/-33.7%・森 4%/36.9%（下向き）・岩 -12.1%/33.7%
+  - 02：テキスト（見出し 60・本文 32、行の高さ 2.1）、斜めの線2本（CSS。テキストと一緒に出る・消える）
+  - 03：`about-landform`（画面の下いっぱい）、テキスト（33、行の高さ 2.05）、UI（PC x1195 y222 w968 ＋ スマホ x965 y316 w235。まとめて右から）。画像は `loading="lazy"`（02 にいるときに先に読まれる）
+  - トークン：`--color-chara-mizu` / `--color-chara-iwa`
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 28 / 28 件 OK、コンソールのエラーなし
+  - PDF を半透明で重ねて、02・03・hero の位置がほぼ一致（03 の背景は about-landform なので違う）。目線を戻した状態の黒目の位置：02 の水 (263.9, 777.3) ／ PDF (264.0, 777.3)、岩・森も一致。hero の目も数 px 以内
+  - 12 秒の記録：hero にいる間は hero の目だけが動き、3体がばらばらのタイミングで瞬き（ときどき2回）・目線を動かした
+- 残っていること・次にやること：Phase 4（04〜08 のスマホの持ち越し・中身の切り替え・背景色、09 の円形の出現・スライダー）
+- 本体側に頼むこと：なし
+
+## 2026-11-14 — 06 Phase 2：01-hero（マスク・雲・出現・白い幕）
+
+- 指示書：docs/instructions/06_top-visual.md（Phase 2 まで）
+- やったこと：
+  - 位置は PDF（`.tmp-measure/` に書き出して方眼を重ねて測った。`.tmp-measure/` は .gitignore）：ロゴ x536 y152 w670／マスク x315 y343 w1105 h707／landform03（奥の三角）x528 y483 w700／landform02（青い山並み）x315 y640 w1105／landform01（手前の緑）x315 y680 w1105／iPad x600 y532 w500／キャラクター x448 y726 w844／mizu-phone x444 y930 w87。雲の幅は 108 / 62 / 78
+  - マスク：`hero-mask.svg` を CSS の `mask`（`-webkit-mask` も）。中の要素は `.p-top-box` で、数字は Figma の座標のまま
+  - 出現：ロゴ fade-up 1／キャラクター pop 2（mizu-phone も pop 2。ふくらむ中心をキャラクターの中心にした）／landform 01・03 slide-left 2・02 slide-right 2（距離 0.75rem）／iPad fade-up 5
+  - 雲：`assets/js/modules/heroClouds.js`。はじめから2つ（途中の位置から）、そのあと 8〜18 秒おきに1つ、同時に4つまで。右の外 → 左の外、60 秒 ±15%。高さはマスクの上 40% のどこか。hero 以外では新しく出さず、出ている雲は CSS で止める。動きを減らす設定では止めて置くだけ
+  - hero → 02：幕（`l-stage__curtain`。02 の背景色）が下からせり上がる。hero の要素は消さずに残す。舞台の背景色は被さりきってから替える。02 の要素とキャラクターの出現は幕のあと（`--motion-delay-base`）。02 の `--scene-lock` は幕＋1.4s（`@property` で `calc()` を時間として読めるようにした）
+  - 読み込み：hero の画像は `fetchpriority="high"`・srcset/sizes。見えない画面は `display: none`、前後の画面は `.is-preload`（隠したまま描く）。共通の `assets/js/modules/cssVars.js`
+  - 重なりを 去る画面 1 ＜ 幕 2 ＜ 画面をまたぐ要素 3 ＜ 今の画面 4 にした
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 27 / 27 件 OK、コンソールのエラーなし
+  - 1728×1117 で PDF とほぼ同じ構図（目は Phase 3）。幕：450ms で半分まで上がり、hero は下に残る／1050ms で被さりきり、02 のテキストはまだ（このあと出る）。`--scene-lock` は 2.3s として読めた
+  - 読む画像：1280×800 で landform 768w・1536w、3840×2160 で 1920w・2560w（5120w は読まない）、iPad は avif。開いた時点で読むのは hero の画像だけ
+  - 1280×800 で構図が保たれる。動きを減らす設定で雲が止まる
+- 残っていること・次にやること：Phase 3（02・03 のキャラクター、目の動き、03 の素材）
+- 本体側に頼むこと：なし
+
+## 2026-11-13 — 06 Phase 0・1：Top の切り替えの仕組みと、動きの変数・プリセット
+
+- 指示書：docs/instructions/06_top-visual.md（Usami の回答を入れた版。`docs/` 直下の新しい版を写した）。Phase 1 まで
+- Phase 0：Figma は MCP の月の回数制限があるので使わず、Usami の PDF（`docs/evecre-web.pdf`、9画面・1728×1117。commit していない）から、素材の使い道・背景色・文字を確かめた
+- Usami の決定（2026-11-13）：ヘルプを先に main へ（`aed9e89`）／英字は Ultra（Google Fonts）・日本語はりょうゴシック PlusN（Adobe Fonts）／03 の背景は `about-landform`／02 の斜めの線は CSS／04〜08 のイラストと role はテキストと一緒／08 の文は PDF のとおり／ヘッダーのロゴは消す／目の位置は PDF から／背景色は PDF から測った値
+- やったこと（Phase 1）：
+  - `scrollStage.js` を作り直した：1回の操作で1画面（ホイールはひと続きの回転で1画面・スワイプ・キー・ドット）。`data-state` は before / entering / active / leaving / after、舞台に `data-current`・`data-direction`。切り替え中は `--scene-lock`（CSS）の間、入力を受けない。`#how-to` など（id か data-scene）で開く・移る（チャットボットの `/#how-to` のため）。最初の画面の画像を読んでから出す（`ready`）
+  - `autoAdvance.js`：最後の次は `goTo(0, { direction: 'loop' })`。`top.js` は `stage.ready` のあとで自動送りを始める
+  - CSS：`foundation/_motion.css`（動きの値）・`_animation.css` に `motion-*`（形）・`layout/_stage.css`（作り直し）・`layout/_stage-motion.css`（プリセット）・`object/project/_top.css`（位置は Figma の座標 `--x/--y/--w/--h`、`--top-u`。背景色・画面をまたぐ要素）。`_hero.css` は消した
+  - `index.html`：9画面（hero / about / team / step-1〜5 / connect）。テキストは指示書と PDF のとおり。画像の場所は仮の四角（`p-top-ph`）。画面をまたぐキャラクターとスマホは `l-stage__persistent`
+  - ヘッダー：ロゴを消した（Top・ヘルプ）。Top は舞台の上に重ねる（`l-header--overlay`）。「Top」→「TOP」
+  - フォント：`assets/js/modules/webfonts.js`（Adobe Fonts の kit は JS だけ。インラインスクリプトの代わり）・Top の `<head>` に Ultra。`--font-family-base` / `--font-family-display`
+  - トークン：`--color-top-sky/cream/butter/mint/green`、`--top-frame-w/h`・`--top-u`
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 25 / 25 件 OK
+  - 1728×1117：hero から出現。トラックパッドの慣性（60回の小さなホイール）で1画面だけ進む。切り替え中の ↓ の連打は無視。↑ で戻ると去る画面は短いフェード。ドットで飛べる。09 から ↓ で進まない。`/#how-to` で STEP 1 から開く。タッチのスワイプで次へ。ページの scrollY は 0 のまま
+  - 02 → 03 でキャラクター（仮の四角）が1つのまま縮みながら移る。04 → 05 でスマホが右から左へ移り、背景色がなめらかに替わる。09 はスマホを覆う
+  - 展示モード（fast）：09 → 01（direction loop）→ 02 と回る
+  - 動きを減らす設定で `--scene-lock` が 0.5s・距離 0
+  - 1280×720 で全体が縮んで構図が保たれる。コンソールのエラーなし。りょうゴシック・Ultra が localhost で読めた
+- 残っていること・次にやること：Phase 2（01-hero：マスク・雲・出現・白い幕の切り替え、素材の読み込み）
+- 本体側に頼むこと：なし
+
 ## 2026-11-13 — ヘルプのページ（仕組みと記事の下書き）・05 のマージ
 
 - 依頼：「ヘルプページを新しく作成して。https://aday.hitotabi.design/help を参考に」（指示書なし）。05 は main にマージ済み（`cd3172a`）

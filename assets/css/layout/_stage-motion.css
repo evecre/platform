@@ -1,0 +1,66 @@
+/* ==========================================================================
+   Layout / stage-motion — Top の画面の中の要素の出現・後退（プリセット）
+   HTML の属性で選ぶ：
+     data-enter="fade-up | pop | slide-left | slide-right | none"   出現（画面が entering のとき）
+     data-leave="fade-up-out | pop-out | none"                      後退（画面が leaving のとき）。省略すると短いフェード
+     data-order="1〜8"        出現の順番。遅れ＝(n - 1) × --motion-stagger
+     data-leave-order="1〜8"  後退の順番（省略は 1＝遅れなし）
+   ★画面の中で見える要素には、すべて data-enter を付ける（付けない要素は、後退のときにアニメーションせず、最後に急に消える）
+   ★戻る（上へ）ときは、去る画面の要素は data-leave にかかわらず短いフェードで消える
+   ★画面全体の出現を遅らせたいとき（幕が被さるのを待つなど）は、その画面に --motion-delay-base を付ける
+   値（長さ・距離・イージング）は foundation/_motion.css、動きの形は foundation/_animation.css の motion-*
+   ========================================================================== */
+
+/* --- 順番 → 遅れ ------------------------------------------------------------ */
+.l-stage [data-order="1"] { --motion-delay: 0s; }
+.l-stage [data-order="2"] { --motion-delay: var(--motion-stagger); }
+.l-stage [data-order="3"] { --motion-delay: calc(var(--motion-stagger) * 2); }
+.l-stage [data-order="4"] { --motion-delay: calc(var(--motion-stagger) * 3); }
+.l-stage [data-order="5"] { --motion-delay: calc(var(--motion-stagger) * 4); }
+.l-stage [data-order="6"] { --motion-delay: calc(var(--motion-stagger) * 5); }
+.l-stage [data-order="7"] { --motion-delay: calc(var(--motion-stagger) * 6); }
+.l-stage [data-order="8"] { --motion-delay: calc(var(--motion-stagger) * 7); }
+
+.l-stage [data-leave-order="2"] { --motion-leave-delay: var(--motion-stagger); }
+.l-stage [data-leave-order="3"] { --motion-leave-delay: calc(var(--motion-stagger) * 2); }
+.l-stage [data-leave-order="4"] { --motion-leave-delay: calc(var(--motion-stagger) * 3); }
+
+/* --- 出現（entering） ------------------------------------------------------- */
+.l-stage__scene[data-state="entering"] [data-enter="fade-up"] {
+  animation: motion-fade-up var(--motion-duration-enter) var(--motion-ease-enter) calc(var(--motion-delay-base, 0s) + var(--motion-delay, 0s)) both;
+}
+
+.l-stage__scene[data-state="entering"] [data-enter="slide-left"] {
+  animation: motion-slide-left var(--motion-duration-enter) var(--motion-ease-enter) calc(var(--motion-delay-base, 0s) + var(--motion-delay, 0s)) both;
+}
+
+.l-stage__scene[data-state="entering"] [data-enter="slide-right"] {
+  animation: motion-slide-right var(--motion-duration-enter) var(--motion-ease-enter) calc(var(--motion-delay-base, 0s) + var(--motion-delay, 0s)) both;
+}
+
+.l-stage__scene[data-state="entering"] [data-enter="pop"] {
+  animation: motion-pop var(--motion-duration-pop) var(--motion-ease-pop) calc(var(--motion-delay-base, 0s) + var(--motion-delay, 0s)) both;
+}
+
+/* --- 後退（leaving） -------------------------------------------------------- */
+/* 指定が無い要素は短いフェード */
+.l-stage__scene[data-state="leaving"] [data-enter] {
+  animation: motion-fade-out var(--motion-duration-fade-out) ease var(--motion-leave-delay, 0s) both;
+}
+
+.l-stage__scene[data-state="leaving"] [data-leave="fade-up-out"] {
+  animation: motion-fade-up-out var(--motion-duration-leave) var(--motion-ease-leave) var(--motion-leave-delay, 0s) both;
+}
+
+.l-stage__scene[data-state="leaving"] [data-leave="pop-out"] {
+  animation: motion-pop-out var(--motion-duration-pop) var(--motion-ease-leave) var(--motion-leave-delay, 0s) both;
+}
+
+.l-stage__scene[data-state="leaving"] [data-leave="none"] {
+  animation: none;
+}
+
+/* 戻る（上へ）ときは、去る画面を短いフェードで消す（専用の逆再生は作らない） */
+.l-stage[data-direction="back"] .l-stage__scene[data-state="leaving"] [data-enter] {
+  animation: motion-fade-out var(--motion-duration-fade-out) ease both;
+}
