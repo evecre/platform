@@ -98,6 +98,7 @@ Top は、**1回のスクロール操作（ホイール・スワイプ・↓↑ 
 | キャラクターの目（瞬き・目線） | `--eye-blink-duration`・`--eye-blink-interval-min` / `-max`・`--eye-blink-double-chance`（2回続ける割合）・`--eye-look-duration`・`--eye-look-distance-x` / `-y`（動く量。黒目の大きさに対する %）・`--eye-look-interval-min` / `-max`・`--eye-look-hold-min` / `-max`（動かしたままにする長さ） |
 | 目の位置・傾き・ふだんの目線 | `_top.css` の `.p-top-hero__eyes--…`・`.p-top-chara__eyes--…`（`--eyes-left/top/width`・`--eyes-rotate`・`--gaze-x/y`。PDF から測った値） |
 | 04〜08 のスマホの中身が替わる速さ | `--motion-phone-screen-duration`（新しい中身がフェードで出て、出しきってから古い中身が消える） |
+| 09 → 01 の収縮（展示モード） | `--motion-shrink-duration`・`--motion-ease-shrink`（その下で 01 の出現が同時に起きる） |
 | 08 → 09 の円形の出現 | `--motion-iris-duration`・`--motion-ease-iris`（円の大きさは `_top.css` の `top-iris`） |
 | 09 のスライダー | `--slider-speed`（1周の時間）。文字の色は `_variables.css` の `--color-top-slider`、文は `index.html` の `p-top-connect__slide` |
 | hero の雲 | `--hero-cloud-speed`（横断の時間）・`--hero-cloud-interval-min` / `-max`（出る間隔）・`--hero-cloud-max`（同時の上限）・`--hero-cloud-initial`（はじめから流れている数）・`--hero-cloud-band`（出る高さ：マスクの上からこの割合まで）。雲の大きさは `heroClouds.js` の `CLOUDS`（Figma の幅） |
@@ -174,6 +175,11 @@ HTML の属性で選ぶ（`layout/_stage-motion.css`）。
 - 幕を 02 の背景色にして、下からせり上げる（`top-curtain-up`）
 - hero の要素は消さずに残す（幕の下に隠れる）。舞台の背景色は幕が被さりきってから替える
 - 02 の出現を幕の長さだけ遅らせる：`.p-top-about { --motion-delay-base: var(--motion-curtain-duration); }`（`--motion-delay-base` は画面全体の出現の遅れ。プリセットの遅れに足される）
+
+### 4-4-3. 縦長の画面（スマホ・縦に持ったタブレット）
+
+- `max-aspect-ratio: 4/5` で、基準のフレームが **390×844** に替わる（`foundation/_variables.css`）。位置は `_top.css` の末尾の「縦長の画面」の節に、390×844 の座標で書いてある
+- 構図：上にテキスト、下にスマホとイラストを並べる（04〜08）。hero のマスクと 03 の UI は箱ごと縮める（`--box-u`）。`<br>` は外して自然に折り返す。現在位置のドットは出さない（スワイプで移る）
 
 ### 4-5. JS が付けるもの（CSS が見るもの）
 

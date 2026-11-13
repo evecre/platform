@@ -40,7 +40,8 @@
   --motion-iris-duration: 1.2s;     /* 08 → 09 の円形の出現 */
   --motion-ease-iris: cubic-bezier(0.6, 0, 0.3, 1);
   --motion-phone-screen-duration: 0.5s; /* 04〜08 のスマホの中身が替わる長さ（新しい中身がフェードで出る） */
-  --motion-shrink-duration: 0.9s;   /* 09 → 01 の収縮（展示モード） */
+  --motion-shrink-duration: 0.9s;   /* 09 → 01 の収縮（展示モード）。その下で 01 の出現が同時に起きる */
+  --motion-ease-shrink: cubic-bezier(0.7, 0, 0.3, 1);
 
   /* --- キャラクターの目（01〜03。assets/js/modules/eyes.js が読む。目ごとに別々のタイミング） --- */
   --eye-blink-duration: 0.15s;      /* 瞬き1回の長さ */
@@ -79,6 +80,7 @@
     --motion-persist-duration: 0s;
     --motion-curtain-duration: 0.3s;
     --motion-iris-duration: 0.3s;
+    --motion-shrink-duration: 0.3s;
     --motion-phone-screen-duration: 0.2s;
     --scene-lock: 0.5s; /* 0 にしない（トラックパッドの慣性で何画面も進まないように） */
   }

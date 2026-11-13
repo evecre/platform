@@ -43,3 +43,18 @@
 .l-header--overlay .l-header__link {
   font-size: calc(24 * var(--top-u));
 }
+
+/* 縦長の画面（基準のフレーム 390×844） */
+@media (max-aspect-ratio: 4/5) {
+  .l-header--overlay {
+    padding: calc(18 * var(--top-u)) calc(20 * var(--top-u)) 0 0;
+  }
+
+  .l-header--overlay .l-header__list {
+    gap: calc(18 * var(--top-u));
+  }
+
+  .l-header--overlay .l-header__link {
+    font-size: calc(14 * var(--top-u));
+  }
+}

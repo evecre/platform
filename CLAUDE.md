@@ -187,11 +187,14 @@ robots.txt  _headers               検索エンジン対策（§6）
   - ★JS に動きの時間・距離の数字を書かない。値は `foundation/_motion.css`、プリセットは `layout/_stage-motion.css`（`data-enter` / `data-leave` / `data-order`）、位置は `object/project/_top.css`（Figma の座標 `--x/--y/--w/--h`・`--top-u`）。**調整の仕方は `assets/css/README.md` §4**
   - 舞台の背景は1枚で、色だけが画面ごとに替わる（`--stage-bg`）。画面は背景を持たない（09 だけ持つ）
   - 画面をまたぐ要素（キャラクター・howtouse のスマホ）は `l-stage__persistent` の1つの要素を、画面ごとの変数で動かす
-  - 重なり：去る画面 1 ＜ 幕（`l-stage__curtain`）2 ＜ 画面をまたぐ要素 3 ＜ 今の画面 4
+  - 重なり：去る画面 1 ＜ 幕（`l-stage__curtain`）2 ＜ 今の画面 4 ＜ 画面をまたぐ要素 5 ＜ 09（6。スマホを覆う）
   - 見えない画面は `display: none`。今の画面の前後に `.is-preload`（隠したまま描いて画像を先に読む）。hero 以外の画像は `loading="lazy"`
   - JS が読む CSS の時間・数は `assets/js/modules/cssVars.js`（`readCssTime` / `readCssNumber`）。`calc()` で書く変数は `_motion.css` の `@property` で型を登録する（`--scene-lock`）
 - 02・03（Phase 3）：キャラクターは3体で1つの箱（`.p-top-chara`。体は `character-*-body.svg`、目は `c-eyes`）。02 は 03 の 4.82 倍で、箱ごと縮めて 03 へ移る。03 → 04 でポンッと消える。02 の斜めの線は CSS（`.p-top-about__line`）。03 は `about-landform`・UI（PC ＋ スマホ。まとめて右から）
 - 04〜08・09（Phase 4）：スマホは `.p-top-phone`（画面をまたぐ1つ。04・08 は右 x1065、05〜07 は左 x365）。中身5枚（`data-screen`）は、新しい中身を上に重ねてフェードで出し、出しきってから古い中身を消す（白く抜けない）。03 より前は `display: none`（中の画像を読まない）。丸いイラスト・role はテキストと一緒（fade-up 2・fade-up-out）。08 → 09 は 08 をそのまま残し、09 の枠を `clip-path: circle()` で中央から広げる（背景色は被さりきってから）。スライダーは同じ文を6つ並べた帯を半分ずらして無限に流す（上は右から左・下は左から右。09 以外・動きを減らす設定では止める）
+- 09 → 01（Phase 5。展示モードだけ）：`direction: 'loop'`。09 の枠が `clip-path` で中央へ縮み、その下で 01 の出現が同時に起きる（`--motion-shrink-*`）。スクロールでは 09 の次へ進まない
+- 縦長の画面（Phase 5）：`max-aspect-ratio: 4/5` で基準のフレームを 390×844 にし、`_top.css` の末尾で位置を組み替える。箱は `--box-u` で中身ごと縮める（箱の横長での左上は `--ox` / `--oy` にはっきり書く）。ドットは出さない
+- 最初の画面（`#…` で開いたときも）は `.is-preload` で隠したまま描いてから画像を待つ（`display: none` のままだと lazy の画像が読まれず、待ち続ける）
 - 目（Phase 3）：`object/component/_eyes.css`（`c-eyes`）＋ `assets/js/modules/eyes.js`。位置・傾き・ふだんの目線は PDF から測った値（`_top.css`）。**目の位置は勝手に変えない**（Figma に合わせてある）。値は `--eye-*`
 - 01-hero（Phase 2）：マスク（`hero-mask.svg` を CSS の mask に。中の要素は `.p-top-box` の中で Figma の座標）。雲は `assets/js/modules/heroClouds.js`（マスクの右の外から左へ。種類・高さ・速さ・間隔はランダム、値は `--hero-cloud-*`。hero 以外では新しく出さず、CSS で止まる）。hero → 02 は 02 の背景色の幕が下からせり上がる（hero の要素は残す・背景色は被さりきってから替える・02 の出現は `--motion-delay-base` で幕のあと）
 - フォント：日本語＝りょうゴシック PlusN（Adobe Fonts の kit `jtx8lwo`。JS だけの kit なので `assets/js/modules/webfonts.js` が読む。★kit のドメインに localhost と evecre.pages.dev が要る）、英字の見出し＝Ultra（Google Fonts。Top の `<head>`）。`--font-family-base` / `--font-family-display`

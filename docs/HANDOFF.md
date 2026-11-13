@@ -18,6 +18,27 @@
 
 ---
 
+## 2026-11-14 — 06 Phase 5：展示モードの 09 → 01、縦長の画面、仕上げ（06 完了）
+
+- 指示書：docs/instructions/06_top-visual.md（Phase 5・完了条件まで）
+- やったこと：
+  - 09 → 01（展示モード）：去る 09 を 01 より上（z-index 6）に重ね、09 の枠を `clip-path: circle()` で中央へ縮める。09 の要素は個別に消さない。その下で 01 の出現が同時に起きる（`--motion-shrink-duration`・`--motion-ease-shrink`）。01 の `--scene-lock` は出現の終わり（順番 5 の iPad）まで
+  - 縦長の画面（`max-aspect-ratio: 4/5`）：基準のフレームを 390×844 にし、`_top.css` の末尾で全画面の位置を組み替えた（上にテキスト、下にスマホとイラスト。hero のマスクと 03 の UI は `--box-u` で中身ごと縮める）。`<br>` を外す、ヘッダーを小さく、現在位置のドットを出さない
+  - 重なりを直した：画面をまたぐ要素（キャラクター・スマホ）を今の画面より上（5）にした（03 の丘の絵がキャラクターを覆っていた）。09 は 6 にしてスマホを覆う
+  - 不具合を直した：`#team` など画像のある画面から開くと真っ白のままだった（最初の画面が `display: none` のままで lazy の画像が読まれず、`decode()` を待ち続けた）。最初の画面に `.is-preload` を付けてから待つ
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 28 / 28 件 OK
+  - `npm run build && node scripts/serve.mjs --root dist`、1920×1080、`?kiosk=1&fast=1`：hero → about → … → connect → hero（loop）→ about → … と回る。チャットボットを開くと止まる。コンソールのエラーなし
+  - 09 → 01 の途中：09 の円が中央へ縮む
+  - 縦長：390×844・375×667・768×1024 で全画面を確かめた（横スクロールなし）。横長（1728）の位置は変わっていない（iPad x600 y532 w500）
+  - `#team` / `#how-to` / `#step-5` / `#about` で開ける。03 のキャラクターが丘の上に見える
+  - noindex：meta・`robots.txt`・`X-Robots-Tag`（dist）
+- 残っていること：
+  - Usami の調整（速さ・距離・イージング。`assets/css/README.md` §4）と、縦長の構図の確認
+  - ユーザーに確認したいこと：09 のスライダーの文（指示書は上「Knowledge Platform」下「Evecre」、PDF は上下とも「Evecre　Knowledge Platform」。今は PDF）／02 の岩の形が素材と PDF で少し違う
+  - main へのマージ（ユーザーの確認待ち）。マージしたら本番（evecre.pages.dev）で Adobe Fonts が読めるか確かめる（kit のドメイン）
+- 本体側に頼むこと：なし
+
 ## 2026-11-14 — 06 Phase 4：04〜08（スマホの持ち越し・中身・背景色）と 09（円形の出現・スライダー）
 
 - 指示書：docs/instructions/06_top-visual.md（Phase 4 まで）

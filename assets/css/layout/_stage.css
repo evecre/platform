@@ -25,7 +25,7 @@
 }
 
 /* --- 画面 --------------------------------------------------------------------
-   重なり（下から）：去る画面 1 ＜ 幕 2 ＜ 画面をまたぐ要素 3 ＜ 今の画面 4
+   重なり（下から）：去る画面 1 ＜ 幕 2 ＜ 今の画面 4 ＜ 画面をまたぐ要素 5（09 のように、またぐ要素を覆う画面は _top.css で 6 にする）
    見えない画面は display: none（中の loading="lazy" の画像を読ませない）。
    今の画面の前後（.is-preload）は、隠したまま描いて画像を先に読ませる */
 .l-stage.is-ready .l-stage__scene {
@@ -81,9 +81,8 @@
 }
 
 /* --- 画面をまたいで残る要素の層（キャラクター・howtouse のスマホ） ---
-   重なり：去る画面・幕 ＜ この層（3）＜ 今の画面（4）。
-   画面は背景を持たない（舞台の背景が見える）ので、この層は今の画面の後ろから透けて見える。
-   背景を持つ画面（09 の円など）は、この層を覆い隠せる。
+   重なり：去る画面・幕・今の画面 ＜ この層（5）。今の画面の背景の絵（03 の丘など）より手前に出る。
+   この層を覆いたい画面（09 の円）は、その画面の z-index を 6 にする（_top.css）。
    位置・大きさは、画面ごとの CSS 変数で object/project/_top.css が決める（l-stage[data-current="…"]） */
 .l-stage__persistent {
   display: none;
@@ -92,7 +91,7 @@
 .l-stage.is-ready .l-stage__persistent {
   position: absolute;
   inset: 0;
-  z-index: 3;
+  z-index: 5;
   display: block;
   pointer-events: none;
 }
@@ -108,4 +107,11 @@
 
 .l-stage:not(.is-ready) .l-stage__indicator {
   display: none;
+}
+
+/* 縦長の画面では現在位置のドットを出さない（画面の要素と重なるため。スワイプで移る） */
+@media (max-aspect-ratio: 4/5) {
+  .l-stage__indicator {
+    display: none;
+  }
 }

@@ -180,6 +180,8 @@ export function createScrollStage(stage, { indicator = null } = {}) {
 
   // 最初の画面の画像が読めてから、最初の出現を始める（読み込み中に出現が空振りしないように）
   const first = Math.max(0, indexFromHash(window.location.hash));
+  // 隠したまま描いて、中の loading="lazy" の画像を読ませる（display: none のままだと読まれず、待ち続けてしまう）
+  scenes[first].classList.add('is-preload');
   const ready = waitForImages(scenes[first]).then(() => {
     goTo(first, { direction: 'forward' });
   });

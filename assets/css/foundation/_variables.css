@@ -91,6 +91,14 @@
 }
 
 /* 動きを減らす設定のときは、時間のトークンを 0 にする（トークンを使っていれば自動で止まる） */
+/* 縦長の画面（スマホ・縦に持ったタブレット）：Top の基準のフレームを 390×844 にする（位置は object/project/_top.css の縦長の節） */
+@media (max-aspect-ratio: 4/5) {
+  :root {
+    --top-frame-w: 390;
+    --top-frame-h: 844;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     --duration-fast: 0s;
