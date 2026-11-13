@@ -40,6 +40,19 @@
   --motion-iris-duration: 1.2s;     /* 08 → 09 の円形の出現 */
   --motion-shrink-duration: 0.9s;   /* 09 → 01 の収縮（展示モード） */
 
+  /* --- キャラクターの目（01〜03。assets/js/modules/eyes.js が読む。目ごとに別々のタイミング） --- */
+  --eye-blink-duration: 0.15s;      /* 瞬き1回の長さ */
+  --eye-blink-interval-min: 2s;     /* 次の瞬きまで（この間でランダム） */
+  --eye-blink-interval-max: 6s;
+  --eye-blink-double-chance: 0.2;   /* 2回続けて瞬きする割合（0〜1） */
+  --eye-look-duration: 0.4s;        /* 黒目が動く速さ */
+  --eye-look-distance-x: 14%;       /* 黒目が動く量（黒目の大きさに対する %。白目からはみ出す分は止まる） */
+  --eye-look-distance-y: 45%;
+  --eye-look-interval-min: 4s;      /* 次に目線を動かすまで（この間でランダム） */
+  --eye-look-interval-max: 9s;
+  --eye-look-hold-min: 1.2s;        /* 目線を動かしたままにする長さ（このあとふだんの目線に戻る） */
+  --eye-look-hold-max: 2.5s;
+
   /* --- hero の雲・09 のスライダー --- */
   --hero-cloud-speed: 60s;          /* 雲がマスクの右の外から左の外まで流れる時間（遅め）。雲ごとに ±15% ばらつく */
   --hero-cloud-interval-min: 8s;    /* 次の雲が出るまでの間隔（この間でランダム） */

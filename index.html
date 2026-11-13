@@ -57,8 +57,13 @@
             <source type="image/avif" srcset="/assets/img/top/ipad-mainboard.avif">
             <img class="p-top-hero__ipad-img" src="/assets/img/top/ipad-mainboard.png" width="2960" height="2290" alt="iPad で開いたイベクリのメインボード" fetchpriority="high">
           </picture>
-          <!-- ★目は 06 Phase 3 で動かす（SVG をページに直接書き込む） -->
-          <img class="p-top-at p-top-hero__chara" data-enter="pop" data-order="2" src="/assets/img/top/hero-charcters.svg" width="2020" height="824" alt="イベクリのキャラクター（水・森・岩）">
+          <!-- キャラクター（目の無い1枚）＋ 目（c-eyes。位置・傾き・ふだんの目線は _top.css の .p-top-hero__eyes--…） -->
+          <div class="p-top-at p-top-hero__chara" data-enter="pop" data-order="2">
+            <img class="p-top-hero__chara-img" src="/assets/img/top/hero-charcters.svg" width="2020" height="824" alt="イベクリのキャラクター（水・森・岩）">
+            <span class="c-eyes p-top-hero__eyes p-top-hero__eyes--mizu" data-eyes="hero" aria-hidden="true"><span class="c-eyes__inner"><img class="c-eyes__white" src="/assets/img/character/character-eye.svg" alt=""><img class="c-eyes__iris" src="/assets/img/character/character-mizu-iris.svg" alt=""></span></span>
+            <span class="c-eyes p-top-hero__eyes p-top-hero__eyes--mori" data-eyes="hero" aria-hidden="true"><span class="c-eyes__inner"><img class="c-eyes__white" src="/assets/img/character/character-eye.svg" alt=""><img class="c-eyes__iris" src="/assets/img/character/character-mori-iris.svg" alt=""></span></span>
+            <span class="c-eyes p-top-hero__eyes p-top-hero__eyes--iwa" data-eyes="hero" aria-hidden="true"><span class="c-eyes__inner"><img class="c-eyes__white" src="/assets/img/character/character-eye.svg" alt=""><img class="c-eyes__iris" src="/assets/img/character/character-iwa-iris.svg" alt=""></span></span>
+          </div>
         </div>
 
         <!-- キャラクターと一緒にポンッと出る（ふくらむ中心はキャラクターの中心。_top.css の transform-origin） -->
@@ -69,6 +74,9 @@
     <!-- 02-about（キャラクターは画面をまたぐので l-stage__persistent にある） -->
     <section class="p-top-about l-stage__scene" data-scene="about">
       <div class="l-stage__frame">
+        <!-- 斜めの線（CSS で描く）。テキストと一緒に出る・消える -->
+        <span class="p-top-at p-top-about__line p-top-about__line--left" data-enter="fade-up" data-order="2" data-leave="fade-up-out" aria-hidden="true"></span>
+        <span class="p-top-at p-top-about__line p-top-about__line--right" data-enter="fade-up" data-order="2" data-leave="fade-up-out" aria-hidden="true"></span>
         <div class="p-top-at p-top-about__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
           <h2 class="p-top-about__title">イベクリとは？</h2>
           <p class="p-top-about__lead">イベントづくりを支えて、その経験を次へつなぐ。<br>イベントをつくる人のためのプラットフォームです。</p>
@@ -79,12 +87,25 @@
     <!-- 03-about（キャラクターは 02 から縮小しながら移る） -->
     <section class="p-top-team l-stage__scene" data-scene="team">
       <div class="l-stage__frame">
-        <div class="p-top-at p-top-ph p-top-team__landform" data-enter="fade-up" data-order="2">about-landform</div>
+        <img class="p-top-at p-top-team__landform" data-enter="fade-up" data-order="2"
+          srcset="/assets/img/top/about-landform-768w.webp 768w, /assets/img/top/about-landform-1536w.webp 1536w, /assets/img/top/about-landform-1920w.webp 1920w, /assets/img/top/about-landform-2560w.webp 2560w, /assets/img/top/about-landform-3840w.webp 3840w, /assets/img/top/about-landform-5120w.webp 5120w" sizes="100vw" src="/assets/img/top/about-landform-1536w.webp" width="1536" height="523" alt="" loading="lazy">
         <div class="p-top-at p-top-team__text" data-enter="fade-up" data-order="3" data-leave="fade-up-out">
           <p class="p-top-team__paragraph">学園祭、展示会、ワークショップ。<br>はじめてイベントをつくるチームも、<br>毎年つづくイベントを受け継ぐチームも。</p>
           <p class="p-top-team__paragraph">イベクリは、そんなつくり手たちがチームで<br>迷わず進み、つくったものを誰かに届け、<br>得た経験を次の誰かに渡せるよう支えます。</p>
         </div>
-        <div class="p-top-at p-top-ph p-top-team__ui" data-enter="slide-right" data-order="3">UI（スマホ＋PC）</div>
+        <!-- UI（ノート PC ＋ スマホ）。まとめて右から出る -->
+        <div class="p-top-at p-top-box p-top-team__ui" data-enter="slide-right" data-order="3">
+          <picture class="p-top-at p-top-team__pc">
+            <source type="image/avif" srcset="/assets/img/top/pc-main-board.avif">
+            <source type="image/webp" srcset="/assets/img/top/pc-main-board.webp">
+            <img src="/assets/img/top/pc-main-board.png" width="6410" height="3882" alt="ノート PC で開いたイベクリのメインボード" loading="lazy">
+          </picture>
+          <picture class="p-top-at p-top-team__phone">
+            <source type="image/avif" srcset="/assets/img/top/main-board.avif">
+            <source type="image/webp" srcset="/assets/img/top/main-board.webp">
+            <img src="/assets/img/top/main-board.png" width="1904" height="3945" alt="スマホで開いたイベクリのメインボード" loading="lazy">
+          </picture>
+        </div>
       </div>
     </section>
 
@@ -167,7 +188,21 @@
 
     <!-- 画面をまたいで残る要素。位置・大きさは画面ごとの CSS 変数（object/project/_top.css の .l-stage[data-current="…"]） -->
     <div class="l-stage__persistent" aria-hidden="true">
-      <div class="p-top-at p-top-ph p-top-chara">キャラクター（02→03）</div>
+      <!-- キャラクター（02 → 03）。3体で1つ。森がいちばん手前。位置は _top.css（02 の位置から 03 へ縮みながら移る） -->
+      <div class="p-top-at p-top-chara">
+        <span class="p-top-chara__member p-top-chara__member--mizu">
+          <img class="p-top-chara__body" src="/assets/img/character/character-mizu-body.svg" alt="">
+          <span class="c-eyes p-top-chara__eyes p-top-chara__eyes--mizu" data-eyes="about team" aria-hidden="true"><span class="c-eyes__inner"><img class="c-eyes__white" src="/assets/img/character/character-eye.svg" alt=""><img class="c-eyes__iris" src="/assets/img/character/character-mizu-iris.svg" alt=""></span></span>
+        </span>
+        <span class="p-top-chara__member p-top-chara__member--iwa">
+          <img class="p-top-chara__body" src="/assets/img/character/character-iwa-body.svg" alt="">
+          <span class="c-eyes p-top-chara__eyes p-top-chara__eyes--iwa" data-eyes="about team" aria-hidden="true"><span class="c-eyes__inner"><img class="c-eyes__white" src="/assets/img/character/character-eye.svg" alt=""><img class="c-eyes__iris" src="/assets/img/character/character-iwa-iris.svg" alt=""></span></span>
+        </span>
+        <span class="p-top-chara__member p-top-chara__member--mori">
+          <img class="p-top-chara__body" src="/assets/img/character/character-mori-body.svg" alt="">
+          <span class="c-eyes p-top-chara__eyes p-top-chara__eyes--mori" data-eyes="about team" aria-hidden="true"><span class="c-eyes__inner"><img class="c-eyes__white" src="/assets/img/character/character-eye.svg" alt=""><img class="c-eyes__iris" src="/assets/img/character/character-mori-iris.svg" alt=""></span></span>
+        </span>
+      </div>
       <div class="p-top-at p-top-ph p-top-phone">スマホ（04〜08）</div>
     </div>
 

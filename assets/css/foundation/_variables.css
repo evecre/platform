@@ -20,6 +20,8 @@
   --color-top-butter: #FBECC4;   /* 05 STEP 2・08 STEP 5 */
   --color-top-mint: #BBEAC5;     /* 06 STEP 3・09 STEP 6 */
   --color-top-green: #22AC38;    /* 09 の見出し・ボタン */
+  --color-chara-mizu: #009FE5;   /* キャラクターの色（02 の斜めの線など） */
+  --color-chara-iwa: #F9B900;
 
   /* Top の基準のフレーム（Figma の comp：1728×1117）と、画面に収まる 1px の大きさ。Top の位置・大きさは calc(数字 * var(--top-u)) で書く */
   --top-frame-w: 1728;

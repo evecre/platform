@@ -48,7 +48,7 @@ img.p-top-at {
 .l-stage[data-current="step-3"],
 .l-stage[data-current="connect"] { --stage-bg: var(--color-top-mint); }
 
-/* --- 仮の四角（Phase 1。画像に置き換えたら消す） --- */
+/* --- 仮の四角（画像に置き換えたら消す。06 Phase 4 で 04〜08 を置き換える） --- */
 .p-top-ph {
   display: grid;
   place-items: center;
@@ -60,21 +60,17 @@ img.p-top-at {
 }
 
 /* --- 文字 --- */
-.p-top-about__title,
 .p-top-step__title {
   font-weight: 700;
   font-size: calc(48 * var(--top-u));
   line-height: var(--line-height-tight);
 }
 
-.p-top-about__lead,
-.p-top-team__paragraph,
 .p-top-step__paragraph {
   font-size: calc(28 * var(--top-u));
   line-height: 1.9;
 }
 
-.p-top-team__paragraph + .p-top-team__paragraph,
 .p-top-step__paragraph + .p-top-step__paragraph {
   margin-top: calc(28 * var(--top-u));
 }
@@ -102,6 +98,18 @@ img.p-top-at {
 .p-top-hero__landform { --motion-distance-slide: 0.75rem; }
 .p-top-hero__ipad { --x: 600; --y: 532; --w: 500; --h: 387; }
 .p-top-hero__chara { --x: 448; --y: 726; --w: 844; --h: 344; }
+
+/* hero のキャラクターの目（PDF から測った位置。キャラクターの箱に対する %。傾き・ふだんの目線も PDF のとおり） */
+.p-top-hero__eyes {
+  position: absolute;
+  left: var(--eyes-left);
+  top: var(--eyes-top);
+  width: var(--eyes-width);
+  rotate: var(--eyes-rotate, 0deg);
+}
+.p-top-hero__eyes--mizu { --eyes-left: 9.88%; --eyes-top: 32.91%; --eyes-width: 12.52%; --eyes-rotate: -9.1deg; --gaze-x: 14.3%; --gaze-y: -33.7%; }
+.p-top-hero__eyes--mori { --eyes-left: 42.10%; --eyes-top: 23.34%; --eyes-width: 14.10%; --gaze-x: 4%; --gaze-y: 36.9%; }
+.p-top-hero__eyes--iwa { --eyes-left: 76.39%; --eyes-top: 34.17%; --eyes-width: 12.50%; --eyes-rotate: 10.8deg; --gaze-x: -12.1%; --gaze-y: 33.7%; }
 
 /* mizu-phone：キャラクターと一緒にふくらむよう、ふくらむ中心をキャラクターの中心（870, 898）に置く */
 .p-top-hero__phone {
@@ -168,13 +176,45 @@ img.p-top-at {
   --scene-lock: calc(var(--motion-curtain-duration) + 1.4s);
 }
 
-/* --- 02-about --- */
-.p-top-about__text { --x: 460; --y: 260; --w: 813; --h: 240; text-align: center; }
+/* --- 02-about（キャラクターは画面をまたぐので下の .p-top-chara） --- */
+.p-top-about__text { --x: 400; --y: 262; --w: 928; --h: 240; text-align: center; }
 
-/* --- 03-about --- */
-.p-top-team__landform { --x: 0; --y: 507; --w: 1728; --h: 610; }
-.p-top-team__text { --x: 180; --y: 320; --w: 693; --h: 453; }
-.p-top-team__ui { --x: 967; --y: 220; --w: 761; --h: 587; }
+.p-top-about__title {
+  font-size: calc(60 * var(--top-u));
+}
+
+.p-top-about__lead {
+  margin-top: calc(28 * var(--top-u));
+  font-size: calc(32 * var(--top-u));
+  line-height: 2.1;
+}
+
+/* 斜めの線。--w が長さ、--line-angle が傾き（中心で回す） */
+.p-top-about__line {
+  --h: 6;
+  border-radius: var(--radius-full);
+  rotate: var(--line-angle);
+}
+.p-top-about__line--left { --x: 258; --y: 420; --w: 206; --line-angle: 70.7deg; background-color: var(--color-chara-mizu); }
+.p-top-about__line--right { --x: 1244.5; --y: 431; --w: 244; --line-angle: 118.7deg; background-color: var(--color-chara-iwa); }
+
+/* --- 03-about（キャラクターは 02 から縮みながら移る） --- */
+.p-top-team__landform { --x: 0; --y: 529; --w: 1728; --h: 588; object-fit: cover; }
+.p-top-team__text { --x: 178; --y: 320; --w: 720; --h: 470; }
+
+.p-top-team__paragraph {
+  font-size: calc(33 * var(--top-u));
+  line-height: 2.05;
+}
+
+.p-top-team__paragraph + .p-top-team__paragraph {
+  margin-top: calc(66 * var(--top-u));
+}
+
+/* UI：ノート PC（画面の右に切れる）＋ スマホ（PC の手前） */
+.p-top-team__ui { --x: 965; --y: 222; --w: 1198; --h: 586; }
+.p-top-team__pc { --x: 1195; --y: 222; --w: 968; --h: 586; }
+.p-top-team__phone { --x: 965; --y: 316; --w: 235; --h: 487; }
 
 /* --- 04〜08 howtouse（テキストと丸いイラスト） --- */
 .p-top-step--1 .p-top-step__text { --x: 423; --y: 287; --w: 533; --h: 453; }
@@ -205,6 +245,7 @@ img.p-top-at {
 }
 
 /* --- 画面をまたぐ要素：キャラクター（02 → 03。03 → 04 でポンッと消える） ---
+   3体で1つの箱。箱の中の位置・目は % なので、箱ごと縮めると 03 の姿になる（02 は 03 の 4.82 倍）。値は PDF から測った
    位置は画面ごとの --x / --y / --w / --h。見えるかは --persist-opacity */
 .p-top-chara,
 .p-top-phone {
@@ -217,18 +258,47 @@ img.p-top-at {
     opacity var(--motion-duration-fade-out) ease;
 }
 
-.p-top-chara { --x: 0; --y: 553; --w: 1728; --h: 563; }
+/* 02 の位置（画面の下に切れる大きな3体） */
+.p-top-chara { --x: -96.8; --y: 525.5; --w: 1920; --h: 909.9; }
 .l-stage[data-current="about"] .p-top-chara { --persist-opacity: 1; }
-.l-stage[data-current="team"] .p-top-chara { --x: 671; --y: 896; --w: 387; --h: 173; --persist-opacity: 1; }
-/* hero から来たときはポンッと出る（戻ってきたときは位置が移るだけ） */
+/* 03 の位置 */
+.l-stage[data-current="team"] .p-top-chara { --x: 663.8; --y: 889.6; --w: 398.3; --h: 188.8; --persist-opacity: 1; }
+/* hero から来たときはポンッと出る（幕が被さってから。戻ってきたときは位置が移るだけ） */
 .l-stage[data-current="about"][data-direction="forward"] .p-top-chara {
   animation: motion-pop var(--motion-duration-pop) var(--motion-ease-pop) var(--motion-curtain-duration) both;
 }
-/* 03 → 04：その場でポンッと消える */
+/* 03 → 04：その場（03 の位置）でポンッと消える */
 .l-stage[data-current="step-1"][data-direction="forward"] .p-top-chara {
-  --x: 671; --y: 896; --w: 387; --h: 173;
+  --x: 663.8; --y: 889.6; --w: 398.3; --h: 188.8;
   animation: motion-pop-out var(--motion-duration-pop) var(--motion-ease-leave) both;
 }
+
+/* 1体（箱に対する %）。体の素材は四辺に約 4% の余白がある（素材の viewBox ごと置く） */
+.p-top-chara__member {
+  position: absolute;
+  left: var(--member-left);
+  top: var(--member-top);
+  width: var(--member-width);
+}
+.p-top-chara__member--mizu { --member-left: 0%; --member-top: 0%; --member-width: 41.32%; }
+.p-top-chara__member--mori { --member-left: 28.05%; --member-top: 11.58%; --member-width: 44.66%; }
+.p-top-chara__member--iwa { --member-left: 61.69%; --member-top: 2.77%; --member-width: 38.31%; }
+
+.p-top-chara__body {
+  display: block;
+  width: 100%;
+}
+
+/* 目（体の箱に対する %。ふだんの目線は PDF のとおり） */
+.p-top-chara__eyes {
+  position: absolute;
+  left: var(--eyes-left);
+  top: var(--eyes-top);
+  width: var(--eyes-width);
+}
+.p-top-chara__eyes--mizu { --eyes-left: 34.72%; --eyes-top: 30.47%; --eyes-width: 35.42%; --gaze-x: 20.1%; --gaze-y: -44.9%; }
+.p-top-chara__eyes--mori { --eyes-left: 33.03%; --eyes-top: 29.01%; --eyes-width: 33.94%; --gaze-x: 0%; --gaze-y: -74.8%; }
+.p-top-chara__eyes--iwa { --eyes-left: 30.05%; --eyes-top: 30.87%; --eyes-width: 35.72%; --gaze-x: -20.2%; --gaze-y: -44.9%; }
 
 /* --- 画面をまたぐ要素：howtouse のスマホ（04〜08。09 の円の下にもそのまま残る） --- */
 .p-top-phone { --x: 1067; --y: 160; --w: 380; --h: 800; }

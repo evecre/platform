@@ -190,6 +190,8 @@ robots.txt  _headers               検索エンジン対策（§6）
   - 重なり：去る画面 1 ＜ 幕（`l-stage__curtain`）2 ＜ 画面をまたぐ要素 3 ＜ 今の画面 4
   - 見えない画面は `display: none`。今の画面の前後に `.is-preload`（隠したまま描いて画像を先に読む）。hero 以外の画像は `loading="lazy"`
   - JS が読む CSS の時間・数は `assets/js/modules/cssVars.js`（`readCssTime` / `readCssNumber`）。`calc()` で書く変数は `_motion.css` の `@property` で型を登録する（`--scene-lock`）
+- 02・03（Phase 3）：キャラクターは3体で1つの箱（`.p-top-chara`。体は `character-*-body.svg`、目は `c-eyes`）。02 は 03 の 4.82 倍で、箱ごと縮めて 03 へ移る。03 → 04 でポンッと消える。02 の斜めの線は CSS（`.p-top-about__line`）。03 は `about-landform`・UI（PC ＋ スマホ。まとめて右から）
+- 目（Phase 3）：`object/component/_eyes.css`（`c-eyes`）＋ `assets/js/modules/eyes.js`。位置・傾き・ふだんの目線は PDF から測った値（`_top.css`）。**目の位置は勝手に変えない**（Figma に合わせてある）。値は `--eye-*`
 - 01-hero（Phase 2）：マスク（`hero-mask.svg` を CSS の mask に。中の要素は `.p-top-box` の中で Figma の座標）。雲は `assets/js/modules/heroClouds.js`（マスクの右の外から左へ。種類・高さ・速さ・間隔はランダム、値は `--hero-cloud-*`。hero 以外では新しく出さず、CSS で止まる）。hero → 02 は 02 の背景色の幕が下からせり上がる（hero の要素は残す・背景色は被さりきってから替える・02 の出現は `--motion-delay-base` で幕のあと）
 - フォント：日本語＝りょうゴシック PlusN（Adobe Fonts の kit `jtx8lwo`。JS だけの kit なので `assets/js/modules/webfonts.js` が読む。★kit のドメインに localhost と evecre.pages.dev が要る）、英字の見出し＝Ultra（Google Fonts。Top の `<head>`）。`--font-family-base` / `--font-family-display`
 - ヘッダー：TOP / みんなの記録 / ヘルプ。ロゴは置かない（全ページ）。Top は舞台の上に重ねる（`l-header--overlay`）

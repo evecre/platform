@@ -52,6 +52,7 @@
 | Top の各画面の位置・大きさ（Figma の座標）・背景色・文字・画面をまたぐ要素の画面ごとの位置 | `object/project/_top.css` |
 | Top の背景色・基準のフレーム（1728×1117）・`--top-u` | `foundation/_variables.css` の `--color-top-*`・`--top-*` |
 | 角丸・本文の最大幅の値 | `foundation/_variables.css` |
+| キャラクターの目（`c-eyes`。白目＋黒目・瞬き `.is-blink`・目線 `data-look`） | `object/component/_eyes.css` |
 | ヘルプの検索の欄（`c-help-search`。小さい版は `--compact`） | `object/component/_help-search.css` |
 | ヘルプの記事の一覧（検索結果・カテゴリ・関連する記事。`c-help-list`） | `object/component/_help-list.css` |
 | パンくず（`c-breadcrumb`。ヘルプのカテゴリ・記事） | `object/component/_breadcrumb.css` |
@@ -94,6 +95,8 @@ Top は、**1回のスクロール操作（ホイール・スワイプ・↓↑ 
 | キャラクター・スマホが次の位置へ移る速さ | `--motion-persist-duration`・`--motion-persist-ease` |
 | 切り替え中に次の操作を受け付けない長さ | `--scene-lock`（★その画面の出現が終わるまで以上にする。画面ごとに `.p-top-○○ { --scene-lock: 2s; }` で上書きできる。`calc()` も使える） |
 | hero → 02 の白い幕 | `--motion-curtain-duration`（02 の出現はこのあとに始まる）・`--motion-ease-curtain` |
+| キャラクターの目（瞬き・目線） | `--eye-blink-duration`・`--eye-blink-interval-min` / `-max`・`--eye-blink-double-chance`（2回続ける割合）・`--eye-look-duration`・`--eye-look-distance-x` / `-y`（動く量。黒目の大きさに対する %）・`--eye-look-interval-min` / `-max`・`--eye-look-hold-min` / `-max`（動かしたままにする長さ） |
+| 目の位置・傾き・ふだんの目線 | `_top.css` の `.p-top-hero__eyes--…`・`.p-top-chara__eyes--…`（`--eyes-left/top/width`・`--eyes-rotate`・`--gaze-x/y`。PDF から測った値） |
 | hero の雲 | `--hero-cloud-speed`（横断の時間）・`--hero-cloud-interval-min` / `-max`（出る間隔）・`--hero-cloud-max`（同時の上限）・`--hero-cloud-initial`（はじめから流れている数）・`--hero-cloud-band`（出る高さ：マスクの上からこの割合まで）。雲の大きさは `heroClouds.js` の `CLOUDS`（Figma の幅） |
 | ある要素だけ距離・速さを変える | その要素の CSS で変数を上書き（例：`_top.css` の landform は `--motion-distance-slide: 1rem`） |
 | 要素の順番・動きの種類 | `index.html` の属性（下の 4-2） |
@@ -154,6 +157,12 @@ HTML の属性で選ぶ（`layout/_stage-motion.css`）。
 
 - 見えるかは `--persist-opacity`（1 で見える）
 - 進んで来たときだけの動き（例：02 でポンッと出る、04 でポンッと消える）は `[data-direction="forward"]` で書く
+
+### 4-4-1. キャラクターの目
+
+- 体（または体の絵）の上に `c-eyes`（白目 `character-eye.svg` ＋ 黒目 `character-*-iris.svg`）を重ねる。SVG はページに書き込まず `<img>` で重ねる（Illustrator の SVG どうしの id・色が干渉しないように）
+- 置き場所・大きさ・傾きは親（`.p-top-hero__eyes--…` など）の `--eyes-left` / `--eyes-top` / `--eyes-width` / `--eyes-rotate`、ふだんの目線は `--gaze-x` / `--gaze-y`（黒目の大きさに対する %）
+- 動かすのは `assets/js/modules/eyes.js`：`data-eyes="hero"`（または `"about team"`）の目は、その画面が今の画面のときだけ、目ごとに別々のタイミングで瞬き（`.is-blink`）・目線（`data-look="left"` など8方向）をする。黒目は白目からはみ出さない（CSS の clamp）
 
 ### 4-4-2. 画面と画面のあいだの幕（hero → 02 の白い幕）
 
