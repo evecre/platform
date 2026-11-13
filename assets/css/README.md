@@ -93,12 +93,13 @@ Top は、**1回のスクロール操作（ホイール・スワイプ・↓↑ 
 | 動く距離・ポンッの大きさ | `--motion-distance-up`・`--motion-distance-slide`・`--motion-pop-from`・`--motion-pop-over` |
 | 背景色が替わる速さ | `--motion-bg-duration`・`--motion-bg-ease` |
 | キャラクター・スマホが次の位置へ移る速さ | `--motion-persist-duration`・`--motion-persist-ease` |
-| 切り替え中に次の操作を受け付けない長さ | `--scene-lock`（★その画面の出現が終わるまで以上にする。画面ごとに `.p-top-○○ { --scene-lock: 2s; }` で上書きできる。`calc()` も使える） |
+| 切り替えてから次の操作を受け付けるまで | `--scene-input-lock`（0.7秒。短いほど次々に進める。長いほどトラックパッドの慣性で進みにくい。幕・円の切り替えはその長さ） |
+| 出現が終わって active になるまで | `--scene-lock`（★その画面の出現が終わるまで以上にする。画面ごとに `.p-top-○○ { --scene-lock: 2s; }` で上書きできる。`calc()` も使える） |
 | hero → 02 の白い幕 | `--motion-curtain-duration`（02 の出現はこのあとに始まる）・`--motion-ease-curtain` |
 | キャラクターの目（瞬き・目線） | `--eye-blink-duration`・`--eye-blink-interval-min` / `-max`・`--eye-blink-double-chance`（2回続ける割合）・`--eye-look-duration`・`--eye-look-distance-x` / `-y`（動く量。黒目の大きさに対する %）・`--eye-look-interval-min` / `-max`・`--eye-look-hold-min` / `-max`（動かしたままにする長さ） |
 | 目の位置・傾き・ふだんの目線 | `_top.css` の `.p-top-hero__eyes--…`・`.p-top-chara__eyes--…`（`--eyes-left/top/width`・`--eyes-rotate`・`--gaze-x/y`。PDF から測った値） |
 | 04〜08 のスマホの中身が替わる速さ | `--motion-phone-screen-duration`（新しい中身がフェードで出て、出しきってから古い中身が消える） |
-| 09 → 01 の収縮（展示モード） | `--motion-shrink-duration`・`--motion-ease-shrink`（その下で 01 の出現が同時に起きる） |
+| 09 から去るときの収縮（09 → 08 に戻る・展示モードの 09 → 01） | `--motion-shrink-duration`・`--motion-ease-shrink`（その下で 01 の出現が同時に起きる） |
 | 08 → 09 の円形の出現 | `--motion-iris-duration`・`--motion-ease-iris`（円の大きさは `_top.css` の `top-iris`） |
 | 09 のスライダー | `--slider-speed`（1周の時間）。文字の色は `_variables.css` の `--color-top-slider`、文は `index.html` の `p-top-connect__slide` |
 | hero の雲 | `--hero-cloud-speed`（横断の時間）・`--hero-cloud-interval-min` / `-max`（出る間隔）・`--hero-cloud-max`（同時の上限）・`--hero-cloud-initial`（はじめから流れている数）・`--hero-cloud-band`（出る高さ：マスクの上からこの割合まで）。雲の大きさは `heroClouds.js` の `CLOUDS`（Figma の幅） |

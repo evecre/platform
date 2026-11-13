@@ -26,7 +26,7 @@
   --oy: var(--y);
 }
 
-.l-stage.is-ready .p-top-box > .p-top-at {
+.l-stage.is-ready .p-top-box>.p-top-at {
   left: calc((var(--x, 0) - var(--ox)) * var(--box-u, var(--top-u)));
   top: calc((var(--y, 0) - var(--oy)) * var(--box-u, var(--top-u)));
   width: calc(var(--w, 100) * var(--box-u, var(--top-u)));
@@ -34,7 +34,7 @@
 }
 
 /* 画像は箱いっぱいに */
-.p-top-at > img,
+.p-top-at>img,
 img.p-top-at {
   display: block;
   width: 100%;
@@ -42,15 +42,29 @@ img.p-top-at {
 }
 
 /* --- 背景色（舞台の背景は1枚。画面ごとに色だけ替わる） --- */
-.l-stage[data-current="hero"] { --stage-bg: var(--color-top-sky); }
+.l-stage[data-current="hero"] {
+  --stage-bg: var(--color-top-sky);
+}
+
 .l-stage[data-current="about"],
-.l-stage[data-current="team"] { --stage-bg: var(--color-top-cream); }
+.l-stage[data-current="team"] {
+  --stage-bg: var(--color-top-cream);
+}
+
 .l-stage[data-current="step-1"],
-.l-stage[data-current="step-4"] { --stage-bg: var(--color-top-sky); }
+.l-stage[data-current="step-4"] {
+  --stage-bg: var(--color-top-sky);
+}
+
 .l-stage[data-current="step-2"],
-.l-stage[data-current="step-5"] { --stage-bg: var(--color-top-butter); }
+.l-stage[data-current="step-5"] {
+  --stage-bg: var(--color-top-butter);
+}
+
 .l-stage[data-current="step-3"],
-.l-stage[data-current="connect"] { --stage-bg: var(--color-top-mint); }
+.l-stage[data-current="connect"] {
+  --stage-bg: var(--color-top-mint);
+}
 
 /* --- 文字（04〜09 の STEP） --- */
 .p-top-step__number {
@@ -71,31 +85,73 @@ img.p-top-at {
   line-height: 2.1;
 }
 
-.p-top-step__title + .p-top-step__paragraph {
+.p-top-step__title+.p-top-step__paragraph {
   margin-top: calc(18 * var(--top-u));
 }
 
-.p-top-step__paragraph + .p-top-step__paragraph {
+.p-top-step__paragraph+.p-top-step__paragraph {
   margin-top: calc(20 * var(--top-u));
 }
 
 /* --- 01-hero ------------------------------------------------------------------
    マスク（hero-mask.svg）の中に、雲・landform03〜01・iPad・キャラクター。mizu-phone はマスクの外で上に重ねる */
-.p-top-hero__title { --x: 536; --y: 152; --w: 670; --h: 220; }
+.p-top-hero__title {
+  --x: 536;
+  --y: 152;
+  --w: 670;
+  --h: 220;
+}
 
 .p-top-hero__mask {
-  --x: 315; --y: 343; --w: 1105; --h: 707; --ox: 315; --oy: 343;
+  --x: 315;
+  --y: 343;
+  --w: 1105;
+  --h: 707;
+  --ox: 315;
+  --oy: 343;
   -webkit-mask: url("/assets/img/top/hero-mask.svg") center / 100% 100% no-repeat;
   mask: url("/assets/img/top/hero-mask.svg") center / 100% 100% no-repeat;
 }
 
-.p-top-hero__landform--3 { --x: 528; --y: 483; --w: 700; --h: 353; }
-.p-top-hero__landform--2 { --x: 315; --y: 640; --w: 1105; --h: 425; }
-.p-top-hero__landform--1 { --x: 315; --y: 680; --w: 1105; --h: 338; }
+.p-top-hero__landform--3 {
+  --x: 528;
+  --y: 483;
+  --w: 700;
+  --h: 353;
+}
+
+.p-top-hero__landform--2 {
+  --x: 315;
+  --y: 640;
+  --w: 1105;
+  --h: 425;
+}
+
+.p-top-hero__landform--1 {
+  --x: 315;
+  --y: 680;
+  --w: 1105;
+  --h: 338;
+}
+
 /* landform の横の移動は短く */
-.p-top-hero__landform { --motion-distance-slide: 0.75rem; }
-.p-top-hero__ipad { --x: 600; --y: 532; --w: 500; --h: 387; }
-.p-top-hero__chara { --x: 448; --y: 726; --w: 844; --h: 344; }
+.p-top-hero__landform {
+  --motion-distance-slide: 0.75rem;
+}
+
+.p-top-hero__ipad {
+  --x: 600;
+  --y: 532;
+  --w: 500;
+  --h: 387;
+}
+
+.p-top-hero__chara {
+  --x: 448;
+  --y: 726;
+  --w: 844;
+  --h: 344;
+}
 
 /* hero のキャラクターの目（PDF から測った位置。キャラクターの箱に対する %。傾き・ふだんの目線も PDF のとおり） */
 .p-top-hero__eyes {
@@ -105,13 +161,39 @@ img.p-top-at {
   width: var(--eyes-width);
   rotate: var(--eyes-rotate, 0deg);
 }
-.p-top-hero__eyes--mizu { --eyes-left: 9.88%; --eyes-top: 32.91%; --eyes-width: 12.52%; --eyes-rotate: -9.1deg; --gaze-x: 14.3%; --gaze-y: -33.7%; }
-.p-top-hero__eyes--mori { --eyes-left: 42.10%; --eyes-top: 23.34%; --eyes-width: 14.10%; --gaze-x: 4%; --gaze-y: 36.9%; }
-.p-top-hero__eyes--iwa { --eyes-left: 76.39%; --eyes-top: 34.17%; --eyes-width: 12.50%; --eyes-rotate: 10.8deg; --gaze-x: -12.1%; --gaze-y: 33.7%; }
+
+.p-top-hero__eyes--mizu {
+  --eyes-left: 9.88%;
+  --eyes-top: 32.91%;
+  --eyes-width: 12.52%;
+  --eyes-rotate: -9.1deg;
+  --gaze-x: 14.3%;
+  --gaze-y: -33.7%;
+}
+
+.p-top-hero__eyes--mori {
+  --eyes-left: 42.10%;
+  --eyes-top: 23.34%;
+  --eyes-width: 14.10%;
+  --gaze-x: 4%;
+  --gaze-y: 36.9%;
+}
+
+.p-top-hero__eyes--iwa {
+  --eyes-left: 76.39%;
+  --eyes-top: 34.17%;
+  --eyes-width: 12.50%;
+  --eyes-rotate: 10.8deg;
+  --gaze-x: -12.1%;
+  --gaze-y: 33.7%;
+}
 
 /* mizu-phone：キャラクターと一緒にふくらむよう、ふくらむ中心をキャラクターの中心（870, 898）に置く */
 .p-top-hero__phone {
-  --x: 444; --y: 930; --w: 87; --h: 108;
+  --x: 444;
+  --y: 930;
+  --w: 87;
+  --h: 108;
   transform-origin: calc((870 - var(--x)) * var(--top-u)) calc((898 - var(--y)) * var(--top-u));
 }
 
@@ -130,8 +212,15 @@ img.p-top-at {
 }
 
 @keyframes top-hero-cloud {
-  from { left: 100%; translate: 0 0; }
-  to { left: 0%; translate: -100% 0; }
+  from {
+    left: 100%;
+    translate: 0 0;
+  }
+
+  to {
+    left: 0%;
+    translate: -100% 0;
+  }
 }
 
 /* hero が見えていないときと、動きを減らす設定では止める */
@@ -156,8 +245,13 @@ img.p-top-at {
 }
 
 @keyframes top-curtain-up {
-  from { translate: 0 100%; }
-  to { translate: 0 0; }
+  from {
+    translate: 0 100%;
+  }
+
+  to {
+    translate: 0 0;
+  }
 }
 
 .l-stage[data-current="about"][data-direction="forward"] .p-top-hero[data-state="leaving"] [data-enter] {
@@ -172,13 +266,21 @@ img.p-top-at {
 .l-stage[data-current="about"][data-direction="forward"] .p-top-about {
   --motion-delay-base: var(--motion-curtain-duration);
   --scene-lock: calc(var(--motion-curtain-duration) + 1.4s);
+  --scene-input-lock: var(--motion-curtain-duration);
 }
 
 /* --- 02-about（キャラクターは画面をまたぐので下の .p-top-chara） --- */
-.p-top-about__text { --x: 400; --y: 262; --w: 928; --h: 240; text-align: center; }
+.p-top-about__text {
+  --x: 400;
+  --y: 262;
+  --w: 928;
+  --h: 240;
+  text-align: center;
+}
 
 .p-top-about__title {
   font-size: calc(60 * var(--top-u));
+  font-weight: 700;
 }
 
 .p-top-about__lead {
@@ -193,48 +295,166 @@ img.p-top-at {
   border-radius: var(--radius-full);
   rotate: var(--line-angle);
 }
-.p-top-about__line--left { --x: 258; --y: 420; --w: 206; --line-angle: 70.7deg; background-color: var(--color-chara-mizu); }
-.p-top-about__line--right { --x: 1244.5; --y: 431; --w: 244; --line-angle: 118.7deg; background-color: var(--color-chara-iwa); }
+
+.p-top-about__line--left {
+  --x: 258;
+  --y: 420;
+  --w: 206;
+  --line-angle: 70.7deg;
+  background-color: var(--color-chara-mizu);
+}
+
+.p-top-about__line--right {
+  --x: 1244.5;
+  --y: 431;
+  --w: 244;
+  --line-angle: 118.7deg;
+  background-color: var(--color-chara-iwa);
+}
 
 /* --- 03-about（キャラクターは 02 から縮みながら移る） --- */
-.p-top-team__landform { --x: 0; --y: 529; --w: 1728; --h: 588; object-fit: cover; }
-.p-top-team__text { --x: 178; --y: 320; --w: 720; --h: 470; }
+.p-top-team__landform {
+  --x: 0;
+  --y: 529;
+  --w: 1728;
+  --h: 588;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* 丘は基準のフレームではなく、画面の左右の端と下の端まで広げる（画面の縦横比がフレームと違っても、左右・下が空かないように） */
+.l-stage.is-ready .p-top-team__landform {
+  left: 0;
+  width: 100%;
+  /* 上端は Figma の位置のまま、下端は画面の下の端（画像は object-fit: cover で切り抜く） */
+  height: calc(50% - (var(--y) - var(--top-frame-h) / 2) * var(--top-u));
+}
+
+.p-top-team__text {
+  --x: 178;
+  --y: 320;
+  --w: 720;
+  --h: 470;
+}
 
 .p-top-team__paragraph {
   font-size: calc(33 * var(--top-u));
   line-height: 2.05;
 }
 
-.p-top-team__paragraph + .p-top-team__paragraph {
+.p-top-team__paragraph+.p-top-team__paragraph {
   margin-top: calc(66 * var(--top-u));
 }
 
 /* UI：ノート PC（画面の右に切れる）＋ スマホ（PC の手前） */
-.p-top-team__ui { --x: 965; --y: 222; --w: 1198; --h: 586; --ox: 965; --oy: 222; }
-.p-top-team__pc { --x: 1195; --y: 222; --w: 968; --h: 586; }
-.p-top-team__phone { --x: 965; --y: 316; --w: 235; --h: 487; }
+.p-top-team__ui {
+  --x: 965;
+  --y: 222;
+  --w: 1198;
+  --h: 586;
+  --ox: 965;
+  --oy: 222;
+}
+
+.p-top-team__pc {
+  --x: 1195;
+  --y: 222;
+  --w: 968;
+  --h: 586;
+}
+
+.p-top-team__phone {
+  --x: 965;
+  --y: 316;
+  --w: 235;
+  --h: 487;
+}
 
 /* --- 04〜08 howtouse（テキストと丸いイラスト。スマホは画面をまたぐので下の .p-top-phone） --- */
-.p-top-step__text { --w: 560; --h: 470; }
-.p-top-step--1 .p-top-step__text { --x: 423; --y: 292; }
-.p-top-step--1 .p-top-step__illust { --x: 422; --y: 467; --w: 578; --h: 578; }
-.p-top-step--2 .p-top-step__text { --x: 960; --y: 177; }
-.p-top-step--2 .p-top-step__illust { --x: 957; --y: 752; --w: 502; --h: 203; }
-.p-top-step--3 .p-top-step__text { --x: 930; --y: 177; --w: 640; }
-.p-top-step--3 .p-top-step__illust { --x: 955; --y: 493; --w: 513; --h: 513; }
-.p-top-step--4 .p-top-step__text { --x: 963; --y: 177; }
-.p-top-step--4 .p-top-step__illust { --x: 1138; --y: 594; --w: 517; --h: 404; }
-.p-top-step--5 .p-top-step__text { --x: 215; --y: 177; --w: 800; }
-.p-top-step--5 .p-top-step__illust { --x: 222; --y: 520; --w: 656; --h: 512; }
+.p-top-step__text {
+  --w: 560;
+  --h: 470;
+}
+
+.p-top-step--1 .p-top-step__text {
+  --x: 423;
+  --y: 292;
+}
+
+.p-top-step--1 .p-top-step__illust {
+  --x: 422;
+  --y: 467;
+  --w: 578;
+  --h: 578;
+}
+
+.p-top-step--2 .p-top-step__text {
+  --x: 960;
+  --y: 177;
+}
+
+.p-top-step--2 .p-top-step__illust {
+  --x: 957;
+  --y: 752;
+  --w: 502;
+  --h: 203;
+}
+
+.p-top-step--3 .p-top-step__text {
+  --x: 930;
+  --y: 177;
+  --w: 640;
+}
+
+.p-top-step--3 .p-top-step__illust {
+  --x: 955;
+  --y: 493;
+  --w: 513;
+  --h: 513;
+}
+
+.p-top-step--4 .p-top-step__text {
+  --x: 963;
+  --y: 177;
+}
+
+.p-top-step--4 .p-top-step__illust {
+  --x: 1138;
+  --y: 594;
+  --w: 517;
+  --h: 404;
+}
+
+.p-top-step--5 .p-top-step__text {
+  --x: 215;
+  --y: 177;
+  --w: 800;
+}
+
+.p-top-step--5 .p-top-step__illust {
+  --x: 222;
+  --y: 520;
+  --w: 656;
+  --h: 512;
+}
 
 /* --- 09（STEP 6）。この画面だけ背景を持ち、08 とスマホを覆う（画面をまたぐ要素の層 5 より上に重ねる） --- */
-.p-top-connect .l-stage__frame { background-color: var(--color-top-mint); }
+.p-top-connect .l-stage__frame {
+  background-color: var(--color-top-mint);
+}
 
 .l-stage.is-ready .p-top-connect:is([data-state="entering"], [data-state="active"]) {
   z-index: 6;
 }
 
-.p-top-connect__content { --x: 414; --y: 305; --w: 900; --h: 560; text-align: center; color: var(--color-top-green); }
+.p-top-connect__content {
+  --x: 414;
+  --y: 305;
+  --w: 900;
+  --h: 560;
+  text-align: center;
+  color: var(--color-top-green);
+}
 
 .p-top-connect__content .p-top-step__title {
   margin-top: calc(23 * var(--top-u));
@@ -265,8 +485,15 @@ img.p-top-at {
 }
 
 @keyframes top-iris {
-  from { clip-path: circle(0% at 50% 50%); }
-  to { clip-path: circle(72% at 50% 50%); } /* 72%：画面の四隅まで届く大きさ */
+  from {
+    clip-path: circle(0% at 50% 50%);
+  }
+
+  to {
+    clip-path: circle(72% at 50% 50%);
+  }
+
+  /* 72%：画面の四隅まで届く大きさ */
 }
 
 .l-stage[data-current="connect"] .p-top-step--5[data-state="leaving"] [data-enter] {
@@ -280,26 +507,37 @@ img.p-top-at {
 
 .l-stage[data-current="connect"][data-direction="forward"] .p-top-connect {
   --scene-lock: calc(var(--motion-iris-duration) + 0.2s);
+  --scene-input-lock: var(--motion-iris-duration);
 }
 
-/* 09 → 01（展示モードだけ。direction loop）：09 が画面の中央へシュッと縮んで消え、その下で 01 の出現が同時に起きる
-   ・去る 09 を、出てくる 01 より上に重ねる（ふだんは出てくる画面が上）
+/* 09 から去るとき（09 → 08 に戻る・展示モードの 09 → 01）：09 が画面の中央へシュッと縮んで消え、その下で行き先の出現が同時に起きる
+   ・去る 09 を、出てくる画面より上に重ねる（ふだんは出てくる画面が上）
    ・09 の要素は個別に消さない（縮む円の中にそのまま残る） */
-.l-stage.is-ready[data-direction="loop"] .p-top-connect[data-state="leaving"] {
+.l-stage.is-ready:is([data-direction="loop"], [data-direction="back"]) .p-top-connect[data-state="leaving"] {
   z-index: 6;
 }
 
-.l-stage.is-ready[data-direction="loop"] .p-top-connect[data-state="leaving"] .l-stage__frame {
+.l-stage.is-ready:is([data-direction="loop"], [data-direction="back"]) .p-top-connect[data-state="leaving"] .l-stage__frame {
   animation: top-shrink var(--motion-shrink-duration) var(--motion-ease-shrink) both;
 }
 
-.l-stage[data-direction="loop"] .p-top-connect[data-state="leaving"] [data-enter] {
+.l-stage.is-ready:is([data-direction="loop"], [data-direction="back"]) .p-top-connect[data-state="leaving"] [data-enter] {
   animation: none;
 }
 
+/* 09 から戻った 08：縮みきるまで次の操作を受け付けない */
+.l-stage[data-current="step-5"][data-direction="back"] .p-top-step--5 {
+  --scene-input-lock: var(--motion-shrink-duration);
+}
+
 @keyframes top-shrink {
-  from { clip-path: circle(72% at 50% 50%); }
-  to { clip-path: circle(0% at 50% 50%); }
+  from {
+    clip-path: circle(72% at 50% 50%);
+  }
+
+  to {
+    clip-path: circle(0% at 50% 50%);
+  }
 }
 
 /* hero の出現が終わるまで（iPad は順番 5）次の操作を受け付けない */
@@ -316,8 +554,13 @@ img.p-top-at {
   pointer-events: none;
 }
 
-.p-top-connect__slider--top { top: calc(50% + (115 - var(--top-frame-h) / 2) * var(--top-u)); }
-.p-top-connect__slider--bottom { top: calc(50% + (870 - var(--top-frame-h) / 2) * var(--top-u)); }
+.p-top-connect__slider--top {
+  top: calc(50% + (115 - var(--top-frame-h) / 2) * var(--top-u));
+}
+
+.p-top-connect__slider--bottom {
+  top: calc(50% + (870 - var(--top-frame-h) / 2) * var(--top-u));
+}
 
 .p-top-connect__track {
   display: flex;
@@ -331,7 +574,8 @@ img.p-top-at {
 
 .p-top-connect__slide {
   flex-shrink: 0;
-  font-weight: 200;
+  font-family: var(--font-family-display);
+  font-weight: 400;
   font-size: calc(140 * var(--top-u));
   line-height: 1;
   white-space: pre;
@@ -339,13 +583,23 @@ img.p-top-at {
 }
 
 @keyframes top-slide-left {
-  from { translate: 0 0; }
-  to { translate: -50% 0; }
+  from {
+    translate: 0 0;
+  }
+
+  to {
+    translate: -50% 0;
+  }
 }
 
 @keyframes top-slide-right {
-  from { translate: -50% 0; }
-  to { translate: 0 0; }
+  from {
+    translate: -50% 0;
+  }
+
+  to {
+    translate: 0 0;
+  }
 }
 
 /* 09 が見えていないときと、動きを減らす設定では止める */
@@ -374,17 +628,37 @@ img.p-top-at {
 }
 
 /* 02 の位置（画面の下に切れる大きな3体） */
-.p-top-chara { --x: -96.8; --y: 525.5; --w: 1920; --h: 909.9; }
-.l-stage[data-current="about"] .p-top-chara { --persist-opacity: 1; }
+.p-top-chara {
+  --x: -96.8;
+  --y: 525.5;
+  --w: 1920;
+  --h: 909.9;
+}
+
+.l-stage[data-current="about"] .p-top-chara {
+  --persist-opacity: 1;
+}
+
 /* 03 の位置 */
-.l-stage[data-current="team"] .p-top-chara { --x: 663.8; --y: 889.6; --w: 398.3; --h: 188.8; --persist-opacity: 1; }
+.l-stage[data-current="team"] .p-top-chara {
+  --x: 663.8;
+  --y: 889.6;
+  --w: 398.3;
+  --h: 188.8;
+  --persist-opacity: 1;
+}
+
 /* hero から来たときはポンッと出る（幕が被さってから。戻ってきたときは位置が移るだけ） */
 .l-stage[data-current="about"][data-direction="forward"] .p-top-chara {
   animation: motion-pop var(--motion-duration-pop) var(--motion-ease-pop) var(--motion-curtain-duration) both;
 }
+
 /* 03 → 04：その場（03 の位置）でポンッと消える */
 .l-stage[data-current="step-1"][data-direction="forward"] .p-top-chara {
-  --x: 663.8; --y: 889.6; --w: 398.3; --h: 188.8;
+  --x: 663.8;
+  --y: 889.6;
+  --w: 398.3;
+  --h: 188.8;
   animation: motion-pop-out var(--motion-duration-pop) var(--motion-ease-leave) both;
 }
 
@@ -395,9 +669,24 @@ img.p-top-at {
   top: var(--member-top);
   width: var(--member-width);
 }
-.p-top-chara__member--mizu { --member-left: 0%; --member-top: 0%; --member-width: 41.32%; }
-.p-top-chara__member--mori { --member-left: 28.05%; --member-top: 11.58%; --member-width: 44.66%; }
-.p-top-chara__member--iwa { --member-left: 61.69%; --member-top: 2.77%; --member-width: 38.31%; }
+
+.p-top-chara__member--mizu {
+  --member-left: 0%;
+  --member-top: 0%;
+  --member-width: 41.32%;
+}
+
+.p-top-chara__member--mori {
+  --member-left: 28.05%;
+  --member-top: 11.58%;
+  --member-width: 44.66%;
+}
+
+.p-top-chara__member--iwa {
+  --member-left: 61.69%;
+  --member-top: 2.77%;
+  --member-width: 38.31%;
+}
 
 .p-top-chara__body {
   display: block;
@@ -411,21 +700,53 @@ img.p-top-at {
   top: var(--eyes-top);
   width: var(--eyes-width);
 }
-.p-top-chara__eyes--mizu { --eyes-left: 34.72%; --eyes-top: 30.47%; --eyes-width: 35.42%; --gaze-x: 20.1%; --gaze-y: -44.9%; }
-.p-top-chara__eyes--mori { --eyes-left: 33.03%; --eyes-top: 29.01%; --eyes-width: 33.94%; --gaze-x: 0%; --gaze-y: -74.8%; }
-.p-top-chara__eyes--iwa { --eyes-left: 30.05%; --eyes-top: 30.87%; --eyes-width: 35.72%; --gaze-x: -20.2%; --gaze-y: -44.9%; }
+
+.p-top-chara__eyes--mizu {
+  --eyes-left: 34.72%;
+  --eyes-top: 30.47%;
+  --eyes-width: 35.42%;
+  --gaze-x: 20.1%;
+  --gaze-y: -44.9%;
+}
+
+.p-top-chara__eyes--mori {
+  --eyes-left: 33.03%;
+  --eyes-top: 29.01%;
+  --eyes-width: 33.94%;
+  --gaze-x: 0%;
+  --gaze-y: -74.8%;
+}
+
+.p-top-chara__eyes--iwa {
+  --eyes-left: 30.05%;
+  --eyes-top: 30.87%;
+  --eyes-width: 35.72%;
+  --gaze-x: -20.2%;
+  --gaze-y: -44.9%;
+}
 
 /* --- 画面をまたぐ要素：howtouse のスマホ（04〜08。09 の円の下にもそのまま残る） ---
    1つのまま位置が移る。画面の中身（5枚）は、移りながら替わる：新しい中身を上に重ねてフェードで出し、出しきってから古い中身を消す（白く抜けない） */
-.p-top-phone { --x: 1065; --y: 165; --w: 378; --h: 783; }
+.p-top-phone {
+  --x: 1065;
+  --y: 165;
+  --w: 378;
+  --h: 783;
+}
+
 .l-stage:is([data-current="step-1"], [data-current="step-2"], [data-current="step-3"], [data-current="step-4"], [data-current="step-5"], [data-current="connect"]) .p-top-phone {
   --persist-opacity: 1;
 }
-.l-stage:is([data-current="step-2"], [data-current="step-3"], [data-current="step-4"]) .p-top-phone { --x: 365; }
+
+.l-stage:is([data-current="step-2"], [data-current="step-3"], [data-current="step-4"]) .p-top-phone {
+  --x: 365;
+}
+
 /* 03 から来たときは下から出る */
 .l-stage[data-current="step-1"][data-direction="forward"] .p-top-phone {
   animation: motion-fade-up var(--motion-duration-enter) var(--motion-ease-enter) both;
 }
+
 /* 03 より前の画面（と、最初の画面が決まる前）では描かない（中の画像を先に読まない。03 にいる間に読み始める） */
 .l-stage.is-ready .p-top-phone {
   display: none;
@@ -470,60 +791,219 @@ img.p-top-at {
   }
 
   /* --- 01-hero --- */
-  .p-top-hero__title { --x: 45; --y: 170; --w: 300; --h: 98; }
-  .p-top-hero__mask { --x: -60; --y: 380; --w: 510; --h: 326; --box-u: calc(var(--top-u) * 510 / 1105); }
+  .p-top-hero__title {
+    --x: 45;
+    --y: 170;
+    --w: 300;
+    --h: 98;
+  }
+
+  .p-top-hero__mask {
+    --x: -60;
+    --y: 380;
+    --w: 510;
+    --h: 326;
+    --box-u: calc(var(--top-u) * 510 / 1105);
+  }
+
   .p-top-hero__phone {
-    --x: -0.5; --y: 650.9; --w: 40.2; --h: 49.8;
+    --x: -0.5;
+    --y: 650.9;
+    --w: 40.2;
+    --h: 49.8;
     transform-origin: calc(196.7 * var(--top-u)) calc(-14.7 * var(--top-u));
   }
 
   /* --- 02-about --- */
-  .p-top-about__text { --x: 24; --y: 150; --w: 342; --h: 280; }
-  .p-top-about__title { font-size: calc(32 * var(--top-u)); }
-  .p-top-about__lead { margin-top: calc(16 * var(--top-u)); font-size: calc(16 * var(--top-u)); line-height: 2; }
-  .p-top-about__line--left { --x: 10; --y: 175; --w: 70; --h: 3; }
-  .p-top-about__line--right { --x: 312; --y: 175; --w: 80; --h: 3; }
+  .p-top-about__text {
+    --x: 24;
+    --y: 150;
+    --w: 342;
+    --h: 280;
+  }
+
+  .p-top-about__title {
+    font-size: calc(32 * var(--top-u));
+  }
+
+  .p-top-about__lead {
+    margin-top: calc(16 * var(--top-u));
+    font-size: calc(16 * var(--top-u));
+    line-height: 2;
+  }
+
+  .p-top-about__line--left {
+    --x: 10;
+    --y: 175;
+    --w: 70;
+    --h: 3;
+  }
+
+  .p-top-about__line--right {
+    --x: 312;
+    --y: 175;
+    --w: 80;
+    --h: 3;
+  }
 
   /* --- 03-about --- */
-  .p-top-team__text { --x: 24; --y: 110; --w: 342; --h: 300; }
-  .p-top-team__paragraph { font-size: calc(15 * var(--top-u)); line-height: 1.9; }
-  .p-top-team__paragraph + .p-top-team__paragraph { margin-top: calc(14 * var(--top-u)); }
-  .p-top-team__landform { --x: 0; --y: 560; --w: 390; --h: 284; }
-  .p-top-team__ui { --x: 40; --y: 420; --w: 420; --h: 205; --box-u: calc(var(--top-u) * 420 / 1198); }
+  .p-top-team__text {
+    --x: 24;
+    --y: 110;
+    --w: 342;
+    --h: 300;
+  }
+
+  .p-top-team__paragraph {
+    font-size: calc(15 * var(--top-u));
+    line-height: 1.9;
+  }
+
+  .p-top-team__paragraph+.p-top-team__paragraph {
+    margin-top: calc(14 * var(--top-u));
+  }
+
+  .p-top-team__landform {
+    --x: 0;
+    --y: 560;
+    --w: 390;
+    --h: 284;
+  }
+
+  .p-top-team__ui {
+    --x: 40;
+    --y: 420;
+    --w: 420;
+    --h: 205;
+    --box-u: calc(var(--top-u) * 420 / 1198);
+  }
 
   /* --- 04〜08（上にテキスト、下にスマホとイラストを並べる。スマホは 04・08 が右、05〜07 が左） --- */
-  .p-top-step .p-top-step__text { --x: 24; --y: 90; --w: 342; --h: 290; }
-  .p-top-step__number { font-size: calc(34 * var(--top-u)); }
-  .p-top-step__title { margin-top: calc(14 * var(--top-u)); font-size: calc(24 * var(--top-u)); }
-  .p-top-step__paragraph { font-size: calc(15 * var(--top-u)); line-height: 1.9; }
-  .p-top-step__title + .p-top-step__paragraph { margin-top: calc(8 * var(--top-u)); }
-  .p-top-step__paragraph + .p-top-step__paragraph { margin-top: calc(8 * var(--top-u)); }
-  .p-top-step--1 .p-top-step__illust { --x: 15; --y: 470; --w: 190; --h: 190; }
-  .p-top-step--2 .p-top-step__illust { --x: 192; --y: 520; --w: 180; --h: 73; }
-  .p-top-step--3 .p-top-step__illust { --x: 190; --y: 470; --w: 185; --h: 185; }
-  .p-top-step--4 .p-top-step__illust { --x: 188; --y: 480; --w: 190; --h: 148; }
-  .p-top-step--5 .p-top-step__illust { --x: 12; --y: 470; --w: 195; --h: 152; }
+  .p-top-step .p-top-step__text {
+    --x: 24;
+    --y: 90;
+    --w: 342;
+    --h: 290;
+  }
 
-  .p-top-phone { --x: 215; --y: 380; --w: 150; --h: 311; }
-  .l-stage:is([data-current="step-2"], [data-current="step-3"], [data-current="step-4"]) .p-top-phone { --x: 25; }
+  .p-top-step__number {
+    font-size: calc(34 * var(--top-u));
+  }
+
+  .p-top-step__title {
+    margin-top: calc(14 * var(--top-u));
+    font-size: calc(24 * var(--top-u));
+  }
+
+  .p-top-step__paragraph {
+    font-size: calc(15 * var(--top-u));
+    line-height: 1.9;
+  }
+
+  .p-top-step__title+.p-top-step__paragraph {
+    margin-top: calc(8 * var(--top-u));
+  }
+
+  .p-top-step__paragraph+.p-top-step__paragraph {
+    margin-top: calc(8 * var(--top-u));
+  }
+
+  .p-top-step--1 .p-top-step__illust {
+    --x: 15;
+    --y: 470;
+    --w: 190;
+    --h: 190;
+  }
+
+  .p-top-step--2 .p-top-step__illust {
+    --x: 192;
+    --y: 520;
+    --w: 180;
+    --h: 73;
+  }
+
+  .p-top-step--3 .p-top-step__illust {
+    --x: 190;
+    --y: 470;
+    --w: 185;
+    --h: 185;
+  }
+
+  .p-top-step--4 .p-top-step__illust {
+    --x: 188;
+    --y: 480;
+    --w: 190;
+    --h: 148;
+  }
+
+  .p-top-step--5 .p-top-step__illust {
+    --x: 12;
+    --y: 470;
+    --w: 195;
+    --h: 152;
+  }
+
+  .p-top-phone {
+    --x: 215;
+    --y: 380;
+    --w: 150;
+    --h: 311;
+  }
+
+  .l-stage:is([data-current="step-2"], [data-current="step-3"], [data-current="step-4"]) .p-top-phone {
+    --x: 25;
+  }
 
   /* --- 02 → 03 のキャラクター --- */
-  .p-top-chara { --x: -60; --y: 470; --w: 510; --h: 241.7; }
+  .p-top-chara {
+    --x: -60;
+    --y: 470;
+    --w: 510;
+    --h: 241.7;
+  }
+
   .l-stage[data-current="team"] .p-top-chara,
-  .l-stage[data-current="step-1"][data-direction="forward"] .p-top-chara { --x: 120; --y: 690; --w: 150; --h: 71.1; }
+  .l-stage[data-current="step-1"][data-direction="forward"] .p-top-chara {
+    --x: 120;
+    --y: 690;
+    --w: 150;
+    --h: 71.1;
+  }
 
   /* --- 09 --- */
-  .p-top-connect__content { --x: 24; --y: 250; --w: 342; --h: 400; }
-  .p-top-connect__content .p-top-step__title { margin-top: calc(14 * var(--top-u)); }
-  .p-top-connect__content .p-top-step__paragraph { margin-top: calc(8 * var(--top-u)); max-width: none; text-align: left; }
+  .p-top-connect__content {
+    --x: 24;
+    --y: 250;
+    --w: 342;
+    --h: 400;
+  }
+
+  .p-top-connect__content .p-top-step__title {
+    margin-top: calc(14 * var(--top-u));
+  }
+
+  .p-top-connect__content .p-top-step__paragraph {
+    margin-top: calc(8 * var(--top-u));
+    max-width: none;
+    text-align: left;
+  }
+
   .p-top-connect__button {
     width: calc(220 * var(--top-u));
     height: calc(64 * var(--top-u));
     margin-top: calc(32 * var(--top-u));
     font-size: calc(22 * var(--top-u));
   }
-  .p-top-connect__slide { font-size: calc(64 * var(--top-u)); }
-  .p-top-connect__slider--top { top: calc(50% + (110 - var(--top-frame-h) / 2) * var(--top-u)); }
-  .p-top-connect__slider--bottom { top: calc(50% + (700 - var(--top-frame-h) / 2) * var(--top-u)); }
-}
 
+  .p-top-connect__slide {
+    font-size: calc(64 * var(--top-u));
+  }
+
+  .p-top-connect__slider--top {
+    top: calc(50% + (110 - var(--top-frame-h) / 2) * var(--top-u));
+  }
+
+  .p-top-connect__slider--bottom {
+    top: calc(50% + (700 - var(--top-frame-h) / 2) * var(--top-u));
+  }
+}

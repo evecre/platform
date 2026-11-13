@@ -6,6 +6,12 @@
    ========================================================================== */
 
 /* JS が読む変数のうち calc() で書けるものは、型を登録する（登録しないと計算前の文字のまま JS に渡る） */
+@property --scene-input-lock {
+  syntax: "<time>";
+  inherits: true;
+  initial-value: 0.7s;
+}
+
 @property --scene-lock {
   syntax: "<time>";
   inherits: true;
@@ -30,7 +36,8 @@
   --motion-pop-over: 1.08;          /* ポンッで行き過ぎる大きさ */
 
   /* --- 画面の切り替え --- */
-  --scene-lock: 1.6s;               /* 切り替え中に次の入力を受け付けない長さ。★その画面の出現が終わる時間（最後の順番の遅れ＋出現の長さ）以上にする。画面ごとに上書きできる */
+  --scene-input-lock: 0.7s;         /* 切り替えてから次の操作を受け付けるまで。短いほど次々に進める。長いほどトラックパッドの慣性で進みにくい */
+  --scene-lock: 1.6s;               /* 出現が終わって active になるまで。★その画面の出現が終わる時間（最後の順番の遅れ＋出現の長さ）以上にする。画面ごとに上書きできる */
   --motion-bg-duration: 0.8s;       /* 背景色が替わる長さ（舞台の背景は1枚で、色だけ替わる） */
   --motion-bg-ease: ease;
   --motion-persist-duration: 0.9s;  /* 画面をまたぐ要素（キャラクター・howtouse のスマホ）が次の位置へ移る長さ */
@@ -45,14 +52,14 @@
 
   /* --- キャラクターの目（01〜03。assets/js/modules/eyes.js が読む。目ごとに別々のタイミング） --- */
   --eye-blink-duration: 0.15s;      /* 瞬き1回の長さ */
-  --eye-blink-interval-min: 2s;     /* 次の瞬きまで（この間でランダム） */
-  --eye-blink-interval-max: 6s;
-  --eye-blink-double-chance: 0.2;   /* 2回続けて瞬きする割合（0〜1） */
+  --eye-blink-interval-min: 5s;     /* 次の瞬きまで（この間でランダム） */
+  --eye-blink-interval-max: 12s;
+  --eye-blink-double-chance: 0.15;  /* 2回続けて瞬きする割合（0〜1） */
   --eye-look-duration: 0.4s;        /* 黒目が動く速さ */
   --eye-look-distance-x: 14%;       /* 黒目が動く量（黒目の大きさに対する %。白目からはみ出す分は止まる） */
   --eye-look-distance-y: 45%;
-  --eye-look-interval-min: 4s;      /* 次に目線を動かすまで（この間でランダム） */
-  --eye-look-interval-max: 9s;
+  --eye-look-interval-min: 10s;     /* 次に目線を動かすまで（この間でランダム） */
+  --eye-look-interval-max: 20s;
   --eye-look-hold-min: 1.2s;        /* 目線を動かしたままにする長さ（このあとふだんの目線に戻る） */
   --eye-look-hold-max: 2.5s;
 
@@ -82,6 +89,7 @@
     --motion-iris-duration: 0.3s;
     --motion-shrink-duration: 0.3s;
     --motion-phone-screen-duration: 0.2s;
-    --scene-lock: 0.5s; /* 0 にしない（トラックパッドの慣性で何画面も進まないように） */
+    --scene-lock: 0.5s;
+    --scene-input-lock: 0.5s; /* 0 にしない（トラックパッドの慣性で何画面も進まないように） */
   }
 }

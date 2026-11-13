@@ -180,9 +180,10 @@ robots.txt  _headers               検索エンジン対策（§6）
 - 指示書：`docs/instructions/06_top-visual.md`（Usami の回答を入れた版。`docs/` 直下にあった新しい版を写した）。デザインは Figma の comp（基準のフレーム **1728×1117**）。Figma の MCP は月の回数制限があるので、ふだんは Usami が書き出した PDF（`docs/evecre-web.pdf`。commit していない）を見る
 - 画面：`hero`（01）／`about`（02）／`team`（03）／`step-1`〜`step-5`（04〜08。`step-1` は `id="how-to"`）／`connect`（09 STEP 6）
 - 仕組み：`assets/js/modules/scrollStage.js`（`createScrollStage()` が `{ goTo, next, prev, current, count, ready }` を返す）
-  - 1回の操作（ホイール・スワイプ・↓↑ PageDown/Up Space・ドット）で1画面。切り替え中（行き先の画面の CSS 変数 `--scene-lock` の間）は次の入力を受けない。ホイールはひと続きの回転（`WHEEL_GESTURE_GAP` の間が空くまで）で1画面だけ（トラックパッドの慣性で飛ばない）
+  - 1回の操作（ホイール・スワイプ・↓↑ PageDown/Up Space・ドット）で1画面。切り替えてから `--scene-input-lock`（0.7秒）は次の入力を受けない。出現が終わって active になるのは `--scene-lock` のあと（出現の途中で次へ進むと、前の切り替えをその場で終わらせる）
+  - ホイール：ひと続きの回転は1画面だけ（慣性は捨てる）。途切れた（`WHEEL_GESTURE_GAP`）か、強まった（`WHEEL_RISE`）ら新しい操作として受け付ける。切り替え中に回した分も使ったことにする（慣性の残りで2画面目へ進まないように）
   - 画面の `data-state`：before → entering → active → leaving → after。舞台の `data-current`（今の画面）・`data-direction`（forward / back / loop）
-  - ページはスクロールさせない（`<html class="is-stage-locked">`）。フッターは出さない。JS が動かなければ縦並び
+  - ページはスクロールさせない（`<html class="is-stage-locked">`）。フッターは出さない。JS が舞台を整える（`.is-ready`）までは舞台を見せない（開いた瞬間にロゴが大きく出ないように）。JS が無いときは `assets/css/noscript.css`（`<noscript>` の link）で縦並びを見せる
   - `#how-to` など（`id` か `data-scene`）でその画面から開く・移る（チャットボットの `/#how-to`）
   - ★JS に動きの時間・距離の数字を書かない。値は `foundation/_motion.css`、プリセットは `layout/_stage-motion.css`（`data-enter` / `data-leave` / `data-order`）、位置は `object/project/_top.css`（Figma の座標 `--x/--y/--w/--h`・`--top-u`）。**調整の仕方は `assets/css/README.md` §4**
   - 舞台の背景は1枚で、色だけが画面ごとに替わる（`--stage-bg`）。画面は背景を持たない（09 だけ持つ）
@@ -195,7 +196,10 @@ robots.txt  _headers               検索エンジン対策（§6）
 - 09 → 01（Phase 5。展示モードだけ）：`direction: 'loop'`。09 の枠が `clip-path` で中央へ縮み、その下で 01 の出現が同時に起きる（`--motion-shrink-*`）。スクロールでは 09 の次へ進まない
 - 縦長の画面（Phase 5）：`max-aspect-ratio: 4/5` で基準のフレームを 390×844 にし、`_top.css` の末尾で位置を組み替える。箱は `--box-u` で中身ごと縮める（箱の横長での左上は `--ox` / `--oy` にはっきり書く）。ドットは出さない
 - 最初の画面（`#…` で開いたときも）は `.is-preload` で隠したまま描いてから画像を待つ（`display: none` のままだと lazy の画像が読まれず、待ち続ける）
-- 目（Phase 3）：`object/component/_eyes.css`（`c-eyes`）＋ `assets/js/modules/eyes.js`。位置・傾き・ふだんの目線は PDF から測った値（`_top.css`）。**目の位置は勝手に変えない**（Figma に合わせてある）。値は `--eye-*`
+- 本文の太さは 500（`foundation/_base.css` の body。りょうゴシック PlusN の Medium）。09 のスライダーは Ultra
+- 09 から去るとき（09 → 08・展示モードの 09 → 01）は、09 が中央へ縮む（`--motion-shrink-*`）
+- 03 の丘（`about-landform`）は基準のフレームではなく、画面の左右・下の端まで広げる
+- 目（Phase 3）：`object/component/_eyes.css`（`c-eyes`）＋ `assets/js/modules/eyes.js`。目線を動かす方向は、ふだんの目線から動かしても白目の円の中に収まる方向だけを選ぶ（CSS の clamp は縦横べつべつで、斜めだとはみ出すため）。位置・傾き・ふだんの目線は PDF から測った値（`_top.css`）。**目の位置は勝手に変えない**（Figma に合わせてある）。値は `--eye-*`
 - 01-hero（Phase 2）：マスク（`hero-mask.svg` を CSS の mask に。中の要素は `.p-top-box` の中で Figma の座標）。雲は `assets/js/modules/heroClouds.js`（マスクの右の外から左へ。種類・高さ・速さ・間隔はランダム、値は `--hero-cloud-*`。hero 以外では新しく出さず、CSS で止まる）。hero → 02 は 02 の背景色の幕が下からせり上がる（hero の要素は残す・背景色は被さりきってから替える・02 の出現は `--motion-delay-base` で幕のあと）
 - フォント：日本語＝りょうゴシック PlusN（Adobe Fonts の kit `jtx8lwo`。JS だけの kit なので `assets/js/modules/webfonts.js` が読む。★kit のドメインに localhost と evecre.pages.dev が要る）、英字の見出し＝Ultra（Google Fonts。Top の `<head>`）。`--font-family-base` / `--font-family-display`
 - ヘッダー：TOP / みんなの記録 / ヘルプ。ロゴは置かない（全ページ）。Top は舞台の上に重ねる（`l-header--overlay`）
