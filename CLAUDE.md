@@ -143,7 +143,7 @@ robots.txt  _headers               検索エンジン対策（§6）
 - しきい値（`engine.js`）：1位の点数が `THRESHOLD_ANSWER`（0.55）以上で、2位との差が `MIN_MARGIN`（0.05）以上なら回答。`THRESHOLD_SUGGEST`（0.30）以上なら「もしかして」（上位3件）。それ未満は「答えられない」でカテゴリに戻す
   - 下げると答える数が増えるが、**違う答え（誤答）を出しやすくなる**。誤答は「もしかして」より悪いので、`--tune` の表で誤答 0 を保てる範囲で決める（2026-11-04：0.50 以下で誤答が出る）
 - キャラクター：`assets/js/modules/character.js`（`pickCharacter()` は読み込みごとに1体。`createCharacter(ch, { className })`）＋ `object/component/_character.css`
-  - 素材は `assets/img/character/`。目の寸法・位置は素材から実測した値。勝手に変えない
+  - 素材は `assets/img/character/`。目の寸法は素材から実測した値。目の位置・大きさ（`--face-left` / `--face-top` / `--face-width`）は Top の 02・03 のキャラクター（Figma）と同じ値（2026-11-14 にユーザーの指摘で揃えた）。勝手に変えない
   - 瞬き・目線は「たまに」（瞬き 13〜19秒、目線 29〜41秒）。短くしない。動きを減らす設定では止める
 
 ## 12. 配信（03 で追加）
