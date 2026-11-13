@@ -36,7 +36,7 @@
 - 残っていること：
   - Usami の調整（速さ・距離・イージング。`assets/css/README.md` §4）と、縦長の構図の確認
   - ユーザーに確認したいこと：09 のスライダーの文（指示書は上「Knowledge Platform」下「Evecre」、PDF は上下とも「Evecre　Knowledge Platform」。今は PDF）／02 の岩の形が素材と PDF で少し違う
-  - main へのマージ（ユーザーの確認待ち）。マージしたら本番（evecre.pages.dev）で Adobe Fonts が読めるか確かめる（kit のドメイン）
+  - main にマージ済み（2026-11-14、`f39bf20`）。本番（evecre.pages.dev）で Top が開き、Adobe Fonts（りょうゴシック）と Ultra が読めた（`wf-active`）。X-Robots-Tag あり・コンソールのエラーなし
 - 本体側に頼むこと：なし
 
 ## 2026-11-14 — 06 Phase 4：04〜08（スマホの持ち越し・中身・背景色）と 09（円形の出現・スライダー）
