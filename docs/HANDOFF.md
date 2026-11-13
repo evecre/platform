@@ -18,6 +18,30 @@
 
 ---
 
+## 2026-11-13 — ヘルプのページ（仕組みと記事の下書き）・05 のマージ
+
+- 依頼：「ヘルプページを新しく作成して。https://aday.hitotabi.design/help を参考に」（指示書なし）。05 は main にマージ済み（`cd3172a`）
+- ユーザーの決定：記事は Claude が下書き → ユーザーが確かめる／参考と同じ3階層／お問い合わせのボタンは置かない（行き先が無い）
+- 参考ページから取ったのは構成だけ（トップ＝「なにかお困りですか？」＋検索＋カテゴリのカード、カテゴリ＝記事の一覧、記事＝パンくず・タイトル・最終更新・見出しと番号つきの手順）。文言・見た目・ロゴは使っていない
+- やったこと：
+  - `pages/help/`（トップ・category・article）、`assets/js/modules/help.js`、`assets/js/pages/help-top.js`・`help-category.js`・`help-article.js`、`assets/data/help.json`（4カテゴリ・16記事）、`scripts/check-help.mjs`（`npm run check:help`）
+  - CSS：`component/_help-search.css`・`_help-list.css`・`_breadcrumb.css`、`project/_help.css`（仮の見た目）。トークン `--content-max-width`（05 で消しすぎていたのを戻した）・`--reading-max-width`・`--help-category-min-width`
+  - Top のヘッダーに「ヘルプ」。ヘルプのページにもチャットボット
+  - 展示モード：ヘルプは Top 以外なので、3分操作が無ければ Top に戻す。05 で消した `idleReturn.js`・`IDLE_RETURN_MS` を戻した
+  - 検索はチャットボットの normalize（類義語・ひらがな/カタカナ）を使う。`synonyms.json` に読みがな（つうち・しょうたい・もくてき・ひきつぎ・こうかい・たすく）を足した
+  - 記事の下書きは、本体（`c017185`）の CLAUDE.md（アカウント作成・イベント作成・目的と柱・振り返り・通知・Discord/Slack・引き継ぎ・みんなの記録・退会）を読んで書いた。全部 `checked: false`
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 24 / 24 件 OK。`check:help` → 誤りなし（確認がまだ 16 件・todo 5 件）。`check:faq` → 26/31・到達 31/31・誤答 0（読みがなを足しても変わらない）
+  - dist で：トップに4カテゴリ、検索「つうち」→「通知を受け取る」が先頭、「やること」→ タスクの記事、「退会」→「アカウントを削除する」、0件のときは案内。カテゴリ・記事のパンくず・title・最終更新「2026/11/13」・関連する記事・カテゴリへ戻る。無い id は「見つかりませんでした」
+  - 375px で横スクロールなし。コンソールのエラーなし。展示モード（fast）で記事を開いて 18 秒で Top（`?kiosk=1&fast=1`）に戻る
+- 分かったこと：本体は `/explore` に `X-Robots-Tag` を付けない（本体の CLAUDE.md：2026-11-12 ユーザー判断）。CLAUDE.md §6 を直した
+- 残っていること・次にやること：
+  - **記事の中身の確認（ユーザー）**：`npm run check:help` で一覧が出る。特に todo の5つ（イベントを作るボタン名・招待リンクの場所・タスクを作るボタン名・山の説明・アカウント削除の場所）
+  - 画像（スクリーンショット）を入れるなら `assets/img/help/` に置き、`image` ブロックで
+  - チャットボットの答えから、ヘルプの記事へリンクする（faq.json の links に `/pages/help/article/?id=…`）
+  - main へのマージ（ユーザーの確認待ち）
+- 本体側に頼むこと：なし
+
 ## 2026-11-12 — 05 Phase 2：一覧・詳細・索引を消し、古い URL から「みんなの記録」へ移す
 
 - 指示書：docs/instructions/05_move-archive.md（Phase 2・完了条件まで）

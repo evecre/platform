@@ -15,7 +15,7 @@
 |---|---|---|---|---|
 | Foundation | なし | `foundation/` | reset、トークン、素の要素、文字サイズ、共有 `@keyframes` | サイト全体の前提か |
 | Layout | `l-` | `layout/` | ヘッダー、フッター、スクロールの舞台 | 1ページに1つしか無い領域か |
-| Component | `c-` | `object/component/` | ボタン、チャットボット、キャラクター | 2ページ以上で使い回すか |
+| Component | `c-` | `object/component/` | ボタン、チャットボット、キャラクター、ヘルプの検索の欄 | 2ページ以上で使い回すか |
 | Project | `p-` | `object/project/` | ページ固有のブロック（`p-hero`、`p-top-concept` …） | 特定のページだけで意味を持つか |
 | Utility | `u-` | `object/utility/` | `u-hidden` | 最後の手段。増やさない |
 
@@ -49,6 +49,11 @@
 | 現在位置のドット（`c-step-indicator`。今の画面は `.is-active`） | `object/component/_step-indicator.css` |
 | Top の最初の画面（`p-hero`。出現アニメーションの例） | `object/project/_hero.css` |
 | 角丸・本文の最大幅の値 | `foundation/_variables.css` |
+| ヘルプの検索の欄（`c-help-search`。小さい版は `--compact`） | `object/component/_help-search.css` |
+| ヘルプの記事の一覧（検索結果・カテゴリ・関連する記事。`c-help-list`） | `object/component/_help-list.css` |
+| パンくず（`c-breadcrumb`。ヘルプのカテゴリ・記事） | `object/component/_breadcrumb.css` |
+| ヘルプの3ページ（トップの見出し・カテゴリのカード・記事の見出し・手順・補足・関連する記事） | `object/project/_help.css` |
+| ヘルプの本文の幅・カテゴリのカードの最小幅 | `foundation/_variables.css` の `--reading-max-width`・`--help-category-min-width` |
 | チャットボットの置き場所（右下に固定） | `layout/_chatbot.css` |
 | チャットボットのボタン・パネル・吹き出し・選択肢・入力欄（開いている間は `.c-chatbot.is-open`） | `object/component/_chatbot.css` |
 | キャラクター（目の位置・普段の目線・瞬きと目線の周期） | `object/component/_character.css` |

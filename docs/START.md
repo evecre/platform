@@ -32,6 +32,7 @@ ES Modules と fetch を使うので、HTML をファイルとして直接開か
 node --check <編集した JS>
 npm run check                    # 全 JS に node --check
 node scripts/check-faq.mjs       # チャットボットの正答率（02 以降）
+npm run check:help               # ヘルプのデータ（help.json）の検査と、確認がまだの記事
 ```
 
 ## Cloudflare Pages の設定（本番：https://evecre.pages.dev）
@@ -54,7 +55,8 @@ node scripts/check-faq.mjs       # チャットボットの正答率（02 以降
 | 02 | チャットボット（自作 FAQ エンジン・パネル UI・正答率チェック） | 完了（2026-11-04。main にマージ済み） |
 | 03 | 本体の公開 API につなぐ・Cloudflare Pages に出す準備 | 完了（2026-11-06。main にマージ済み） |
 | 04 | イベント一覧・詳細を読み物にする（判定・件数・つまずいたことの索引） | 完了（2026-11-08。main にマージ済み） |
-| 05 | 公開イベントの閲覧を本体の「みんなの記録」（/explore）に移す（一覧・詳細・索引を消す・古い URL から移す） | Phase 2 まで完了（2026-11-12。`feature/05-move-archive`。main へのマージ待ち） |
+| 05 | 公開イベントの閲覧を本体の「みんなの記録」（/explore）に移す（一覧・詳細・索引を消す・古い URL から移す） | 完了（2026-11-13。main にマージ済み） |
+| — | ヘルプ（pages/help/。指示書なし・2026-11-13 の依頼） | 仕組みと記事の下書き 16 件（`feature/help-pages`）。記事の中身はユーザーの確認待ち |
 | — | 本体側：公開 API（別の Claude Code が担当） | 完了（本体 d7ed899。main にマージ・Render にデプロイ済み） |
 
 状態は作業のたびにこの表を更新すること。

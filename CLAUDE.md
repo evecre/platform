@@ -29,6 +29,7 @@
 
 ```
 index.html                         Top（スクロールで画面が切り替わる）
+pages/help/                        ヘルプ（トップ・category/?id=…・article/?id=…）。§14
 pages/event-log/                   古い URL（一覧・detail/?id=…・struggles/）から「みんなの記録」へ移すだけのページ
 assets/
   css/
@@ -36,13 +37,14 @@ assets/
     vendor/reset/                  既存の reset（中身を確かめてから foundation に取り込む）
     foundation/  layout/  object/component/  object/project/  object/utility/
   js/
-    pages/                         ページごとの入口（top.js / explore-redirect.js）
-    modules/                       共通の部品（scrollStage, kiosk, autoAdvance, exploreLink, chatbot/ …）
+    pages/                         ページごとの入口（top.js / help-*.js / explore-redirect.js）
+    modules/                       共通の部品（scrollStage, kiosk, autoAdvance, idleReturn, exploreLink, help, chatbot/ …）
     vendor/
   img/  common/ top/ character/
   data/
-    faq.json  synonyms.json  faq-tests.json   チャットボットのデータ
-scripts/                           serve.mjs / build-dist.mjs / check-js.mjs / check-faq.mjs（Node）
+    faq.json  synonyms.json  faq-tests.json   チャットボットのデータ（synonyms.json はヘルプの検索も使う）
+    help.json                      ヘルプのカテゴリと記事
+scripts/                           serve.mjs / build-dist.mjs / check-js.mjs / check-faq.mjs / check-help.mjs（Node）
 docs/                              START / HANDOFF / api-contract / instructions/
 robots.txt  _headers               検索エンジン対策（§6）
 ```
@@ -85,12 +87,13 @@ robots.txt  _headers               検索エンジン対策（§6）
 
 注意：これは「検索に載らない」だけで、URL を知っている人は誰でも見られる。強い制限が必要になったら Cloudflare Access を検討する（ユーザーに相談）。
 
-「みんなの記録」（本体の `/explore`）の noindex は本体側の担当（2026-11-12 時点：本体の `index.html` に `<meta name="robots" content="noindex">`。`X-Robots-Tag` は未対応で依頼中）
+「みんなの記録」（本体の `/explore`）の noindex は本体側の担当（本体の `index.html` に `<meta name="robots" content="noindex">`。`X-Robots-Tag` は付けない：2026-11-12 の本体側のユーザー判断）
 
 ## 7. 展示モード
 
 - URL に `?kiosk=1` が付いたときだけ有効。`sessionStorage` に保存し、ページを移っても続く（`?kiosk=0` で解除）
 - **Top**：30秒ごとに次の画面へ自動で進む。最後まで行ったら最初へ。ユーザーが操作したら止め、30秒操作が無ければ再開
+- **Top 以外（ヘルプ）**：3分間操作（スクロール・タッチ・クリック・キー入力）が無ければ Top に戻る（`idleReturn.js`・`IDLE_RETURN_MS`。05 で一度消し、ヘルプで戻した）
 - **みんなの記録（本体）**：リンクに `?kiosk=1` を付けて移る（`exploreLink.js`）。本体が3分操作が無ければ `https://evecre.pages.dev/?kiosk=1` に戻す。展示中はログイン・コメントの入力欄を出さない（本体の `public/js/views/explore.js`、依頼文 `docs/requests/main-app-explore-kiosk-return.md`）
   - ★本体が戻す先は `PUBLIC_SITE_ORIGINS` の localhost でない値（今は本番の pages.dev）。会場でローカル（localhost:5173）で動かしても、戻る先は本番の Top になる
 - チャットボットを開いている間は自動送りを止める
@@ -120,6 +123,7 @@ robots.txt  _headers               検索エンジン対策（§6）
   - `createScrollStage()` は `{ goTo, next, prev, current, count }` を返す（展示モードの自動送りで使う）
 - **展示モード**：`assets/js/modules/kiosk.js` に判定と時間の定数（`AUTO_ADVANCE_MS` / `RESUME_AFTER_MS` / `CHATBOT_RESET_MS`）。sessionStorage のキーは `evecre:kiosk`（値 `1` / `fast`）。`?kiosk=1&fast=1` で時間が 10 分の 1
   - Top の自動送り：`autoAdvance.js`（操作＝wheel / touchstart / pointerdown / keydown。scroll は自動送り自身が起こすので含めない）。最後から最初へは瞬時に戻す
+  - Top 以外の無操作で戻る：`idleReturn.js`（操作に scroll も含める。`location.replace` で戻る。`common.js` が page が top 以外のとき起動）
   - チャットボットは開いたとき `chatbot:open`、閉じたとき `chatbot:close` を **document で**発火すること（自動送りが止まる・再開する）
   - 展示中は `<html class="is-kiosk">`
   - 表示・非表示の切り替えは `u-hidden`（`hidden` 属性は、クラスの `display` に負けるので使わない）
@@ -129,12 +133,13 @@ robots.txt  _headers               検索エンジン対策（§6）
 ## 11. チャットボット（02 で追加）
 
 - 判定：`assets/js/modules/chatbot/`（`normalize.js` → `matcher.js` → `engine.js`。DOM に依存しない）。パネル：`chatbot.js`（`startChatbot({ kiosk })`。`common.js` から起動）
-  - Top に出す（`common.js` から。05 でページが Top だけになったので、`CHATBOT_TOP_ONLY` は消した）
+  - `initCommon()` を呼ぶページ（Top・ヘルプ）に出す（05 で `CHATBOT_TOP_ONLY` は消した）
   - 答え・質問の文はすべて `textContent`、リンクは `safeUrl()` を通す
   - 展示モードで `CHATBOT_RESET_MS`（kiosk.js）操作が無ければ、閉じて最初のあいさつに戻す
   - パネルの中の keydown は Top の舞台に渡さない（stopPropagation）
 - データ：`assets/data/faq.json`（カテゴリと質問）・`synonyms.json`（類義語）・`faq-tests.json`（正答率のテスト）
   - 質問を足す：`items` に1件足す。`id`（英小文字とハイフン）・`category`（`categories` の id）・`question`・`patterns`（言い回し。**5個以上**）・`keywords`（その項目らしい語。1つ含まれるごとに +0.1）・`answer`（改行可）・`links`（`/` か `https://` で始まる。みんなの記録は本番の URL を直接書く。展示モードでは `exploreHref()` が `?kiosk=1` を足す）・`related`（ほかの項目の id）・`featured`（カテゴリを選んだときに出すか）
+  - ★`synonyms.json` はヘルプの検索も使う（§14）。足したら `check:faq` で誤答 0 を確かめる
   - 言い回しが違うだけで外れるときは、まず `synonyms.json`（代表の語 → 言い換えの一覧）に足す。全部の項目に効く。語尾・つなぎは `normalize.js` の `FILLER_PHRASES`
   - テストの文を、そのまま `patterns` に写さない（テストが意味を失う）
   - 足したら `npm run check:faq`（`--tune` でしきい値の表）。faq.json に誤り（id の重複・無い related・patterns 5個未満・無いカテゴリ）があると終了コード 1
@@ -158,3 +163,18 @@ robots.txt  _headers               検索エンジン対策（§6）
 - リンク：HTML に `data-explore-link` を付けると、`common.js`（`setupExploreLinks()`）が href を `EXPLORE_URL` にする（展示モードなら `?kiosk=1`）。HTML にも同じ URL を書いておく（JS が動かないとき用）
   - **`EXPLORE_URL` を変えたら（独自ドメインなど）**：`config.js`・`index.html` の `data-explore-link`・`pages/event-log/*/index.html` の `data-explore-redirect`・`assets/data/faq.json` の links を直す
 - 古い URL（本体の「リンクをコピー」が以前出していた `/pages/event-log/detail/?id=…` など）：`pages/event-log/` の3ページが `explore-redirect.js` で `location.replace` する。`?id=` が `EVENT_ID_RE` に合えば `EXPLORE_URL/<id>`、それ以外は一覧。Cloudflare の `_redirects` はクエリの値をパスに移せないので使わない。3ページとも noindex を残す。**消さないこと**
+
+## 14. ヘルプ（2026-11-13 に追加。参考：ADAY Help の構成）
+
+- 3階層：トップ `pages/help/`（検索の欄・カテゴリの一覧。`?q=` で検索結果）→ カテゴリ `category/?id=…`（記事の一覧）→ 記事 `article/?id=…`（パンくず・タイトル・最終更新・本文・関連する記事）。入口は Top のヘッダーの「ヘルプ」
+- データ：`assets/data/help.json` の `categories`（`id`・`label`・`description`）と `articles`
+  - 記事：`id`（英小文字・数字・ハイフン）・`category`・`title`・`updated`（`"YYYY-MM-DD"`）・`checked`（ユーザーが中身を確かめたら true）・`todo`（確かめること。画面には出ない）・`summary`（一覧に出す1行）・`keywords`（検索で当たりやすくする語）・`body`・`related`（記事の id）
+  - `body` のブロック：`heading`・`text`・`note`（`text`）／`steps`（番号つき）・`list`（`items`）／`image`（`src`・`alt`）／`link`（`label`・`href`。ほかの記事へは `/pages/help/article/?id=…`）
+  - 足したら `npm run check:help`（id の重複・無いカテゴリ・無い related・知らない type・URL の形で終了コード 1。`checked: false` と `todo` は一覧で出す）
+  - 記事の中身は Claude が本体のコードを読んで書いた下書き（2026-11-13）。**ユーザーが確かめて `checked: true` にする**。操作の名前（ボタン名など）は本体の画面に合わせる
+- JS：`assets/js/modules/help.js`（`loadHelp()`・`searchArticles()`・`renderArticleBody()`・`buildArticleItem()`・URL）。**記事の本文を描くのは `renderArticleBody()` だけ**。文字は `textContent`、リンク・画像は `safeUrl()`
+  - ページの入口：`help-top.js`・`help-category.js`・`help-article.js`。テンプレートの目印は `data-help-item="…"`（記事の一覧の1件）・`data-help-category="…"`（カテゴリ）、ページの部品は `data-help="…"`
+- 検索：空白で区切った語が**すべて**含まれる記事。重みはタイトル 3・キーワード 2・概要と本文 1。文字はチャットボットと同じ normalize（ひらがな・カタカナ・全角半角・`synonyms.json` の類義語と読みがな・語尾）でそろえる。日本語は単語に分けないので、「招待リンク」は1つの語として探す
+- CSS：`component/_help-search.css`（検索の欄。`--compact`）・`_help-list.css`（記事の一覧）・`_breadcrumb.css`（パンくず）・`project/_help.css`（3ページ）
+- お問い合わせのボタンは置いていない（行き先が無い。できたら足す）
+
