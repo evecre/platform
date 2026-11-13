@@ -29,15 +29,16 @@
        虹彩の top  = (40 - 13.91) / 2 / 40 = 32.6%
    ★可動域は 白目r20 − 虹彩r6.95 = 13.05。虹彩自身の寸法に対して
      横 ±26% / 縦 ±94% までが「白目からはみ出さない」限界。下の値はその内側。
-   ★目の位置（--face-left / --face-top）は suggest-box-*.svg の白目の円から測った値。
-     体（viewBox 372×349。iwa は 372×350）に対して：幅 76.29 / 372 = 20.5% */
+   ★目の位置と大きさ（--face-left / --face-top / --face-width）は、Top の 02・03 のキャラクター（Figma の comp を PDF から測った値。
+     object/project/_top.css の .p-top-chara__eyes--…）と同じ。体の素材（viewBox 372×349。iwa は 372×350）に対する %。
+     （2026-11-14 まで は suggest-box-*.svg の白目から測った値で、目が上にありすぎた） */
 
 .c-character__face {
   position: absolute;
   z-index: 1;
   top: var(--face-top);
   left: var(--face-left);
-  width: 20.5%;
+  width: var(--face-width);
   /* 瞬きは目の中心を軸に縦に潰す */
   transform: scaleY(1);
   pointer-events: none;
@@ -63,8 +64,9 @@
    ★「たまに動く」くらいが狙いなので、短くしないこと。
      瞬き 13〜19秒に1回／目を振るのは 29〜41秒に1回。 */
 .c-character--mizu {
-  --face-left: 39.45%;   /* 146.75 / 372 */
-  --face-top: 12.63%;    /* 44.07 / 349 */
+  --face-left: 34.72%;
+  --face-top: 30.47%;
+  --face-width: 35.42%;
   --gaze-x: 20%;         /* 右上 */
   --gaze-y: -42%;
   --glance-x: -20%;      /* 左下をちらっと */
@@ -74,8 +76,9 @@
 }
 
 .c-character--mori {
-  --face-left: 38.4%;    /* 142.86 / 372 */
-  --face-top: 12.89%;    /* 44.99 / 349 */
+  --face-left: 33.03%;
+  --face-top: 29.01%;
+  --face-width: 33.94%;
   --gaze-x: 0%;          /* 上 */
   --gaze-y: -48%;
   --glance-x: 22%;       /* 右をちらっと */
@@ -85,8 +88,9 @@
 }
 
 .c-character--iwa {
-  --face-left: 38.87%;   /* 144.58 / 372 */
-  --face-top: 13.6%;     /* 47.59 / 350 */
+  --face-left: 30.05%;
+  --face-top: 30.87%;
+  --face-width: 35.72%;
   --gaze-x: -20%;        /* 左上 */
   --gaze-y: -42%;
   --glance-x: 20%;       /* 右下をちらっと */
