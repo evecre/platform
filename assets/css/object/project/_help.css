@@ -1,0 +1,179 @@
+/* ==========================================================================
+   Project / help — ヘルプのページ（トップ・カテゴリ・記事）
+   マークアップ：pages/help/index.html・category/index.html・article/index.html
+   記事の本文の要素は help.js の renderArticleBody() が作る（p-help-article__heading など）
+   ========================================================================== */
+
+/* ---- 3ページ共通の枠 ---- */
+.p-help-top,
+.p-help-category,
+.p-help-article {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding: var(--space-6) var(--space-4) var(--space-8);
+}
+
+.p-help-top__message,
+.p-help-category__message,
+.p-help-article__message {
+  color: var(--color-text-muted);
+}
+
+/* ---- トップ ---- */
+.p-help-top__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  padding-block: var(--space-7);
+}
+
+.p-help-top__title {
+  font-size: var(--font-size-2xl);
+  text-align: center;
+}
+
+.p-help-top__results,
+.p-help-top__categories {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.p-help-top__heading {
+  font-size: var(--font-size-lg);
+}
+
+.p-help-top__empty {
+  color: var(--color-text-muted);
+}
+
+.p-help-top__category-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--help-category-min-width)), 1fr));
+  gap: var(--space-4);
+}
+
+.p-help-top__category-link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  height: 100%;
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+.p-help-top__category-label {
+  font-weight: 700;
+}
+
+.p-help-top__category-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* ---- カテゴリ ---- */
+.p-help-category__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.p-help-category__title {
+  font-size: var(--font-size-2xl);
+}
+
+.p-help-category__description {
+  color: var(--color-text-muted);
+}
+
+.p-help-category__back,
+.p-help-article__back {
+  align-self: flex-start;
+  color: var(--color-accent);
+}
+
+/* ---- 記事 ---- */
+.p-help-article__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: var(--reading-max-width);
+}
+
+.p-help-article__title {
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-tight);
+}
+
+.p-help-article__updated {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.p-help-article__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  line-height: var(--line-height-base);
+}
+
+.p-help-article__heading {
+  margin-top: var(--space-5);
+  padding: var(--space-2) var(--space-4);
+  border-left: var(--space-1) solid var(--color-accent);
+  font-size: var(--font-size-lg);
+}
+
+.p-help-article__text,
+.p-help-article__note {
+  white-space: pre-wrap;
+}
+
+.p-help-article__note {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  font-size: var(--font-size-sm);
+}
+
+.p-help-article__steps,
+.p-help-article__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-left: var(--space-5);
+}
+
+.p-help-article__steps {
+  list-style: decimal;
+}
+
+.p-help-article__list {
+  list-style: disc;
+}
+
+.p-help-article__image {
+  max-width: 100%;
+  border-radius: var(--radius-md);
+}
+
+.p-help-article__link {
+  color: var(--color-accent);
+}
+
+.p-help-article__related {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.p-help-article__related-title {
+  font-size: var(--font-size-md);
+}

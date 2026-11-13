@@ -1,0 +1,35 @@
+/* ==========================================================================
+   Component / help-search — ヘルプの検索の欄（ヘルプのトップ・カテゴリ・記事）
+   --compact：カテゴリ・記事のページの上に置く小さいもの
+   ========================================================================== */
+
+.c-help-search {
+  display: flex;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: var(--reading-max-width);
+}
+
+.c-help-search__input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  font-size: var(--font-size-md); /* 16px 未満にしない（iOS が勝手にズームする） */
+}
+
+.c-help-search__button {
+  flex-shrink: 0;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  background-color: var(--color-text);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-sm);
+}
+
+.c-help-search--compact .c-help-search__input,
+.c-help-search--compact .c-help-search__button {
+  padding-block: var(--space-2);
+}
