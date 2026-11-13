@@ -15,7 +15,7 @@
 |---|---|---|---|---|
 | Foundation | なし | `foundation/` | reset、トークン、素の要素、文字サイズ、共有 `@keyframes` | サイト全体の前提か |
 | Layout | `l-` | `layout/` | ヘッダー、フッター、スクロールの舞台 | 1ページに1つしか無い領域か |
-| Component | `c-` | `object/component/` | ボタン、イベントカード、チャットボット | 2ページ以上で使い回すか |
+| Component | `c-` | `object/component/` | ボタン、チャットボット、キャラクター | 2ページ以上で使い回すか |
 | Project | `p-` | `object/project/` | ページ固有のブロック（`p-hero`、`p-top-concept` …） | 特定のページだけで意味を持つか |
 | Utility | `u-` | `object/utility/` | `u-hidden` | 最後の手段。増やさない |
 
@@ -23,8 +23,8 @@
 
 - Component は自身の外側の余白（margin）と位置を持たない。配置は親（`l-` / `p-`）が決める
 - Project から Component の中身を直接上書きしない。必要なら `c-` に modifier を足す
-  - ✗ `.p-top-archive .c-event-card__title { … }`
-  - ✓ `.c-event-card--large .c-event-card__title { … }`
+  - ✗ `.p-hero .c-chatbot__toggle { … }`
+  - ✓ `.c-chatbot__toggle--large { … }`
 - `!important` 禁止（`u-hidden` だけ例外）。CSS Nesting を使わない。`id` にスタイルを当てない
 - 色・サイズを直書きしない。`foundation/_variables.css` に名前を付けてから使う
 - 状態は `is-` クラス（`is-active` / `is-open`）か `data-state` 属性で表す
@@ -42,20 +42,13 @@
 | 素の `h1`〜`h3`・本文の文字サイズ | `foundation/_typography.css` |
 | 共有のアニメーション（`fade-in` / `fade-up`） | `foundation/_animation.css` |
 | 要素の初期化（`box-sizing`、余白の全消しなど） | `foundation/_reset.css` |
-| ヘッダー（ロゴ・Top / イベント一覧のリンク・今いるページの色） | `layout/_header.css` |
+| ヘッダー（ロゴ・Top / みんなの記録のリンク・今いるページの色） | `layout/_header.css` |
 | 本文の領域（`l-main`） | `layout/_main.css` |
 | フッター（コピーライト） | `layout/_footer.css` |
 | Top のスクロールの舞台（scene の長さ・画面への固定・active 以外を隠す・ドットの置き場所） | `layout/_stage.css` |
 | 現在位置のドット（`c-step-indicator`。今の画面は `.is-active`） | `object/component/_step-indicator.css` |
 | Top の最初の画面（`p-hero`。出現アニメーションの例） | `object/project/_hero.css` |
-| イベントのカード（`c-event-card`。ラベルは `__label--upcoming` / `--archive`） | `object/component/_event-card.css` |
-| イベント一覧のページ（見出し・絞り込みのボタン・カードの並び・読み込み中などのメッセージ） | `object/project/_event-log.css` |
-| イベント詳細のページ（ヘッダー画像・ラベル・開催日時と場所・概要・ナレッジの枠・戻るリンク） | `object/project/_event-detail.css` |
-| 詳細のナレッジ1件（判定・タスク名・タグ・振り返り2項目・「詳しく」の本文・画像・ファイル） | `object/project/_event-knowledge.css` |
-| つまずいたことの索引のページ（見出し・件数・タグの絞り込み・記録の並び・出どころ・止まったときのお知らせ） | `object/project/_event-struggles.css` |
-| 判定（うまくいった／つまずいた）の色 | `foundation/_variables.css` の `--color-outcome-*`（★つまずいたを警告の色にしない） |
-| 文章の1行の長さの上限（詳細の概要・ナレッジ） | `foundation/_variables.css` の `--reading-max-width` |
-| 角丸・本文の最大幅・カードの最小幅の値 | `foundation/_variables.css` |
+| 角丸・本文の最大幅の値 | `foundation/_variables.css` |
 | チャットボットの置き場所（右下に固定） | `layout/_chatbot.css` |
 | チャットボットのボタン・パネル・吹き出し・選択肢・入力欄（開いている間は `.c-chatbot.is-open`） | `object/component/_chatbot.css` |
 | キャラクター（目の位置・普段の目線・瞬きと目線の周期） | `object/component/_character.css` |
@@ -141,14 +134,9 @@ Top は縦に長いページではなく、スクロールに合わせて **scen
 - 一画面に収まらない分は切れる（`overflow: hidden`）。スマホ（375×667 くらい）でも収まる量にする
 - JS が動く前は普通の縦並びのページとして読めるが、`opacity: 0` から出す要素は JS が動くまで見えない
 
-## 5. イベント一覧・詳細のマークアップ
+## 5. イベント一覧・詳細（本体に移した）
 
-カードとナレッジ1件の HTML は、各ページの `<template>` に書いてある（`pages/event-log/index.html`、`pages/event-log/detail/index.html`）。JS はそれを複製して文字を入れるだけなので、**クラスや要素の並びは HTML の `<template>` を直せば変わる**。
-
-- JS が探すのは `data-*` の属性だけ（カードは `data-card="…"`、ナレッジ1件は `data-knowledge="…"`）。**クラスは見た目のためのものなので、名前を変えてよい**。`data-*` の属性は消さないこと
-- ナレッジ1件の判定は `[data-knowledge="outcome"]` に `data-state="success | struggle"` が付く。色はこれで変える
-
-読み込み中・0件・失敗のときは、`p-event-log__message` / `p-event-detail__message` に文が入る。隠すときは `u-hidden` が付く。
+公開イベントの一覧・詳細・つまずいたことの索引は、本体の「みんなの記録」（`/explore`）に移した（指示書 05）。`pages/event-log/` 以下は、古い URL で来た人を移すだけのページで、見た目は持たない。
 
 ## 6. 展示モードのときだけの見た目
 

@@ -18,6 +18,60 @@
 
 ---
 
+## 2026-11-12 — 05 Phase 2：一覧・詳細・索引を消し、古い URL から「みんなの記録」へ移す
+
+- 指示書：docs/instructions/05_move-archive.md（Phase 2・完了条件まで）
+- やったこと：
+  - 消した：`pages/event-log/` の一覧・詳細・索引の中身、`assets/js/pages/event-log.js`・`event-detail.js`・`event-struggles.js`、`modules/api.js`・`eventView.js`・`filterButtons.js`・`idleReturn.js`、`_event-log.css`・`_event-detail.css`・`_event-knowledge.css`・`_event-struggles.css`・`component/_event-card.css`、`assets/img/event-log/`、`assets/data/mock/`・`assets/data/snapshot/`、`scripts/fetch-snapshot.mjs`・`npm run snapshot`
+  - 中身を減らした：`config.js`（`EXPLORE_URL`・`EVENT_ID_RE` だけ）、`format.js`（`safeUrl()` だけ）、`kiosk.js`（`IDLE_RETURN_MS`）、`common.js`（idleReturn・`CHATBOT_TOP_ONLY`）、`_variables.css`（判定の色・`--reading-max-width`・`--card-min-width`・`--detail-header-max-height`）、`build-dist.mjs`・`.gitignore`（mock・snapshot）
+  - 使われているか確かめてから消した：Top（`top.js`）が使うのは `common.js`・`scrollStage.js`・`autoAdvance.js`、チャットボットは `format.js` の `safeUrl()`・`kiosk.js`・`character.js`・`exploreLink.js`。消したファイルを読んでいるところは残っていない（grep で0件）。`--content-max-width`・`--radius-sm`・`--space-9`・`--z-overlay` も今は使われていないが、トークンの段階として残した
+  - 古い URL：`pages/event-log/index.html`・`detail/index.html`・`struggles/index.html` を、`assets/js/pages/explore-redirect.js` で移すだけのページにした。`?id=` が `EVENT_ID_RE` に合えば `EXPLORE_URL/<id>`、それ以外は一覧。展示モードなら `?kiosk=1`。JS が動かないときのリンクも置いた。`_redirects` はクエリの値をパスに移せないので使っていない
+  - `style.css` の @import、`assets/css/README.md`（早見表・§5）、`_header.css` の説明、`docs/api-contract.md` の冒頭（もう読まない）、CLAUDE.md（§1・§2・§3・§5・§6・§7・§9・§10・§11・§12・§13）、START（展示会場の手順・表）
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 18 / 18 件 OK。`check:faq` は 26/31・到達 31/31・誤答 0
+  - `npm run build && node scripts/serve.mjs --root dist`：dist に Top・チャットボット・移すページだけ（mock・snapshot・消したファイルは無い）
+  - 移す先（本体は Playwright で止めて URL だけ確認）：一覧 → `/explore`、`detail/?id=1792979092586` → `/explore/1792979092586`、`?id=<script>`・id 無し・索引 → `/explore`、展示モードの詳細 → `/explore/1792979092586?kiosk=1`、展示モードの一覧 → `/explore?kiosk=1`
+  - Top：`X-Robots-Tag: noindex, nofollow`・meta も noindex, nofollow。チャットボットが開き、「みんなの記録って何？」のリンクが `/explore`。コンソールのエラーなし
+  - `robots.txt`・`_headers` は変えていない
+- 残っていること・次にやること：main へのマージ（ユーザーの確認待ち）。マージしたら Cloudflare Pages で `https://evecre.pages.dev/pages/event-log/detail/?id=…` が移ることを確かめる
+- ユーザーに確認したいこと：なし
+- 本体側に頼むこと：`/explore` に `X-Robots-Tag: noindex, nofollow`（本体の指示書 §2）。外部サイトはもう公開 API を読まない（`PUBLIC_SITE_ORIGINS` は本体の「イベクリについて」の戻り先として使われている）
+
+## 2026-11-12 — 05 Phase 1：「みんなの記録」（本体の /explore）へのリンク
+
+- 指示書：docs/instructions/05_move-archive.md（Phase 1 まで。ユーザーから「本体の /explore が本番に出た」）
+- ブランチ：`feature/05-move-archive`（main ＋ `chore/top-logo`（Top のロゴ）＋ `docs/explore-kiosk-request` を取り込んで始めた）
+- やったこと：
+  - `config.js` に `EXPLORE_URL`（`https://evecre-ver-2-2-1.onrender.com/explore`）
+  - `assets/js/modules/exploreLink.js`：`exploreHref()`（展示モードなら `?kiosk=1` を足す。EXPLORE_URL の下だけ）・`setupExploreLinks()`（`[data-explore-link]` の href を書き直す。`common.js` から）
+  - Top：ヘッダー「イベント一覧」→「みんなの記録」、アーカイブの画面のボタン「みんなの記録を見る」と、アプリに移ることが分かる文（仮の文言）。同じタブ
+  - チャットボット：`knowledge-public` の links を本番の /explore（faq.json に URL を直接）・「みんなの記録を見る」。`chatbot.js` は links を `exploreHref()` に通す。patterns に「みんなの記録って何」、keywords に「みんなの記録」
+- 確かめたこと（コマンドと結果）：
+  - `npm run check` → 25 / 25 件 OK。`check:faq` は 26/31・到達 31/31・誤答 0（変化なし）
+  - ふだん：ヘッダー・ボタン・チャットボットのリンクが `…/explore`。展示モード：3つとも `…/explore?kiosk=1`
+  - 本番の /explore に移ると、本体が `evecre:explore-kiosk` を保存して URL から kiosk を消し、ヘッダーの「イベクリについて」が `https://evecre.pages.dev/?kiosk=1`
+  - コンソールのエラーなし
+- 本体の確認で分かったこと：本体の依頼文（kiosk で戻る・ログインの導線を隠す）は実装済み（`public/js/views/explore.js`）。**`/explore` の応答に `X-Robots-Tag` が付いていない**（本体の指示書 §2）。本体の `index.html` 全体に `<meta name="robots" content="noindex">` があるので検索には載らないが、nofollow とヘッダーが無い
+- 次にやること：Phase 2（一覧・詳細・索引を消す、古い URL から移す小さなページ、使わなくなった JS・CSS・データを消す）
+- 本体側に頼むこと：`/explore` に `X-Robots-Tag: noindex, nofollow`（本体の指示書 §2 のとおり）
+
+## 2026-11-11 — 05（公開イベントの閲覧を本体に移す）の調査と決定
+
+- 指示書：docs/instructions/05_move-archive.md（まだ始めない。本体の `/explore` が本番に出てから。本体は `243cbcb` でまだ無い）
+- ユーザーの決定：
+  1. 「つまずいたこと」の索引は消してよい（本体にも当面作らない）
+  2. 展示モードで `/explore` に移ったあと、しばらく操作が無ければ外部サイトの Top に戻したい（難しければ無くてもよい）。**「みんなの記録」（/explore）から Top へ移れること**は必須 → 本体への依頼文 `docs/requests/main-app-explore-kiosk-return.md`
+  3. `EXPLORE_URL` は任せる → `https://evecre-ver-2-2-1.onrender.com/explore`（config.js に1か所。独自ドメインにしたら変える）
+  4. 編集中だった Top のロゴ（`index.html`・`logo-with-tagline.svg`）は `chore/top-logo` に commit・push 済み
+- 05 で外部サイト側がやること（調査の結果。指示書への追加を含む）：
+  - ボタンの文言は「みんなの記録を見る」。展示モードのときは `EXPLORE_URL?kiosk=1` へ（依頼文 1-2）
+  - 古い URL：`_redirects` はクエリの値をパスに移せないので、詳細（`?id=`）は「id を `EVENT_ID_RE` で確かめて `EXPLORE_URL/<id>` へ `location.replace` するだけ」の小さなページにする。一覧も同じ小さなページにすれば、URL を config.js の1か所に保てる（`_redirects` を使うなら build-dist の INCLUDE に足す）。どちらも noindex を残す
+  - チャットボット：faq.json の `public-…` 項目の links `/pages/event-log/` → 本体の URL を直接書く（JSON なので config.js を読めない。ドメインを変えたらここも）
+  - 消せる：`api.js`・`eventView.js`・`filterButtons.js`・`idleReturn.js`（Top 以外のページが無くなる）・`pages/event-*.js`・`_event-*.css`・`c-event-card`・`img/event-log/`・`assets/data/mock/`・`assets/data/snapshot/`・`fetch-snapshot.mjs`・`npm run snapshot`・config.js の API 関係の定数・一覧/詳細だけのトークン
+  - 残す：`format.js`（チャットボットが `safeUrl()`。日付の関数は消せる）・`common.js`・`kiosk.js`・`EVENT_ID_RE`
+  - CLAUDE.md の §2・§5（API のキャッシュの保存）・§6・§7・§10・§12・§13、START の展示の手順（snapshot）を直す
+- 本体側に頼むこと：`docs/requests/main-app-explore-kiosk-return.md`（`/explore` のヘッダーに外部サイトの Top へのリンク、`?kiosk=1` のときの無操作で戻る・ログインの導線を隠す）。索引を消すので、本番に移ったあとは外部サイトは公開 API を読まなくなる（`PUBLIC_SITE_ORIGINS` は `publicSiteUrl` の元としては引き続き使う）
+
 ## 2026-11-10 — eventType・lastUpdated・blocks・reflections を読む（本体からの連絡）
 
 - 元：`docs/external-site-eventtype-lastupdated-blocks-reflections.md`（本体からの連絡。2026-11-10 デプロイ済み）。指示書04 §7 と §8 の続き

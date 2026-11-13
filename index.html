@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="ja">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,6 +14,7 @@
   <link rel="stylesheet" href="/assets/css/style.css">
   <script type="module" src="/assets/js/pages/top.js"></script>
 </head>
+
 <body>
   <header class="l-header">
     <!-- TODO: ロゴ画像（assets/img/common/）に差し替える -->
@@ -20,7 +22,7 @@
     <nav class="l-header__nav" aria-label="サイト内">
       <ul class="l-header__list">
         <li class="l-header__item"><a class="l-header__link" href="/" aria-current="page">Top</a></li>
-        <li class="l-header__item"><a class="l-header__link" href="/pages/event-log/">イベント一覧</a></li>
+        <li class="l-header__item"><a class="l-header__link" href="https://evecre-ver-2-2-1.onrender.com/explore" data-explore-link>みんなの記録</a></li>
       </ul>
     </nav>
   </header>
@@ -32,7 +34,7 @@
       <div class="l-stage__frame">
         <!-- TODO: ロゴ画像 -->
         <!-- TODO: 文言 -->
-        <h1 class="p-hero__title">イベクリ</h1>
+        <h1 class="p-hero__title"><img src="assets/img/common/logo-with-tagline.svg" alt="イベクリ"></h1>
         <p class="p-hero__lead">目的を見失わない、学生のイベントづくり。</p>
       </div>
     </section>
@@ -98,8 +100,9 @@
       <div class="l-stage__frame">
         <!-- TODO: 文言 -->
         <h2 class="p-top-archive__title">公開されたイベント</h2>
-        <p class="p-top-archive__text">イベクリで作られたイベントの告知と、開催後の振り返りを見られます。</p>
-        <a class="p-top-archive__link" href="/pages/event-log/">イベント一覧へ</a>
+        <p class="p-top-archive__text">イベクリで作られたイベントの告知と、開催後の振り返りを、イベクリのアプリの「みんなの記録」で見られます。いいねやコメントもできます。</p>
+        <!-- 本体（イベクリのアプリ）に移る。href は common.js が config.js の EXPLORE_URL で書き直す（展示モードなら ?kiosk=1） -->
+        <a class="p-top-archive__link" href="https://evecre-ver-2-2-1.onrender.com/explore" data-explore-link>みんなの記録を見る</a>
       </div>
     </section>
 
@@ -119,4 +122,5 @@
     <small class="l-footer__copyright">&copy; イベクリ</small>
   </footer>
 </body>
+
 </html>

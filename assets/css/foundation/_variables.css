@@ -14,13 +14,6 @@
   --color-accent: #22AC38;       /* ボタン・リンクなど操作の色 */
   --color-border: #D3D6D8;
 
-  /* 振り返りの判定（うまくいった / つまずいた）。★つまずいたは、いちばん読まれる記録なので警告の色（赤・橙・黄）にしない。
-     どちらも落ち着いた色で、区別がつく程度にする */
-  --color-outcome-success-bg: #E8F2EA;
-  --color-outcome-success-text: #2F6A3B;
-  --color-outcome-struggle-bg: #E6ECF5;
-  --color-outcome-struggle-text: #34527E;
-
   /* --- フォント ------------------------------------------------------------ */
   --font-family-base: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
   --line-height-base: 1.7;
@@ -54,10 +47,6 @@
   /* --- 角丸・幅 ------------------------------------------------------------ */
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
-  --content-max-width: 72rem;     /* 一覧・詳細の本文の最大幅 */
-  --reading-max-width: 44rem;     /* 文章を読ませる部分の1行の長さの上限（詳細の概要・ナレッジ） */
-  --card-min-width: 16rem;        /* 一覧のカードが並ぶときの最小幅 */
-  --detail-header-max-height: 50svh; /* 詳細のヘッダー画像の高さの上限（タイトルが一画面目に入るように） */
   --radius-full: 999px;           /* 丸いボタン */
 
   /* --- チャットボット ------------------------------------------------------ */

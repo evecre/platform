@@ -15,7 +15,6 @@ const INCLUDE = ['index.html', 'pages', 'assets', 'favicon.ico', 'robots.txt', '
 // 配信しないもの（ROOT からの相対パス・ファイル名）
 const EXCLUDE_PATHS = new Set([
   'assets/data/faq-tests.json', // チャットボットのテスト用
-  'assets/data/mock', // 仮データ（localhost のときだけ使う。config.js の USE_MOCK_DATA）
 ]);
 const EXCLUDE_NAMES = new Set(['.DS_Store']);
 const EXCLUDE_EXT = new Set(['.md']); // assets/css/README.md など、開発用の説明
