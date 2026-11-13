@@ -3,7 +3,9 @@
 //   画面（[data-scene]）に data-state を付ける：before → entering → active → leaving → after（戻るときは after → entering … → before）
 //   舞台（[data-stage]）に付ける：data-current（今の画面の data-scene）・data-direction（forward / back / loop）
 //   見せ方はすべて CSS（layout/_stage.css・_stage-motion.css・foundation/_motion.css）。JS はアニメーションの時間を持たない
-//   ★切り替え中は次の入力を受け付けない。その長さは行き先の画面の CSS 変数 --scene-lock（foundation/_motion.css）
+//   ★切り替えてから --scene-input-lock の間は次の入力を受け付けない（慣性で何画面も進まないように）。
+//     出現が終わって active になるのは --scene-lock のあと（どちらも行き先の画面の CSS 変数。foundation/_motion.css）。
+//     出現の途中で次へ進んだときは、前の切り替えをその場で終わらせてから次を始める
 //   JS が動かないときは、ふつうの縦に並んだページとして読める（.is-ready が付かないため）
 //   今の画面の前後の画面に .is-preload を付ける（隠したまま描いておき、loading="lazy" の画像を先に読ませる。_stage.css）
 //   URL の #…（画面の id か data-scene）で、その画面から始める・移る（チャットボットの「/#how-to」など）
@@ -13,9 +15,12 @@ import { readCssTime } from './cssVars.js';
 const KEYS_NEXT = new Set(['ArrowDown', 'PageDown']);
 const KEYS_PREV = new Set(['ArrowUp', 'PageUp']);
 // ホイール：これだけ回したら1回の操作とみなす（px）。トラックパッドの小さな揺れで動かないように
-const WHEEL_THRESHOLD = 24;
-// ホイール：この間（ms）イベントが途切れたら、次の回転を新しい操作とみなす（慣性で何画面も進まないように。動きの時間ではない）
-const WHEEL_GESTURE_GAP = 180;
+const WHEEL_THRESHOLD = 12;
+// ホイール：この間（ms）イベントが途切れたら、次の回転を新しい操作とみなす（動きの時間ではない）
+const WHEEL_GESTURE_GAP = 120;
+// ホイール：直前より、この倍率以上に強く回したら、途切れていなくても新しい操作とみなす（慣性は弱まっていくだけなので、強まったら人の操作）
+const WHEEL_RISE = 1.6;
+const LINE_PX = 16; // deltaMode が行単位のときの 1行の px
 // スワイプ：これだけ動かしたら1回の操作とみなす（px）
 const SWIPE_THRESHOLD = 40;
 
@@ -30,7 +35,8 @@ export function createScrollStage(stage, { indicator = null } = {}) {
 
   let current = -1;
   let busy = false;
-  let lockTimer = 0;
+  let inputTimer = 0;
+  let finish = null; // 進行中の切り替えを終わらせる（出現の途中で次へ進んだときに呼ぶ）
   const dots = indicator ? buildIndicator(indicator) : [];
 
   stage.classList.add('is-ready');
@@ -59,6 +65,7 @@ export function createScrollStage(stage, { indicator = null } = {}) {
   function goTo(index, { direction } = {}) {
     const target = clamp(index, 0, scenes.length - 1);
     if (busy || target === current) return false;
+    if (finish) finish();
 
     const from = current;
     const dir = direction ?? (target > from ? 'forward' : 'back');
@@ -68,13 +75,20 @@ export function createScrollStage(stage, { indicator = null } = {}) {
     markCurrent(target);
     current = target;
 
+    let stateTimer = 0;
+    finish = () => {
+      window.clearTimeout(stateTimer);
+      finish = null;
+      if (from >= 0 && from !== current) setState(from, dir === 'back' ? 'before' : 'after');
+      if (scenes[target].dataset.state === 'entering') setState(target, 'active');
+    };
+    stateTimer = window.setTimeout(finish, readCssTime(scenes[target], '--scene-lock'));
+
     busy = true;
-    window.clearTimeout(lockTimer);
-    lockTimer = window.setTimeout(() => {
-      if (from >= 0) setState(from, dir === 'back' ? 'before' : 'after');
-      setState(target, 'active');
+    window.clearTimeout(inputTimer);
+    inputTimer = window.setTimeout(() => {
       busy = false;
-    }, readCssTime(scenes[target], '--scene-lock'));
+    }, readCssTime(scenes[target], '--scene-input-lock'));
     return true;
   }
 
@@ -84,23 +98,30 @@ export function createScrollStage(stage, { indicator = null } = {}) {
   // --- 入力 ---------------------------------------------------------------
   let wheelSum = 0;
   let wheelLast = 0;
-  let wheelUsed = false; // この操作（ひと続きの回転）で、もう1画面動かしたか
+  let wheelPrevAbs = 0;
+  let wheelUsed = false; // この操作（ひと続きの回転）を、もう使ったか
 
   function onWheel(event) {
     if (isInsideScrollable(event.target)) return;
     event.preventDefault();
+    const dy = event.deltaMode === 1 ? event.deltaY * LINE_PX : event.deltaY;
+    const abs = Math.abs(dy);
     const now = event.timeStamp;
-    if (now - wheelLast > WHEEL_GESTURE_GAP) {
+    // 途切れたか、強まったら新しい操作（慣性は弱まりながら続くだけ）
+    if (now - wheelLast > WHEEL_GESTURE_GAP || abs > wheelPrevAbs * WHEEL_RISE + 2) {
       wheelSum = 0;
       wheelUsed = false;
     }
     wheelLast = now;
-    if (wheelUsed) return; // 慣性の続きは捨てる
-    wheelSum += event.deltaY;
+    wheelPrevAbs = abs;
+    if (wheelUsed) return; // 使った操作の続き（慣性）は捨てる
+    wheelSum += dy;
     if (Math.abs(wheelSum) < WHEEL_THRESHOLD) return;
-    const moved = wheelSum > 0 ? next() : prev();
-    // 切り替え中で動けなかったときは、この操作を使い切ったことにしない（止まってから回し直せば動く）
-    wheelUsed = moved || busy;
+    if (dy > 0) next();
+    else prev();
+    // 切り替え中で動けなかったときも使ったことにする（慣性の残りで、入力を待つ時間が明けた直後に2画面目へ進まないように）。
+    // 回し直したとき（途切れた・強まった）は、上で新しい操作として受け付ける
+    wheelUsed = true;
     wheelSum = 0;
   }
 

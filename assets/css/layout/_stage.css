@@ -6,6 +6,12 @@
    画面の中の要素の出現・後退は layout/_stage-motion.css、値は foundation/_motion.css
    ========================================================================== */
 
+/* JS が舞台を整える（.is-ready）までは見せない。整う前の一瞬、縦並びのページ（ロゴが大きく出る）が見えないように。
+   ★JS が使えない環境では assets/css/noscript.css（index.html の <noscript> で読む）が見せる */
+.l-stage:not(.is-ready) {
+  visibility: hidden;
+}
+
 /* ページ自体はスクロールさせない（Top だけ。scrollStage.js が <html> に付ける） */
 .is-stage-locked,
 .is-stage-locked body {
