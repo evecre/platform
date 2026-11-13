@@ -92,7 +92,7 @@ robots.txt  _headers               検索エンジン対策（§6）
 ## 7. 展示モード
 
 - URL に `?kiosk=1` が付いたときだけ有効。`sessionStorage` に保存し、ページを移っても続く（`?kiosk=0` で解除）
-- **Top**：30秒ごとに次の画面へ自動で進む。最後（09）まで行ったら最初（01）へ（スクロールでは 09 の次へ進まない）。ユーザーが操作したら止め、30秒操作が無ければ再開
+- **Top**：5秒ごとに次の画面へ自動で進む（`kiosk.js` の `AUTO_ADVANCE_MS`）。最後（09）まで行ったら最初（01）へ（スクロールでは 09 の次へ進まない）。ユーザーが操作したら止め、30秒操作が無ければ再開
 - **Top 以外（ヘルプ）**：3分間操作（スクロール・タッチ・クリック・キー入力）が無ければ Top に戻る（`idleReturn.js`・`IDLE_RETURN_MS`。05 で一度消し、ヘルプで戻した）
 - **みんなの記録（本体）**：リンクに `?kiosk=1` を付けて移る（`exploreLink.js`）。本体が3分操作が無ければ `https://evecre.pages.dev/?kiosk=1` に戻す。展示中はログイン・コメントの入力欄を出さない（本体の `public/js/views/explore.js`、依頼文 `docs/requests/main-app-explore-kiosk-return.md`）
   - ★本体が戻す先は `PUBLIC_SITE_ORIGINS` の localhost でない値（今は本番の pages.dev）。会場でローカル（localhost:5173）で動かしても、戻る先は本番の Top になる
