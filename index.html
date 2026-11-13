@@ -33,7 +33,7 @@
 
   <!-- Top の舞台（紙芝居）。仕組みは scrollStage.js、動きの付け方は assets/css/README.md §4
        ★見える要素には data-enter（出現）を付ける。data-order＝順番、data-leave＝後退
-       ★Phase 1（2026-11-13）：画像の場所は仮の四角（p-top-ph）。Phase 2〜4 で画像に置き換える -->
+       位置・大きさは object/project/_top.css（Figma の座標） -->
   <main class="l-main l-stage" data-stage>
 
     <!-- 01-hero
@@ -112,7 +112,8 @@
     <!-- 04〜08 howtouse（スマホは画面をまたぐので l-stage__persistent にある） -->
     <section class="p-top-step p-top-step--1 l-stage__scene" id="how-to" data-scene="step-1">
       <div class="l-stage__frame">
-        <div class="p-top-at p-top-ph p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out">mountaineering</div>
+        <img class="p-top-at p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out"
+          srcset="/assets/img/top/mountaineering-768w.webp 768w, /assets/img/top/mountaineering-1536w.webp 1536w, /assets/img/top/mountaineering-1920w.webp 1920w, /assets/img/top/mountaineering-2560w.webp 2560w, /assets/img/top/mountaineering-3840w.webp 3840w, /assets/img/top/mountaineering-5120w.webp 5120w" sizes="34vw" src="/assets/img/top/mountaineering-1536w.webp" width="1921" height="1921" alt="" loading="lazy">
         <div class="p-top-at p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
           <p class="p-top-step__number">STEP 1</p>
           <h2 class="p-top-step__title">イベントをつくる</h2>
@@ -130,13 +131,15 @@
           <p class="p-top-step__paragraph">招待リンクを送って、<br>メンバーを集めましょう。</p>
           <p class="p-top-step__paragraph">参加するときに得意なことを答えて<br>もらえるので、チームのことがよく<br>分かります。</p>
         </div>
-        <div class="p-top-at p-top-ph p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out">role</div>
+        <img class="p-top-at p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out"
+          src="/assets/img/top/role.svg" width="698" height="283" alt="運営・制作・企画のキャラクター" loading="lazy">
       </div>
     </section>
 
     <section class="p-top-step p-top-step--3 l-stage__scene" data-scene="step-3">
       <div class="l-stage__frame">
-        <div class="p-top-at p-top-ph p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out">planning</div>
+        <img class="p-top-at p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out"
+          srcset="/assets/img/top/planning-768w.webp 768w, /assets/img/top/planning-1536w.webp 1536w, /assets/img/top/planning-1920w.webp 1920w, /assets/img/top/planning-2560w.webp 2560w, /assets/img/top/planning-3840w.webp 3840w, /assets/img/top/planning-5120w.webp 5120w" sizes="30vw" src="/assets/img/top/planning-1536w.webp" width="1892" height="1892" alt="" loading="lazy">
         <div class="p-top-at p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
           <p class="p-top-step__number">STEP 3</p>
           <h2 class="p-top-step__title">やることを決める</h2>
@@ -148,7 +151,8 @@
 
     <section class="p-top-step p-top-step--4 l-stage__scene" data-scene="step-4">
       <div class="l-stage__frame">
-        <div class="p-top-at p-top-ph p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out">summit</div>
+        <img class="p-top-at p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out"
+          srcset="/assets/img/top/summit-768w.webp 768w, /assets/img/top/summit-1536w.webp 1536w, /assets/img/top/summit-1920w.webp 1920w, /assets/img/top/summit-2560w.webp 2560w, /assets/img/top/summit-3840w.webp 3840w, /assets/img/top/summit-5120w.webp 5120w" sizes="30vw" src="/assets/img/top/summit-1536w.webp" width="2458" height="1921" alt="" loading="lazy">
         <div class="p-top-at p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
           <p class="p-top-step__number">STEP 4</p>
           <h2 class="p-top-step__title">分担して進める</h2>
@@ -160,7 +164,8 @@
 
     <section class="p-top-step p-top-step--5 l-stage__scene" data-scene="step-5">
       <div class="l-stage__frame">
-        <div class="p-top-at p-top-ph p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out">writing</div>
+        <img class="p-top-at p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out"
+          srcset="/assets/img/top/writing-768w.webp 768w, /assets/img/top/writing-1536w.webp 1536w, /assets/img/top/writing-1920w.webp 1920w, /assets/img/top/writing-2560w.webp 2560w, /assets/img/top/writing-3840w.webp 3840w, /assets/img/top/writing-5120w.webp 5120w" sizes="38vw" src="/assets/img/top/writing-1536w.webp" width="2458" height="1921" alt="" loading="lazy">
         <div class="p-top-at p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
           <p class="p-top-step__number">STEP 5</p>
           <h2 class="p-top-step__title">イベントを振り返る</h2>
@@ -170,9 +175,16 @@
       </div>
     </section>
 
-    <!-- 09（STEP 6）。中の要素は個別の出現なし（元からある感じ）。円形の出現は Phase 4 -->
+    <!-- 09（STEP 6）。08 の上に、画面の中央から円形に広がって出る（_top.css）。中の要素は個別の出現なし（元からある感じ）
+         スライダー：同じ文を6つ並べた帯を、半分（3つ分）ずらして無限に流す（上は右から左、下は左から右）。2つ目からの文と下の帯は読み上げない -->
     <section class="p-top-connect l-stage__scene" data-scene="connect">
       <div class="l-stage__frame">
+        <div class="p-top-connect__slider p-top-connect__slider--top">
+          <div class="p-top-connect__track"><span class="p-top-connect__slide">Evecre　Knowledge Platform　</span><span class="p-top-connect__slide" aria-hidden="true">Evecre　Knowledge Platform　</span><span class="p-top-connect__slide" aria-hidden="true">Evecre　Knowledge Platform　</span><span class="p-top-connect__slide" aria-hidden="true">Evecre　Knowledge Platform　</span><span class="p-top-connect__slide" aria-hidden="true">Evecre　Knowledge Platform　</span><span class="p-top-connect__slide" aria-hidden="true">Evecre　Knowledge Platform　</span></div>
+        </div>
+        <div class="p-top-connect__slider p-top-connect__slider--bottom" aria-hidden="true">
+          <div class="p-top-connect__track"><span class="p-top-connect__slide">Evecre　Knowledge Platform　</span><span class="p-top-connect__slide" aria-hidden="true">Evecre　Knowledge Platform　</span><span class="p-top-connect__slide" aria-hidden="true">Evecre　Knowledge Platform　</span><span class="p-top-connect__slide" aria-hidden="true">Evecre　Knowledge Platform　</span><span class="p-top-connect__slide" aria-hidden="true">Evecre　Knowledge Platform　</span><span class="p-top-connect__slide" aria-hidden="true">Evecre　Knowledge Platform　</span></div>
+        </div>
         <div class="p-top-at p-top-connect__content" data-enter="none">
           <p class="p-top-step__number">STEP 6</p>
           <h2 class="p-top-step__title">公開して、つなぐ</h2>
@@ -203,7 +215,34 @@
           <span class="c-eyes p-top-chara__eyes p-top-chara__eyes--mori" data-eyes="about team" aria-hidden="true"><span class="c-eyes__inner"><img class="c-eyes__white" src="/assets/img/character/character-eye.svg" alt=""><img class="c-eyes__iris" src="/assets/img/character/character-mori-iris.svg" alt=""></span></span>
         </span>
       </div>
-      <div class="p-top-at p-top-ph p-top-phone">スマホ（04〜08）</div>
+      <!-- howtouse のスマホ（04〜08）。1つのまま位置が移り、画面の中身は移りながら替わる（_top.css） -->
+      <div class="p-top-at p-top-phone">
+        <picture class="p-top-phone__screen" data-screen="step-1">
+          <source type="image/avif" srcset="/assets/img/top/create-event.avif">
+          <source type="image/webp" srcset="/assets/img/top/create-event.webp">
+          <img src="/assets/img/top/create-event.png" width="1904" height="3945" alt="" loading="lazy">
+        </picture>
+        <picture class="p-top-phone__screen" data-screen="step-2">
+          <source type="image/avif" srcset="/assets/img/top/invite.avif">
+          <source type="image/webp" srcset="/assets/img/top/invite.webp">
+          <img src="/assets/img/top/invite.png" width="1904" height="3945" alt="" loading="lazy">
+        </picture>
+        <picture class="p-top-phone__screen" data-screen="step-3">
+          <source type="image/avif" srcset="/assets/img/top/create-task.avif">
+          <source type="image/webp" srcset="/assets/img/top/create-task.webp">
+          <img src="/assets/img/top/create-task.png" width="1904" height="3945" alt="" loading="lazy">
+        </picture>
+        <picture class="p-top-phone__screen" data-screen="step-4">
+          <source type="image/avif" srcset="/assets/img/top/task-detail.avif">
+          <source type="image/webp" srcset="/assets/img/top/task-detail.webp">
+          <img src="/assets/img/top/task-detail.png" width="1904" height="3945" alt="" loading="lazy">
+        </picture>
+        <picture class="p-top-phone__screen" data-screen="step-5">
+          <source type="image/avif" srcset="/assets/img/top/archive.avif">
+          <source type="image/webp" srcset="/assets/img/top/archive.webp">
+          <img src="/assets/img/top/archive.png" width="1904" height="3945" alt="" loading="lazy">
+        </picture>
+      </div>
     </div>
 
     <nav class="c-step-indicator l-stage__indicator" data-stage-indicator aria-label="画面の位置"></nav>

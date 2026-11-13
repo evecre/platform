@@ -97,6 +97,9 @@ Top は、**1回のスクロール操作（ホイール・スワイプ・↓↑ 
 | hero → 02 の白い幕 | `--motion-curtain-duration`（02 の出現はこのあとに始まる）・`--motion-ease-curtain` |
 | キャラクターの目（瞬き・目線） | `--eye-blink-duration`・`--eye-blink-interval-min` / `-max`・`--eye-blink-double-chance`（2回続ける割合）・`--eye-look-duration`・`--eye-look-distance-x` / `-y`（動く量。黒目の大きさに対する %）・`--eye-look-interval-min` / `-max`・`--eye-look-hold-min` / `-max`（動かしたままにする長さ） |
 | 目の位置・傾き・ふだんの目線 | `_top.css` の `.p-top-hero__eyes--…`・`.p-top-chara__eyes--…`（`--eyes-left/top/width`・`--eyes-rotate`・`--gaze-x/y`。PDF から測った値） |
+| 04〜08 のスマホの中身が替わる速さ | `--motion-phone-screen-duration`（新しい中身がフェードで出て、出しきってから古い中身が消える） |
+| 08 → 09 の円形の出現 | `--motion-iris-duration`・`--motion-ease-iris`（円の大きさは `_top.css` の `top-iris`） |
+| 09 のスライダー | `--slider-speed`（1周の時間）。文字の色は `_variables.css` の `--color-top-slider`、文は `index.html` の `p-top-connect__slide` |
 | hero の雲 | `--hero-cloud-speed`（横断の時間）・`--hero-cloud-interval-min` / `-max`（出る間隔）・`--hero-cloud-max`（同時の上限）・`--hero-cloud-initial`（はじめから流れている数）・`--hero-cloud-band`（出る高さ：マスクの上からこの割合まで）。雲の大きさは `heroClouds.js` の `CLOUDS`（Figma の幅） |
 | ある要素だけ距離・速さを変える | その要素の CSS で変数を上書き（例：`_top.css` の landform は `--motion-distance-slide: 1rem`） |
 | 要素の順番・動きの種類 | `index.html` の属性（下の 4-2） |

@@ -48,37 +48,31 @@ img.p-top-at {
 .l-stage[data-current="step-3"],
 .l-stage[data-current="connect"] { --stage-bg: var(--color-top-mint); }
 
-/* --- 仮の四角（画像に置き換えたら消す。06 Phase 4 で 04〜08 を置き換える） --- */
-.p-top-ph {
-  display: grid;
-  place-items: center;
-  border: 2px dashed var(--color-text-muted);
-  border-radius: var(--radius-md);
-  background-color: var(--color-surface);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-}
-
-/* --- 文字 --- */
-.p-top-step__title {
-  font-weight: 700;
-  font-size: calc(48 * var(--top-u));
-  line-height: var(--line-height-tight);
-}
-
-.p-top-step__paragraph {
-  font-size: calc(28 * var(--top-u));
-  line-height: 1.9;
-}
-
-.p-top-step__paragraph + .p-top-step__paragraph {
-  margin-top: calc(28 * var(--top-u));
-}
-
+/* --- 文字（04〜09 の STEP） --- */
 .p-top-step__number {
   font-family: var(--font-family-display);
   font-size: calc(64 * var(--top-u));
-  line-height: 1.2;
+  line-height: 1;
+}
+
+.p-top-step__title {
+  margin-top: calc(45 * var(--top-u));
+  font-weight: 700;
+  font-size: calc(46 * var(--top-u));
+  line-height: 1.3;
+}
+
+.p-top-step__paragraph {
+  font-size: calc(31 * var(--top-u));
+  line-height: 2.1;
+}
+
+.p-top-step__title + .p-top-step__paragraph {
+  margin-top: calc(18 * var(--top-u));
+}
+
+.p-top-step__paragraph + .p-top-step__paragraph {
+  margin-top: calc(20 * var(--top-u));
 }
 
 /* --- 01-hero ------------------------------------------------------------------
@@ -216,32 +210,120 @@ img.p-top-at {
 .p-top-team__pc { --x: 1195; --y: 222; --w: 968; --h: 586; }
 .p-top-team__phone { --x: 965; --y: 316; --w: 235; --h: 487; }
 
-/* --- 04〜08 howtouse（テキストと丸いイラスト） --- */
-.p-top-step--1 .p-top-step__text { --x: 423; --y: 287; --w: 533; --h: 453; }
-.p-top-step--1 .p-top-step__illust { --x: 420; --y: 460; --w: 580; --h: 580; }
-.p-top-step--2 .p-top-step__text { --x: 960; --y: 173; --w: 560; --h: 520; }
-.p-top-step--2 .p-top-step__illust { --x: 960; --y: 753; --w: 500; --h: 193; }
-.p-top-step--3 .p-top-step__text { --x: 929; --y: 173; --w: 620; --h: 453; }
-.p-top-step--3 .p-top-step__illust { --x: 953; --y: 493; --w: 520; --h: 520; }
-.p-top-step--4 .p-top-step__text { --x: 963; --y: 173; --w: 560; --h: 520; }
-.p-top-step--4 .p-top-step__illust { --x: 1133; --y: 593; --w: 520; --h: 400; }
-.p-top-step--5 .p-top-step__text { --x: 213; --y: 173; --w: 800; --h: 453; }
-.p-top-step--5 .p-top-step__illust { --x: 220; --y: 620; --w: 660; --h: 407; }
+/* --- 04〜08 howtouse（テキストと丸いイラスト。スマホは画面をまたぐので下の .p-top-phone） --- */
+.p-top-step__text { --w: 560; --h: 470; }
+.p-top-step--1 .p-top-step__text { --x: 423; --y: 292; }
+.p-top-step--1 .p-top-step__illust { --x: 422; --y: 467; --w: 578; --h: 578; }
+.p-top-step--2 .p-top-step__text { --x: 960; --y: 177; }
+.p-top-step--2 .p-top-step__illust { --x: 957; --y: 752; --w: 502; --h: 203; }
+.p-top-step--3 .p-top-step__text { --x: 930; --y: 177; --w: 640; }
+.p-top-step--3 .p-top-step__illust { --x: 955; --y: 493; --w: 513; --h: 513; }
+.p-top-step--4 .p-top-step__text { --x: 963; --y: 177; }
+.p-top-step--4 .p-top-step__illust { --x: 1138; --y: 594; --w: 517; --h: 404; }
+.p-top-step--5 .p-top-step__text { --x: 215; --y: 177; --w: 800; }
+.p-top-step--5 .p-top-step__illust { --x: 222; --y: 520; --w: 656; --h: 512; }
 
-/* --- 09（STEP 6）。この画面だけ背景を持ち、08 とスマホを覆う（円形の出現は Phase 4） --- */
+/* --- 09（STEP 6）。この画面だけ背景を持ち、08 とスマホを覆う --- */
 .p-top-connect .l-stage__frame { background-color: var(--color-top-mint); }
 
-.p-top-connect__content { --x: 400; --y: 290; --w: 928; --h: 560; text-align: center; color: var(--color-top-green); }
+.p-top-connect__content { --x: 414; --y: 305; --w: 900; --h: 560; text-align: center; color: var(--color-top-green); }
+
+.p-top-connect__content .p-top-step__title {
+  margin-top: calc(23 * var(--top-u));
+}
+
+.p-top-connect__content .p-top-step__paragraph {
+  margin-inline: auto;
+  margin-top: calc(3 * var(--top-u));
+  max-width: calc(860 * var(--top-u));
+}
 
 .p-top-connect__button {
-  display: inline-block;
-  margin-top: calc(56 * var(--top-u));
-  padding: calc(24 * var(--top-u)) calc(48 * var(--top-u));
+  display: inline-grid;
+  place-items: center;
+  width: calc(384 * var(--top-u));
+  height: calc(119 * var(--top-u));
+  margin-top: calc(80 * var(--top-u));
   border-radius: var(--radius-full);
   background-color: var(--color-top-green);
   color: var(--color-text-inverse);
-  font-size: calc(40 * var(--top-u));
+  font-size: calc(46 * var(--top-u));
   font-weight: 700;
+}
+
+/* 08 → 09：08 はそのままの位置に残り、その上に画面の中央から円が広がって 09 が被さる。背景色は被さりきってから替える */
+.l-stage[data-current="connect"][data-direction="forward"] .p-top-connect .l-stage__frame {
+  animation: top-iris var(--motion-iris-duration) var(--motion-ease-iris) both;
+}
+
+@keyframes top-iris {
+  from { clip-path: circle(0% at 50% 50%); }
+  to { clip-path: circle(72% at 50% 50%); } /* 72%：画面の四隅まで届く大きさ */
+}
+
+.l-stage[data-current="connect"] .p-top-step--5[data-state="leaving"] [data-enter] {
+  animation: none;
+}
+
+.l-stage.is-ready[data-current="connect"][data-direction="forward"] {
+  transition-duration: 0s;
+  transition-delay: var(--motion-iris-duration);
+}
+
+.l-stage[data-current="connect"][data-direction="forward"] .p-top-connect {
+  --scene-lock: calc(var(--motion-iris-duration) + 0.2s);
+}
+
+/* スライダー：同じ文を6つ並べた帯を、3つ分（半分）動かして繰り返す（継ぎ目が見えない） */
+.p-top-connect__slider {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.p-top-connect__slider--top { top: calc(50% + (115 - var(--top-frame-h) / 2) * var(--top-u)); }
+.p-top-connect__slider--bottom { top: calc(50% + (870 - var(--top-frame-h) / 2) * var(--top-u)); }
+
+.p-top-connect__track {
+  display: flex;
+  width: max-content;
+  animation: top-slide-left var(--slider-speed) linear infinite;
+}
+
+.p-top-connect__slider--bottom .p-top-connect__track {
+  animation-name: top-slide-right;
+}
+
+.p-top-connect__slide {
+  flex-shrink: 0;
+  font-weight: 200;
+  font-size: calc(140 * var(--top-u));
+  line-height: 1;
+  white-space: pre;
+  color: var(--color-top-slider);
+}
+
+@keyframes top-slide-left {
+  from { translate: 0 0; }
+  to { translate: -50% 0; }
+}
+
+@keyframes top-slide-right {
+  from { translate: -50% 0; }
+  to { translate: 0 0; }
+}
+
+/* 09 が見えていないときと、動きを減らす設定では止める */
+.l-stage:not([data-current="connect"]) .p-top-connect__track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-top-connect__track {
+    animation-play-state: paused;
+  }
 }
 
 /* --- 画面をまたぐ要素：キャラクター（02 → 03。03 → 04 でポンッと消える） ---
@@ -300,13 +382,45 @@ img.p-top-at {
 .p-top-chara__eyes--mori { --eyes-left: 33.03%; --eyes-top: 29.01%; --eyes-width: 33.94%; --gaze-x: 0%; --gaze-y: -74.8%; }
 .p-top-chara__eyes--iwa { --eyes-left: 30.05%; --eyes-top: 30.87%; --eyes-width: 35.72%; --gaze-x: -20.2%; --gaze-y: -44.9%; }
 
-/* --- 画面をまたぐ要素：howtouse のスマホ（04〜08。09 の円の下にもそのまま残る） --- */
-.p-top-phone { --x: 1067; --y: 160; --w: 380; --h: 800; }
+/* --- 画面をまたぐ要素：howtouse のスマホ（04〜08。09 の円の下にもそのまま残る） ---
+   1つのまま位置が移る。画面の中身（5枚）は、移りながら替わる：新しい中身を上に重ねてフェードで出し、出しきってから古い中身を消す（白く抜けない） */
+.p-top-phone { --x: 1065; --y: 165; --w: 378; --h: 783; }
 .l-stage:is([data-current="step-1"], [data-current="step-2"], [data-current="step-3"], [data-current="step-4"], [data-current="step-5"], [data-current="connect"]) .p-top-phone {
   --persist-opacity: 1;
 }
-.l-stage:is([data-current="step-2"], [data-current="step-3"], [data-current="step-4"]) .p-top-phone { --x: 364; }
+.l-stage:is([data-current="step-2"], [data-current="step-3"], [data-current="step-4"]) .p-top-phone { --x: 365; }
 /* 03 から来たときは下から出る */
 .l-stage[data-current="step-1"][data-direction="forward"] .p-top-phone {
   animation: motion-fade-up var(--motion-duration-enter) var(--motion-ease-enter) both;
+}
+/* 03 より前の画面（と、最初の画面が決まる前）では描かない（中の画像を先に読まない。03 にいる間に読み始める） */
+.l-stage.is-ready .p-top-phone {
+  display: none;
+}
+
+.l-stage.is-ready:is([data-current="team"], [data-current="step-1"], [data-current="step-2"], [data-current="step-3"], [data-current="step-4"], [data-current="step-5"], [data-current="connect"]) .p-top-phone {
+  display: block;
+}
+
+.p-top-phone__screen {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0s linear var(--motion-phone-screen-duration);
+}
+
+.p-top-phone__screen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.l-stage:is([data-current="step-1"]) .p-top-phone__screen[data-screen="step-1"],
+.l-stage:is([data-current="step-2"]) .p-top-phone__screen[data-screen="step-2"],
+.l-stage:is([data-current="step-3"]) .p-top-phone__screen[data-screen="step-3"],
+.l-stage:is([data-current="step-4"]) .p-top-phone__screen[data-screen="step-4"],
+.l-stage:is([data-current="step-5"], [data-current="connect"]) .p-top-phone__screen[data-screen="step-5"] {
+  z-index: 1;
+  opacity: 1;
+  transition: opacity var(--motion-phone-screen-duration) ease;
 }

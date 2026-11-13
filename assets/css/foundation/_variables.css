@@ -20,6 +20,7 @@
   --color-top-butter: #FBECC4;   /* 05 STEP 2・08 STEP 5 */
   --color-top-mint: #BBEAC5;     /* 06 STEP 3・09 STEP 6 */
   --color-top-green: #22AC38;    /* 09 の見出し・ボタン */
+  --color-top-slider: rgb(255 255 255 / 0.35); /* 09 のスライダーの文字 */
   --color-chara-mizu: #009FE5;   /* キャラクターの色（02 の斜めの線など） */
   --color-chara-iwa: #F9B900;
 
