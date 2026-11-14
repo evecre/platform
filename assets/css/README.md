@@ -176,6 +176,7 @@ HTML の属性で選ぶ（`layout/_stage-motion.css`）。
 - 幕を 02 の背景色にして、下からせり上げる（`top-curtain-up`）
 - hero の要素は消さずに残す（幕の下に隠れる）。舞台の背景色は幕が被さりきってから替える
 - 02 の出現を幕の長さだけ遅らせる：`.p-top-about { --motion-delay-base: var(--motion-curtain-duration); }`（`--motion-delay-base` は画面全体の出現の遅れ。プリセットの遅れに足される）
+- 02 → hero（戻る）は逆：幕が覆った状態から下へ下がる（`top-curtain-down`）。hero は出現のアニメーションをせず、幕の下から見えてくる。速さは同じ `--motion-curtain-duration`・`--motion-ease-curtain`
 
 ### 4-4-3. 縦長の画面（スマホ・縦に持ったタブレット）
 

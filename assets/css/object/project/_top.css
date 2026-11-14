@@ -141,7 +141,7 @@ img.p-top-at {
 
 .p-top-hero__ipad {
   --x: 600;
-  --y: 532;
+  --y: 482;
   --w: 500;
   --h: 387;
 }
@@ -266,6 +266,43 @@ img.p-top-at {
 .l-stage[data-current="about"][data-direction="forward"] .p-top-about {
   --motion-delay-base: var(--motion-curtain-duration);
   --scene-lock: calc(var(--motion-curtain-duration) + 1.4s);
+  --scene-input-lock: var(--motion-curtain-duration);
+}
+
+/* --- 02 → hero（戻る）：hero → 02 の逆。02 の背景色の幕が画面を覆った状態から、上から下へ下がって hero を見せる ---
+   ・hero の要素は出現のアニメーションをせず、元からある形で幕の下から見えてくる
+   ・幕を hero より上に重ねるため、この間だけ hero を幕（2）の下（1）に置く
+   ・舞台の背景色はすぐに hero の色にする（幕の下から見えてくる部分が hero の色になるように）
+   ・幕が下がりきるまで次の操作を受け付けない */
+.l-stage[data-current="hero"][data-direction="back"] .l-stage__curtain {
+  visibility: visible;
+  background-color: var(--color-top-cream);
+  animation: top-curtain-down var(--motion-curtain-duration) var(--motion-ease-curtain) both;
+}
+
+@keyframes top-curtain-down {
+  from {
+    translate: 0 0;
+  }
+
+  to {
+    translate: 0 100%;
+  }
+}
+
+.l-stage.is-ready[data-current="hero"][data-direction="back"] .p-top-hero {
+  z-index: 1;
+}
+
+.l-stage[data-current="hero"][data-direction="back"] .p-top-hero [data-enter] {
+  animation: none;
+}
+
+.l-stage.is-ready[data-current="hero"][data-direction="back"] {
+  transition-duration: 0s;
+}
+
+.l-stage[data-current="hero"][data-direction="back"] .p-top-hero {
   --scene-input-lock: var(--motion-curtain-duration);
 }
 
