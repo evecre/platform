@@ -123,6 +123,7 @@ HTML の属性で選ぶ（`layout/_stage-motion.css`）。
 | | `slide-left` / `slide-right` | 左／右の横から短くフェードスライドイン |
 | | `none` | 動かさない（元からある） |
 | `data-leave` | `fade-up-out` | さらに上へ動きながら消える |
+| | `fade-down-out` | 下へ動きながら消える（02 → hero で使う） |
 | | `pop-out` | 一瞬膨らんで、小さくなって消える |
 | | `none` | 消えない（次の画面の下にそのまま残る） |
 | | （書かない） | 短いフェードで消える |
@@ -176,7 +177,7 @@ HTML の属性で選ぶ（`layout/_stage-motion.css`）。
 - 幕を 02 の背景色にして、下からせり上げる（`top-curtain-up`）
 - hero の要素は消さずに残す（幕の下に隠れる）。舞台の背景色は幕が被さりきってから替える
 - 02 の出現を幕の長さだけ遅らせる：`.p-top-about { --motion-delay-base: var(--motion-curtain-duration); }`（`--motion-delay-base` は画面全体の出現の遅れ。プリセットの遅れに足される）
-- 02 → hero（戻る）は逆：幕が覆った状態から下へ下がる（`top-curtain-down`）。hero は出現のアニメーションをせず、幕の下から見えてくる。速さは同じ `--motion-curtain-duration`・`--motion-ease-curtain`
+- 02 → hero（戻る）は逆：02 のキャラクターがポンッと消え（`pop-out`）、テキストと斜めの線は下へフェードダウン（`motion-fade-down-out`。`--motion-duration-leave`）。`--motion-duration-pop` 待ってから、幕が覆った状態から下へ下がる（`top-curtain-down`）。hero は出現のアニメーションをせず、幕の下から見えてくる。幕の速さは同じ `--motion-curtain-duration`・`--motion-ease-curtain`
 
 ### 4-4-3. 縦長の画面（スマホ・縦に持ったタブレット）
 
