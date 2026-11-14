@@ -503,7 +503,7 @@ img.p-top-at {
 }
 
 .p-top-connect__content .p-top-step__title {
-  margin-top: calc(23 * var(--top-u));
+  margin: calc(23 * var(--top-u)) 0;
 }
 
 .p-top-connect__content .p-top-step__paragraph {
@@ -516,7 +516,7 @@ img.p-top-at {
   display: inline-grid;
   place-items: center;
   width: calc(384 * var(--top-u));
-  height: calc(119 * var(--top-u));
+  height: calc(112 * var(--top-u));
   margin-top: calc(80 * var(--top-u));
   border-radius: var(--radius-full);
   background-color: var(--color-top-green);
