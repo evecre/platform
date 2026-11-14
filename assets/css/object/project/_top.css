@@ -269,15 +269,30 @@ img.p-top-at {
   --scene-input-lock: var(--motion-curtain-duration);
 }
 
-/* --- 02 → hero（戻る）：hero → 02 の逆。02 の背景色の幕が画面を覆った状態から、上から下へ下がって hero を見せる ---
+/* --- 02 → hero（戻る）：hero → 02 の逆 ---
+   1. 02 のキャラクターがポンッと消え、テキスト（斜めの線も）は下へフェードダウンする
+   2. そのあと、02 の背景色の幕が画面を覆った状態から、上から下へ下がって hero を見せる（--motion-duration-pop だけ待ってから）
    ・hero の要素は出現のアニメーションをせず、元からある形で幕の下から見えてくる
-   ・幕を hero より上に重ねるため、この間だけ hero を幕（2）の下（1）に置く
+   ・重なり：hero（1）＜ 幕（2）＜ 去る 02（3。テキストが消えるまで幕の上に見せる）＜ キャラクター（5）
    ・舞台の背景色はすぐに hero の色にする（幕の下から見えてくる部分が hero の色になるように）
    ・幕が下がりきるまで次の操作を受け付けない */
 .l-stage[data-current="hero"][data-direction="back"] .l-stage__curtain {
   visibility: visible;
   background-color: var(--color-top-cream);
-  animation: top-curtain-down var(--motion-curtain-duration) var(--motion-ease-curtain) both;
+  animation: top-curtain-down var(--motion-curtain-duration) var(--motion-ease-curtain) var(--motion-duration-pop) both;
+}
+
+.l-stage.is-ready[data-current="hero"][data-direction="back"] .p-top-about[data-state="leaving"] {
+  z-index: 3;
+}
+
+.l-stage[data-current="hero"][data-direction="back"] .p-top-about[data-state="leaving"] [data-enter] {
+  animation: motion-fade-down-out var(--motion-duration-leave) var(--motion-ease-leave) both;
+}
+
+/* キャラクターは 02 の位置（.p-top-chara のふだんの位置）のままポンッと消える */
+.l-stage[data-current="hero"][data-direction="back"] .p-top-chara {
+  animation: motion-pop-out var(--motion-duration-pop) var(--motion-ease-leave) both;
 }
 
 @keyframes top-curtain-down {
@@ -303,7 +318,7 @@ img.p-top-at {
 }
 
 .l-stage[data-current="hero"][data-direction="back"] .p-top-hero {
-  --scene-input-lock: var(--motion-curtain-duration);
+  --scene-input-lock: calc(var(--motion-duration-pop) + var(--motion-curtain-duration));
 }
 
 /* --- 02-about（キャラクターは画面をまたぐので下の .p-top-chara） --- */
