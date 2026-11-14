@@ -419,10 +419,11 @@ img.p-top-at {
 }
 
 .p-top-step--4 .p-top-step__illust {
-  --x: 1138;
-  --y: 594;
-  --w: 517;
-  --h: 404;
+  /* role.svg（STEP 2 と同じ絵）。テキストの下に置く */
+  --x: 960;
+  --y: 752;
+  --w: 502;
+  --h: 203;
 }
 
 .p-top-step--5 .p-top-step__text {
@@ -545,7 +546,8 @@ img.p-top-at {
   --scene-lock: calc(var(--motion-stagger) * 4 + var(--motion-duration-enter));
 }
 
-/* スライダー：同じ文を6つ並べた帯を、3つ分（半分）動かして繰り返す（継ぎ目が見えない） */
+/* スライダー：同じ文を6つ並べた帯を、3つ分（半分）動かして繰り返す（継ぎ目が見えない）
+   行の高さは 1.4（g などの下が切れないように）。広げた分（上下に 0.2 文字ずつ）だけ帯の位置を上へずらし、文字の位置は前のまま */
 .p-top-connect__slider {
   position: absolute;
   left: 0;
@@ -555,11 +557,11 @@ img.p-top-at {
 }
 
 .p-top-connect__slider--top {
-  top: calc(50% + (115 - var(--top-frame-h) / 2) * var(--top-u));
+  top: calc(50% + (87 - var(--top-frame-h) / 2) * var(--top-u));
 }
 
 .p-top-connect__slider--bottom {
-  top: calc(50% + (870 - var(--top-frame-h) / 2) * var(--top-u));
+  top: calc(50% + (842 - var(--top-frame-h) / 2) * var(--top-u));
 }
 
 .p-top-connect__track {
@@ -577,7 +579,7 @@ img.p-top-at {
   font-family: var(--font-family-display);
   font-weight: 400;
   font-size: calc(140 * var(--top-u));
-  line-height: 1;
+  line-height: 1.4;
   white-space: pre;
   color: var(--color-top-slider);
 }
@@ -602,8 +604,9 @@ img.p-top-at {
   }
 }
 
-/* 09 が見えていないときと、動きを減らす設定では止める */
-.l-stage:not([data-current="connect"]) .p-top-connect__track {
+/* 09 が見えていないとき（before / after）と、動きを減らす設定では止める。
+   ★「今の画面が 09 でないとき」で止めると、09 から去る（中央へ縮む）間に止まって見えるので、09 の状態で判断する */
+.p-top-connect:is([data-state="before"], [data-state="after"]) .p-top-connect__track {
   animation-play-state: paused;
 }
 
@@ -930,10 +933,10 @@ img.p-top-at {
   }
 
   .p-top-step--4 .p-top-step__illust {
-    --x: 188;
-    --y: 480;
-    --w: 190;
-    --h: 148;
+    --x: 192;
+    --y: 520;
+    --w: 180;
+    --h: 73;
   }
 
   .p-top-step--5 .p-top-step__illust {
@@ -1000,10 +1003,10 @@ img.p-top-at {
   }
 
   .p-top-connect__slider--top {
-    top: calc(50% + (110 - var(--top-frame-h) / 2) * var(--top-u));
+    top: calc(50% + (97 - var(--top-frame-h) / 2) * var(--top-u));
   }
 
   .p-top-connect__slider--bottom {
-    top: calc(50% + (700 - var(--top-frame-h) / 2) * var(--top-u));
+    top: calc(50% + (687 - var(--top-frame-h) / 2) * var(--top-u));
   }
 }
