@@ -71,6 +71,11 @@
   --hero-cloud-initial: 2;          /* hero を開いたとき、はじめから流れている雲の数 */
   --hero-cloud-band: 0.4;           /* 雲が出る高さの範囲（マスクの上から、この割合まで） */
   --slider-speed: 40s;              /* スライダーが1周する時間 */
+
+  /* --- チャットボットのメッセージ（object/component/_chatbot.css。ポンッは motion-pop） --- */
+  --chatbot-pop-duration: 0.45s;    /* メッセージがポンッと出る長さ */
+  --chatbot-reply-delay: 0.4s;      /* 送った文が出てから、返事が出はじめるまで */
+  --chatbot-reply-stagger: 0.3s;    /* 返事が2つ以上続くときの、1つぶんの遅れ */
 }
 
 /* 動きを減らす設定：移動・拡大縮小をやめてフェードだけにする（雲・スライダー・目は各画面の CSS / JS で止める） */
@@ -89,6 +94,7 @@
     --motion-iris-duration: 0.3s;
     --motion-shrink-duration: 0.3s;
     --motion-phone-screen-duration: 0.2s;
+    --chatbot-pop-duration: 0.2s;
     --scene-lock: 0.5s;
     --scene-input-lock: 0.5s; /* 0 にしない（トラックパッドの慣性で何画面も進まないように） */
   }

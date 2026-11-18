@@ -26,6 +26,7 @@
 @import url("object/component/_help-search.css");
 @import url("object/component/_help-list.css");
 @import url("object/component/_breadcrumb.css");
+@import url("object/component/_inline-icon.css");
 
 /* Project（p-） */
 @import url("object/project/_top.css");

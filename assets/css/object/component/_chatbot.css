@@ -8,21 +8,24 @@
   position: relative;
 }
 
-/* --- 右下のボタン --------------------------------------------------------- */
+/* --- 右下のボタン --------------------------------------------------------
+   吹き出し（chatbot-box.svg）の中にキャラクター。キャラクターは吹き出しの四角の中央（ボタンの中央より少し上）
+   位置・大きさは --chatbot-toggle-character-* */
 .c-chatbot__toggle {
+  position: relative;
   display: block;
   width: var(--chatbot-toggle-size);
   height: var(--chatbot-toggle-size);
-  padding: var(--space-2);
-  border-radius: var(--radius-full);
-  background-color: var(--color-surface);
-  box-shadow: 0 0 0 1px var(--color-border);
+  background: url("../../../img/common/chatbot-box.svg") center / contain no-repeat;
   cursor: pointer;
 }
 
 .c-chatbot__toggle-character {
-  width: 86%;
-  margin: 0 auto;
+  position: absolute;
+  top: var(--chatbot-toggle-character-y);
+  left: 50%;
+  width: var(--chatbot-toggle-character-width);
+  translate: -50% -50%;
 }
 
 /* --- パネル ---------------------------------------------------------------- */
@@ -91,12 +94,30 @@
   max-width: var(--chatbot-message-max-width);
 }
 
+/* 足されたメッセージはポンッと出す（一瞬で並ぶと、送った・返ってきたが分からないため）
+   返事（bot）は送った文のあとに出す。続けて足された返事は1つずつ遅らせる（最大3つ）
+   アニメーションは足されたときだけ動く（前からあるメッセージは動かない） */
+.c-chatbot__message {
+  animation: motion-pop var(--chatbot-pop-duration) var(--motion-ease-pop) both;
+}
+
 .c-chatbot__message--bot {
   align-self: flex-start;
+  transform-origin: left bottom;
+  animation-delay: var(--chatbot-reply-delay);
+}
+
+.c-chatbot__message--bot + .c-chatbot__message--bot {
+  animation-delay: calc(var(--chatbot-reply-delay) + var(--chatbot-reply-stagger));
+}
+
+.c-chatbot__message--bot + .c-chatbot__message--bot + .c-chatbot__message--bot {
+  animation-delay: calc(var(--chatbot-reply-delay) + var(--chatbot-reply-stagger) * 2);
 }
 
 .c-chatbot__message--user {
   align-self: flex-end;
+  transform-origin: right bottom;
 }
 
 .c-chatbot__text {

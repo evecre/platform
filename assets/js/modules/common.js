@@ -4,10 +4,12 @@
 //   チャットボットの起動（chatbot/chatbot.js）
 //   Web フォントの読み込み（webfonts.js）
 //   「みんなの記録」（本体の /explore）へのリンク（exploreLink.js。展示モードなら ?kiosk=1）
+//   フィードバック・お問い合わせへのリンク（feedbackLink.js。展示モードでは隠す）
 import { isKiosk } from './kiosk.js';
 import { startIdleReturn } from './idleReturn.js';
 import { startChatbot } from './chatbot/chatbot.js';
 import { setupExploreLinks } from './exploreLink.js';
+import { setupFeedbackLinks } from './feedbackLink.js';
 import { loadWebFonts } from './webfonts.js';
 
 /**
@@ -22,6 +24,7 @@ export function initCommon({ page }) {
 
   loadWebFonts();
   setupExploreLinks();
+  setupFeedbackLinks({ kiosk });
   if (kiosk && page !== 'top') startIdleReturn();
   startChatbot({ kiosk });
 

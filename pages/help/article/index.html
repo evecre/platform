@@ -44,6 +44,7 @@
 
       <div class="p-help-article__content u-hidden" data-help-content>
         <h1 class="p-help-article__title" data-help="title"></h1>
+        <p class="p-help-article__audience" data-help="audienceRow">対象：<span data-help="audience"></span></p>
         <p class="p-help-article__updated" data-help="updatedRow">最終更新：<time data-help="updated"></time></p>
         <!-- 本文。見出し・段落・手順・箇条書き・補足・画像・リンクは help.js の renderArticleBody() が中に作る -->
         <div class="p-help-article__body" data-help="body"></div>
@@ -53,6 +54,9 @@
           <ul class="c-help-list" data-help="related"></ul>
         </section>
       </div>
+
+      <!-- 解決しないとき（href は config.js の FEEDBACK_URL。展示モードでは隠す） -->
+      <p class="p-help-contact" data-feedback>解決しないときは、<a class="p-help-contact__link" href="https://forms.gle/qh1nXQxXm3YNQfsk9" target="_blank" rel="noopener" data-feedback-link>フィードバック・お問い合わせ</a>から知らせてください。</p>
 
       <a class="p-help-article__back" href="/pages/help/" data-help="back">ヘルプ トップへ戻る</a>
     </article>

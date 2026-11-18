@@ -1,7 +1,7 @@
 // 質問の文を、比べやすい形にそろえる（DOM に依存しない。ブラウザと Node の両方から使う）
 //   1. NFKC 正規化・英字を小文字・ひらがなをカタカナに・記号と空白を除く
 //   2. 類義語を代表の語に置き換える（長い語から順に）
-//   3. よくある言い回しの語尾・つなぎを除く
+//   3. よくある言い回しの語尾・つなぎを除く（FILLER_PHRASES はどこでも・TRAILING_PHRASES は文の終わりだけ）
 
 // 除く言い回し。★1文字のもの（「の」「を」など）は入れない（2文字ずつ区切ったときの手がかりが減りすぎる）
 // ★長いものを先に書く必要はない（読み込み時に長い順に並べ替える）
@@ -9,10 +9,13 @@ export const FILLER_PHRASES = [
   'ですか', 'ますか', 'でしょうか', 'ですが', 'ください', 'くださいますか',
   'には', 'したい', 'したいです', 'たいです', 'ほしい', 'ほしいです',
   'どうやって', 'どうすれば', 'どうしたら', 'どうやったら', 'どこで', 'どこから',
-  '教えて', '知りたい', '方法', 'やり方', 'について', 'って何', 'とは',
+  '教えて', '知りたい', '方法', 'やり方', 'について',
   // 話し言葉のつなぎ
-  'って', 'なに', 'なんで', 'したらいい', 'すればいい', 'いいですか',
+  'なんで', 'したらいい', 'すればいい', 'いいですか',
 ];
+
+// 文の終わりにあるときだけ除く言い回し（途中で除くと語を壊す：「ガントはどこ」の「とは」など）
+export const TRAILING_PHRASES = ['って何', 'ってなに', 'とは', 'って', 'なに', '何'];
 
 const HIRAGANA_RE = /[ぁ-ゖ]/g;
 const NOT_WORD_RE = /[^\p{L}\p{N}]/gu;
@@ -51,11 +54,18 @@ export function createNormalizer(synonyms = {}) {
   }
   const synonymRe = alternation([...toCanonical.keys()]);
   const fillerRe = alternation(FILLER_PHRASES.map(normalizeChars));
+  const trailing = alternation(TRAILING_PHRASES.map(normalizeChars));
+  const trailingRe = trailing ? new RegExp(`(?:${trailing.source})+$`) : null;
 
   return function normalize(text) {
     let out = normalizeChars(text);
     if (synonymRe) out = out.replace(synonymRe, (word) => toCanonical.get(word));
     if (fillerRe) out = out.replace(fillerRe, '');
+    // 「柱って何」→「柱」。全部が消えるとき（「なに」だけの質問）は残す
+    if (trailingRe) {
+      const trimmed = out.replace(trailingRe, '');
+      if (trimmed) out = trimmed;
+    }
     return out;
   };
 }

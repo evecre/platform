@@ -1,13 +1,17 @@
 // チャットボットのパネル（c-chatbot）。右下のボタンからパネルを重ねて開く。common.js から起動する
-//   流れ：あいさつ＋カテゴリ → featured の質問 → 回答（links・related・ほかの質問をする）
+//   流れ：あいさつ＋カテゴリ → featured の質問 → 回答（links・ヘルプの記事・related・ほかの質問をする）
 //         自由入力は engine.ask の結果で、回答 / もしかして（候補3つ＋どれでもない）/ 答えられない（カテゴリ）
+//         もしかして・答えられないときは、近いヘルプの記事（result.articles）と、問い合わせ先（展示モードでは出さない）も出す
 //   開閉のたびに document へ chatbot:open / chatbot:close を発火する（展示モードの自動送りが止まる・再開する）
 //   展示モードでは、CHATBOT_RESET_MS 操作が無ければ閉じて最初の状態に戻す
-//   文字はすべて textContent で入れる（改行は CSS の white-space: pre-line）。URL は safeUrl() を通す
+//   文字はすべて textContent で入れる（改行は CSS の white-space: pre-line。答えの [icon:…] は inlineIcon.js が img にする）。URL は safeUrl() を通す
 import { createEngine } from './engine.js';
 import { createCharacter, pickCharacter } from '../character.js';
 import { safeUrl } from '../format.js';
 import { exploreHref } from '../exploreLink.js';
+import { articleUrl } from '../help.js';
+import { FEEDBACK_URL } from '../config.js';
+import { setRichText } from '../inlineIcon.js';
 import { CHATBOT_RESET_MS, kioskTime } from '../kiosk.js';
 
 const DATA_BASE = '/assets/data';
@@ -29,6 +33,11 @@ const TEXT = {
   again: 'ほかに知りたいことはありますか？',
   suggest: 'もしかして：',
   fallback: 'うまく答えられませんでした。こちらから選んでください',
+  helpArticles: 'ヘルプに、こんな記事があります。',
+  helpLink: (title) => `ヘルプ「${title}」をくわしく読む`,
+  articleLink: (title) => `ヘルプ「${title}」`,
+  contact: '解決しないときは、フィードバックのフォームから知らせてください。',
+  contactLink: 'フィードバック・お問い合わせ',
   otherQuestion: 'ほかの質問をする',
   noneOfThese: 'どれでもない',
 };
@@ -131,25 +140,13 @@ export function startChatbot({ kiosk }) {
   function showAnswer(item) {
     const message = botMessage(item.answer);
 
-    const links = (item.links || [])
-      .map((link) => ({ label: link.label, href: exploreHref(safeUrl(link.href)) })) // みんなの記録へは、展示モードなら ?kiosk=1
-      .filter((link) => link.label && link.href);
-    if (links.length) {
-      const list = document.createElement('ul');
-      list.className = 'c-chatbot__links';
-      for (const link of links) {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.className = 'c-chatbot__link';
-        a.href = link.href;
-        a.textContent = link.label;
-        // 同じページの中の移動（Top の #how-to など）は、パネルを閉じて見せる
-        a.addEventListener('click', () => close({ returnFocus: false }));
-        li.append(a);
-        list.append(li);
-      }
-      message.append(list);
-    }
+    const article = item.help ? engine.getArticle(item.help) : null;
+    const links = [
+      ...(item.links || []).map((link) => ({ label: link.label, href: exploreHref(safeUrl(link.href)) })), // みんなの記録へは、展示モードなら ?kiosk=1
+      ...(article ? [{ label: TEXT.helpLink(article.title), href: articleUrl(article.id) }] : []),
+    ];
+    const list = linkList(links);
+    if (list) message.append(list);
 
     const related = (item.related || []).map((id) => engine.getItem(id)).filter(Boolean);
     message.append(
@@ -161,6 +158,26 @@ export function startChatbot({ kiosk }) {
         }),
       ]),
     );
+  }
+
+  // 答えられなかったときに、近いヘルプの記事を出す（無ければ何もしない）
+  function showArticles(articles) {
+    const list = linkList((articles || []).map((a) => ({ label: TEXT.articleLink(a.title), href: articleUrl(a.id) })));
+    if (!list) return;
+    botMessage(TEXT.helpArticles).append(list);
+  }
+
+  // 解決しないときの行き先。展示モードでは出さない（外のサイトに出ると Top に戻れないため）
+  function showContact() {
+    if (kiosk) return;
+    const list = linkList([{ label: TEXT.contactLink, href: FEEDBACK_URL, external: true }]);
+    if (list) botMessage(TEXT.contact).append(list);
+  }
+
+  function showFallback(articles) {
+    showArticles(articles);
+    showCategories(TEXT.fallback);
+    showContact();
   }
 
   async function submitQuery(query) {
@@ -176,12 +193,12 @@ export function startChatbot({ kiosk }) {
           ...result.items.map((item) => questionChoice(item)),
           choice(TEXT.noneOfThese, 'other', () => {
             startTurn(TEXT.noneOfThese);
-            showCategories(TEXT.fallback);
+            showFallback(result.articles);
           }),
         ]),
       );
     } else {
-      showCategories(TEXT.fallback);
+      showFallback(result.articles);
     }
   }
 
@@ -205,10 +222,40 @@ export function startChatbot({ kiosk }) {
     message.className = `c-chatbot__message c-chatbot__message--${from}`;
     const body = document.createElement('p');
     body.className = 'c-chatbot__text';
-    body.textContent = text;
+    // 答えの中の [icon:…] はアイコンにする。ユーザーの発言は文字のまま（印を書かれてもアイコンにしない）
+    if (from === 'bot') setRichText(body, text);
+    else body.textContent = text;
     message.append(body);
     ui.log.append(message);
     return message;
+  }
+
+  /**
+   * リンクの一覧（ul.c-chatbot__links）。label か href が無いものは外す。1つも無ければ null
+   * 同じページの中の移動（Top の #how-to など）は、パネルを閉じて見せる。external は新しいタブで開く
+   * @param {{ label: string, href: string, external?: boolean }[]} links
+   */
+  function linkList(links) {
+    const valid = links.map((link) => ({ ...link, href: safeUrl(link.href) })).filter((link) => link.label && link.href);
+    if (!valid.length) return null;
+    const list = document.createElement('ul');
+    list.className = 'c-chatbot__links';
+    for (const link of valid) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.className = 'c-chatbot__link';
+      a.href = link.href;
+      a.textContent = link.label;
+      if (link.external) {
+        a.target = '_blank';
+        a.rel = 'noopener';
+      } else {
+        a.addEventListener('click', () => close({ returnFocus: false }));
+      }
+      li.append(a);
+      list.append(li);
+    }
+    return list;
   }
 
   function categoryChoices() {
@@ -266,13 +313,15 @@ export function startChatbot({ kiosk }) {
   return { open, close };
 
   async function loadEngine() {
-    const [faq, synonyms] = await Promise.all([
+    const [faq, synonyms, help] = await Promise.all([
       fetchJson(`${DATA_BASE}/faq.json`),
       fetchJson(`${DATA_BASE}/synonyms.json`).catch(() => ({})), // 類義語が無くても動かす
+      fetchJson(`${DATA_BASE}/help.json`).catch(() => null), // ヘルプが読めなくても、FAQ だけで動かす
     ]);
     return createEngine({
       faq,
       synonyms,
+      help,
       onUnanswered: IS_DEV
         ? (record) => console.info('[chatbot] 答えられなかった質問：', record.query, record.type, record.top)
         : undefined,

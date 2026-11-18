@@ -1,51 +1,371 @@
 [
   {
-    "q": "やること増やすには？",
-    "expect": "task-create"
-  },
-  {
-    "q": "新しい企画ってどこで作るの",
-    "expect": "event-create"
-  },
-  {
-    "q": "サークルの後輩を入れたい",
-    "expect": "member-invite"
-  },
-  {
     "q": "このアプリでできることは？",
     "expect": "feature-overview"
   },
   {
-    "q": "山ってなに？",
-    "expect": "mountain"
+    "q": "イベクリってどういうサービス？",
+    "expect": "feature-overview"
   },
   {
-    "q": "リマインドは来ますか",
-    "expect": "notification"
+    "q": "スマホに入れるアプリはありますか",
+    "expect": "app-install"
+  },
+  {
+    "q": "アプリのダウンロード先",
+    "expect": "app-install"
   },
   {
     "q": "まず何をしたらいい？",
     "expect": "howto-start"
   },
   {
-    "q": "ゴールってどうやって決める",
-    "expect": "purpose-set"
-  },
-  {
-    "q": "反省ってどこに書く？",
-    "expect": "review-write"
+    "q": "使い始めるには",
+    "expect": "howto-start"
   },
   {
     "q": "準備って何から進める？",
     "expect": "process-flow"
   },
   {
-    "q": "来年の人に引き継ぎたい",
-    "expect": "handover"
+    "q": "イベントの段取りを知りたい",
+    "expect": "process-flow"
+  },
+  {
+    "q": "山ってなに？",
+    "expect": "mountain"
+  },
+  {
+    "q": "メインボードの背景の意味",
+    "expect": "mountain"
+  },
+  {
+    "q": "新しい企画ってどこで作るの",
+    "expect": "event-create"
+  },
+  {
+    "q": "イベントを新しく作るには",
+    "expect": "event-create"
+  },
+  {
+    "q": "企画を立てたい",
+    "expect": "event-create"
+  },
+  {
+    "q": "目的を書かないと先にいけないのはなぜ",
+    "expect": "first-steps-blocked"
+  },
+  {
+    "q": "最初のページから動けない",
+    "expect": "first-steps-blocked"
+  },
+  {
+    "q": "本番の日をずらしたい",
+    "expect": "event-date"
+  },
+  {
+    "q": "開催日を決め直したい",
+    "expect": "event-date"
+  },
+  {
+    "q": "予定をまとめて見たい",
+    "expect": "calendar"
+  },
+  {
+    "q": "ガントはどこ",
+    "expect": "calendar"
+  },
+  {
+    "q": "作ったイベントを消したい",
+    "expect": "event-delete"
+  },
+  {
+    "q": "イベントを削除する方法",
+    "expect": "event-delete"
+  },
+  {
+    "q": "イベントを辞めたい",
+    "expect": "event-leave"
+  },
+  {
+    "q": "脱退のしかた",
+    "expect": "event-leave"
+  },
+  {
+    "q": "サークルの後輩を入れたい",
+    "expect": "member-invite"
+  },
+  {
+    "q": "友達を呼ぶには",
+    "expect": "member-invite"
+  },
+  {
+    "q": "メンバーを追加したい",
+    "expect": "member-invite"
+  },
+  {
+    "q": "リンクを踏んだけど参加できない",
+    "expect": "join-blocked"
+  },
+  {
+    "q": "ずっと承認待ちになっている",
+    "expect": "join-blocked"
+  },
+  {
+    "q": "招待コードを入力する場所",
+    "expect": "invite-code"
+  },
+  {
+    "q": "コードで入りたい",
+    "expect": "invite-code"
+  },
+  {
+    "q": "申請が届いたらどうする",
+    "expect": "member-approve"
+  },
+  {
+    "q": "参加を承認する方法",
+    "expect": "member-approve"
+  },
+  {
+    "q": "ほかの人を管理者にしたい",
+    "expect": "role-change"
+  },
+  {
+    "q": "ロールを変更したい",
+    "expect": "role-change"
+  },
+  {
+    "q": "タスクを作るボタンが無い",
+    "expect": "button-missing"
+  },
+  {
+    "q": "＋が見つからない",
+    "expect": "button-missing"
+  },
+  {
+    "q": "やること増やすには？",
+    "expect": "task-create"
+  },
+  {
+    "q": "タスクを登録する方法",
+    "expect": "task-create"
+  },
+  {
+    "q": "タスクを完了させるには",
+    "expect": "task-complete"
+  },
+  {
+    "q": "提出のしかた",
+    "expect": "task-complete"
+  },
+  {
+    "q": "完了したのにまだ残っている",
+    "expect": "complete-not-done"
+  },
+  {
+    "q": "完了ボタンを押したのに完了になってない",
+    "expect": "complete-not-done"
+  },
+  {
+    "q": "写真は何枚まで",
+    "expect": "attach-limit"
+  },
+  {
+    "q": "PDFは付けられる？",
+    "expect": "attach-limit"
+  },
+  {
+    "q": "終わったタスクはどこにいった",
+    "expect": "completed-gone"
+  },
+  {
+    "q": "完了したタスクが見えない",
+    "expect": "completed-gone"
+  },
+  {
+    "q": "完了を間違えた",
+    "expect": "complete-undo"
+  },
+  {
+    "q": "未完了に戻したい",
+    "expect": "complete-undo"
+  },
+  {
+    "q": "担当者を募りたい",
+    "expect": "claim-recruit"
+  },
+  {
+    "q": "応募制にしたい",
+    "expect": "claim-recruit"
+  },
+  {
+    "q": "メンバー全員に提出してほしい",
+    "expect": "individual-clear"
+  },
+  {
+    "q": "アンケートを取りたい",
+    "expect": "individual-clear"
+  },
+  {
+    "q": "反省ってどこに書く？",
+    "expect": "review-write"
+  },
+  {
+    "q": "振り返りには何を書けばいい",
+    "expect": "review-write"
+  },
+  {
+    "q": "ゴールってどうやって決める",
+    "expect": "purpose-set"
+  },
+  {
+    "q": "目標を決めるコツ",
+    "expect": "purpose-set"
+  },
+  {
+    "q": "柱とは",
+    "expect": "pillars"
+  },
+  {
+    "q": "方針を3つ決めたい",
+    "expect": "pillars"
+  },
+  {
+    "q": "おすすめのタスクを出してくれる？",
+    "expect": "suggestions"
+  },
+  {
+    "q": "キャラの提案ってなに",
+    "expect": "suggestions"
+  },
+  {
+    "q": "提案が出ない",
+    "expect": "suggestions-sleeping"
+  },
+  {
+    "q": "キャラクターが寝ている",
+    "expect": "suggestions-sleeping"
+  },
+  {
+    "q": "AIに送るデータは？",
+    "expect": "suggestions-data"
+  },
+  {
+    "q": "提案のために何を送っていますか",
+    "expect": "suggestions-data"
+  },
+  {
+    "q": "通知を受け取りたい",
+    "expect": "notification-on"
+  },
+  {
+    "q": "iPhoneで通知をオンにする",
+    "expect": "notification-on"
+  },
+  {
+    "q": "通知が来ない",
+    "expect": "notification-trouble"
+  },
+  {
+    "q": "お知らせが届かない",
+    "expect": "notification-trouble"
+  },
+  {
+    "q": "締め切りのお知らせは来る？",
+    "expect": "notification-types"
+  },
+  {
+    "q": "通知は何時に来る",
+    "expect": "notification-types"
+  },
+  {
+    "q": "Discordに通知を流したい",
+    "expect": "webhook"
+  },
+  {
+    "q": "スラックと連携",
+    "expect": "webhook"
+  },
+  {
+    "q": "アーカイブとは",
+    "expect": "archive-about"
+  },
+  {
+    "q": "アーカイブの使い方",
+    "expect": "archive-about"
+  },
+  {
+    "q": "記録を公開するには",
+    "expect": "publish"
+  },
+  {
+    "q": "イベントを宣伝したい",
+    "expect": "publish"
+  },
+  {
+    "q": "公開したら名前はバレる？",
+    "expect": "publish-names"
+  },
+  {
+    "q": "個人情報が出ないか心配",
+    "expect": "publish-names"
+  },
+  {
+    "q": "公開を停止したい",
+    "expect": "publish-stop"
+  },
+  {
+    "q": "公開した記録を引っ込めたい",
+    "expect": "publish-stop"
   },
   {
     "q": "他のイベントの記録を見たい",
     "expect": "knowledge-public"
+  },
+  {
+    "q": "公開されている振り返りを見たい",
+    "expect": "knowledge-public"
+  },
+  {
+    "q": "来年の人に引き継ぎたい",
+    "expect": "handover"
+  },
+  {
+    "q": "去年のイベントを使い回したい",
+    "expect": "handover"
+  },
+  {
+    "q": "パスワードを忘れた",
+    "expect": "password-reset"
+  },
+  {
+    "q": "パスワードを思い出せない",
+    "expect": "password-reset"
+  },
+  {
+    "q": "確認コードが来ない",
+    "expect": "code-not-arriving"
+  },
+  {
+    "q": "認証のメールが届かない",
+    "expect": "code-not-arriving"
+  },
+  {
+    "q": "ログアウトしてしまった",
+    "expect": "logged-out"
+  },
+  {
+    "q": "通信できませんと出た",
+    "expect": "logged-out"
+  },
+  {
+    "q": "アカウントを削除したい",
+    "expect": "delete-account"
+  },
+  {
+    "q": "退会する方法",
+    "expect": "delete-account"
   },
   {
     "q": "天気を教えて",
@@ -60,67 +380,15 @@
     "expect": null
   },
   {
-    "q": "イベントを新しく作るには",
-    "expect": "event-create"
-  },
-  {
-    "q": "企画を立てたい",
-    "expect": "event-create"
-  },
-  {
-    "q": "タスクを登録する方法",
-    "expect": "task-create"
-  },
-  {
-    "q": "メンバーを追加したい",
-    "expect": "member-invite"
-  },
-  {
-    "q": "友達を呼ぶには",
-    "expect": "member-invite"
-  },
-  {
-    "q": "どんな機能がある？",
-    "expect": "feature-overview"
-  },
-  {
-    "q": "山が大きくなるのはなんで",
-    "expect": "mountain"
-  },
-  {
-    "q": "締め切りのお知らせは来る？",
-    "expect": "notification"
-  },
-  {
-    "q": "使い始めるには",
-    "expect": "howto-start"
-  },
-  {
-    "q": "目標を決めるコツ",
-    "expect": "purpose-set"
-  },
-  {
-    "q": "振り返りを残すには",
-    "expect": "review-write"
-  },
-  {
-    "q": "イベントの段取りを知りたい",
-    "expect": "process-flow"
-  },
-  {
-    "q": "後輩に記録を残したい",
-    "expect": "handover"
-  },
-  {
-    "q": "公開されている振り返りを見たい",
-    "expect": "knowledge-public"
-  },
-  {
-    "q": "パスワードを忘れた",
+    "q": "好きな食べ物は？",
     "expect": null
   },
   {
-    "q": "好きな食べ物は？",
+    "q": "おすすめのラーメン屋",
+    "expect": null
+  },
+  {
+    "q": "電車の時刻表",
     "expect": null
   }
 ]

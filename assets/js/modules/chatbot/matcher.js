@@ -1,7 +1,8 @@
 // 質問が、どの FAQ にどれだけ近いかを点数にする（DOM に依存しない）
 //   1件の点数 ＝ question と patterns の中で一番近いものの点数 ＋ keywords が質問に含まれるごとに加点
 //   （質問が keyword そのものだけなら、近さは 1 とする）
-// 近さの測り方（scorer）は差し替えられる。既定は「2文字ずつの重なり（Dice 係数）」。
+// 近さの測り方（scorer）は差し替えられる。既定は「2文字ずつの重なりに、珍しさの重みを付けたもの」（createIdfBigramScorer）。
+// 重みなしの bigramScorer も残している（scorer に渡せば、こちらで比べられる）。
 // 将来、意味検索の scorer を作ったら combineScorers([...]) で混ぜられる。
 import { bigrams } from './normalize.js';
 
@@ -24,6 +25,36 @@ export const bigramScorer = {
 };
 
 /**
+ * 2文字ずつの重なりに、珍しさの重みを付ける scorer（重み付きの Dice 係数）
+ *   多くの項目に出る2文字（「イベ」「ベン」など）は軽く、その項目にしか出ない2文字は重く数える
+ *   重み ＝ log(1 + 項目の数 / その2文字が出る項目の数)。FAQ に出ない2文字は、いちばん重い値（質問の余計な部分として点を下げる）
+ * @param {Set<string>[][]} itemGrams  項目ごとの、question と patterns の2文字の集合の配列
+ */
+export function createIdfBigramScorer(itemGrams) {
+  const n = itemGrams.length || 1;
+  const df = new Map();
+  for (const grams of itemGrams) {
+    const seen = new Set(grams.flatMap((set) => [...set]));
+    for (const gram of seen) df.set(gram, (df.get(gram) ?? 0) + 1);
+  }
+  const unknown = Math.log(1 + n);
+  const weight = (gram) => (df.has(gram) ? Math.log(1 + n / df.get(gram)) : unknown);
+  const total = (set) => [...set].reduce((sum, gram) => sum + weight(gram), 0);
+  return {
+    prepare: (_raw, normalized) => {
+      const grams = bigrams(normalized);
+      return { grams, total: total(grams) };
+    },
+    similarity(a, b) {
+      if (!a.total || !b.total) return 0;
+      let shared = 0;
+      for (const gram of a.grams) if (b.grams.has(gram)) shared += weight(gram);
+      return (2 * shared) / (a.total + b.total);
+    },
+  };
+}
+
+/**
  * いくつかの scorer を、重み付きの平均で1つにする
  * @param {{ scorer: object, weight: number }[]} parts
  */
@@ -39,13 +70,14 @@ export function combineScorers(parts) {
  * @param {{ items: object[] }} faq
  * @param {{ normalize: (text: string) => string, scorer?: object }} options
  */
-export function createMatcher(faq, { normalize, scorer = bigramScorer }) {
+export function createMatcher(faq, { normalize, scorer }) {
+  const texts = (item) => [item.question, ...(item.patterns ?? [])].filter((text) => typeof text === 'string' && text);
+  // scorer を渡さなければ、FAQ 全体の2文字の出かたから重みを決める（createIdfBigramScorer）
+  scorer ??= createIdfBigramScorer(faq.items.map((item) => texts(item).map((text) => bigrams(normalize(text)))));
   // 読み込み時に、全 FAQ の question と patterns を下ごしらえしておく
   const prepared = faq.items.map((item) => ({
     id: item.id,
-    entries: [item.question, ...(item.patterns ?? [])]
-      .filter((text) => typeof text === 'string' && text)
-      .map((text) => scorer.prepare(text, normalize(text))),
+    entries: texts(item).map((text) => scorer.prepare(text, normalize(text))),
     // 類義語で同じ語になったものは1つにまとめる（ナレッジ → 公開 などで二重に加点しない）
     keywords: [...new Set((item.keywords ?? []).map(normalize).filter(Boolean))],
   }));
