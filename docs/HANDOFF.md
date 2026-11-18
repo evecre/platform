@@ -49,6 +49,12 @@
   - メッセージ：`.c-chatbot__message` に `motion-pop`（bot は左下・user は右下を軸）。返事は `--chatbot-reply-delay`（0.4s）遅れて出て、続く返事は `--chatbot-reply-stagger`（0.3s）ずつ（3つまで。CSS の `+` で）。値は `_motion.css`。動きを減らす設定ではフェードだけ（0.2s）
   - ボタン：吹き出しは CSS の背景。キャラクターは吹き出しの四角の中央（svg の y 3〜64.67 / 80 → 42.3%）、幅 52%（`--chatbot-toggle-character-*`。`_variables.css`）
   - 確かめたこと：ブラウザでボタンの見た目、送信直後に user がポンッと出て bot は遅れて出る・前のメッセージは動かない
+- 追加の依頼（同じ日）：白いアイコン（help・send）を #484545 にして使う。本体を更新したのでアイコンを調べ直す。本体のホームの「プラットフォーム」は「みんなの記録」へ行くようになった
+  - `assets/img/icon/` を本体の `public/images/icon/` の最新にそろえた（mini-cancel・mini-comment・mini-join・hand・suggest・heart-* を足し、絵が変わった completion・create-task・platform を差し替え、誤字の名前 con-mini-join・icon-mini-coomment・「icon-remove from project」を消した）。help・send の白を #484545 に
+  - 画面の言葉の誤りを直した：承認の入口は「承認待ち」ではなくメインボードの「参加申請が届いています」（approve・faq member-approve）。脱退はイベント設定の「このイベントから脱退する」の「脱退する」か、ホームの長押しの「このイベントから脱退」（delete-account・faq event-leave）
+  - アイコンを足した：join（申請後の mini-time）・explore と faq knowledge-public（ホームの platform）・suggestions（help で提案のヒント）・notification-trouble（feedback）・notification-types（通知の種類ごとの mini-*）・faq event-delete（delete）
+  - プラットフォーム → /explore は本体の `feature/home-help-platform`（7195732）にある。本番に入ったかは explore の todo
+  - 確かめたこと：check 3つとも OK（正答 65・誤答 0 は変わらず）。ブラウザで notification-types の8つのアイコンが出る
 - 残っていること・次にやること：
   - ★記事（26件）とチャットボットの答え（45件）を、本体の画面と見比べて確かめる（`checked: true`。`npm run check:help` の todo も）
   - commit・push・main へのマージ（まだしていない）。`style/hero-landform-slide` のマージも
