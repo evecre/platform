@@ -18,6 +18,25 @@
 
 ---
 
+## 2026-11-18 — /start と /handoff のスラッシュコマンド
+
+- 依頼：(1) `fix/curtain-back` のマージ (2) アニメーションのタイミング・コマ（フレーム）はどこで調整するか (3) `/start` と `/handoff` を使えるように
+- やったこと：
+  - (1) `fix/curtain-back` を main にマージ（`f0aa7a2`）。Cloudflare Pages の公開も成功。マージ前に、ユーザーが編集中だった 09 の見出しの余白（`margin: calc(23 * var(--top-u)) 0`）とボタンの高さ（`calc(112 * var(--top-u))`）を commit した
+  - (2) 説明だけで、ファイルは変えていない。速さ・遅れ・イージングは `foundation/_motion.css`、動きの形（@keyframes）は `foundation/_animation.css` と `_top.css`（幕・円・縮む・雲・スライダー）、どの要素にどの動きを付けるかは `index.html` の `data-enter` / `data-leave` / `data-order`、画面ごとの上書きは `_top.css`（詳しくは `assets/css/README.md` §4）
+  - (3) プロジェクトのスキルとして `.claude/skills/start/SKILL.md`・`.claude/skills/handoff/SKILL.md` を作った（`disable-model-invocation: true`。ユーザーが打ったときだけ動く）。`/start` は CLAUDE.md・START.md・HANDOFF の一番上と git の状態を読んで報告し、作業は始めない。`/handoff` は HANDOFF の一番上に記録を足し、CLAUDE.md・START.md・CSS の README を必要なら直す。commit はしない
+- 変えたファイル：`.claude/skills/start/SKILL.md`・`.claude/skills/handoff/SKILL.md`（新規）・`CLAUDE.md`（冒頭にコマンドの説明）・`docs/START.md`（読む順番に1行）・`docs/HANDOFF.md`
+- 決めたこと・理由：`.claude/` は `build-dist.mjs` の `INCLUDE` に無いので配信されない
+- 確かめたこと：
+  - `/handoff` は、`.claude/skills/` を作ったこのセッションでは呼べなかった。スキルはセッションを始めるときに読まれるため、このセッションの記録（この項目）は手で書いた
+  - 新しいセッションで `/start` と `/handoff` が呼べるかは、まだ確かめていない
+- 残っていること・次にやること：
+  - 新しいセッションで `/start` を試す
+  - ユーザーが編集中で、commit していない変更：`_top.css` の hero の landform の `--motion-distance-slide` 0.75rem → 1.75rem
+  - 未追跡のファイル `docs/help-and-chatbot-content-plan_2026-11-16.md`（本体側で作られた、ヘルプとチャットボットの内容の設計案）。まだ読んでいない。commit するかはユーザーに確認する
+- ユーザーに確認したいこと：上の設計案をもとに、ヘルプ・チャットボットの中身を直すか
+- 本体側に頼むこと：なし
+
 ## 2026-11-14 — 02 → 01 に戻るときの幕（逆のアニメーション）
 
 - 依頼：02（イベクリとは？）から 01（hero）へ戻るときは、上から下へ白い背景を下げる逆のアニメーションに
