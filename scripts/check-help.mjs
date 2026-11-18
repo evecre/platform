@@ -1,18 +1,22 @@
 // ヘルプのデータ（assets/data/help.json）を確かめる
 //   node scripts/check-help.mjs   （npm run check:help）
+//   チャットボット（faq.json の help）から指している記事が無いときも、check:faq が誤りにする
 // 誤りがあれば終了コード 1。確認がまだの記事（checked: false）と todo は、お知らせとして出すだけ（1 にしない）
 
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const FILE = path.join(ROOT, 'assets/data/help.json');
+const ICON_DIR = path.join(ROOT, 'assets/img/icon');
+const ICON_TOKEN_RE = /\[icon:([^\]]*)\]/g; // 文の中のアイコン（inlineIcon.js と同じ印。名前の形もここで確かめる）
 
 const ID_RE = /^[a-z0-9-]+$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const TEXT_TYPES = new Set(['heading', 'text', 'note']);
 const LIST_TYPES = new Set(['steps', 'list']);
+const DEVICES = new Set(['all', 'iphone', 'android', 'pc']);
 const ARTICLE_LINK_RE = /^\/pages\/help\/article\/\?id=([a-z0-9-]+)$/;
 
 const isText = (value) => typeof value === 'string' && value.trim() !== '';
@@ -42,6 +46,9 @@ function validate(data) {
     if (!isText(article.title)) errors.push(`${name}：title が空`);
     if (!DATE_RE.test(article.updated ?? '')) errors.push(`${name}：updated は "YYYY-MM-DD"`);
     if (!Array.isArray(article.body) || !article.body.length) errors.push(`${name}：body が空`);
+    // 誰向けか（「管理者」「全員」など。記事の頭に「対象：…」と出る）・どの端末か（all / iphone / android / pc）
+    if (!Array.isArray(article.audience) || !article.audience.length || !article.audience.every(isText)) errors.push(`${name}：audience は空でない文字の配列（例 ["管理者"]）`);
+    if (!Array.isArray(article.devices) || !article.devices.length || !article.devices.every((d) => DEVICES.has(d))) errors.push(`${name}：devices は ${[...DEVICES].join(' / ')} の配列`);
 
     (article.body ?? []).forEach((block, i) => {
       const where = `${name} の body[${i}]（${block?.type}）`;
@@ -61,6 +68,16 @@ function validate(data) {
         errors.push(`${where}：知らない type`);
       }
     });
+
+    // 文の中のアイコン [icon:名前]：名前の形と、assets/img/icon/icon-名前.svg があるか
+    const texts = [article.summary, ...(article.body ?? []).flatMap((b) => [b?.text, b?.label, ...(Array.isArray(b?.items) ? b.items : [])])];
+    for (const text of texts.filter((t) => typeof t === 'string')) {
+      for (const [, icon] of text.matchAll(ICON_TOKEN_RE)) {
+        if (!/^[a-z0-9-]+$/.test(icon)) errors.push(`${name}：アイコンの名前は英小文字・数字・ハイフンだけ [icon:${icon}]`);
+        else if (!existsSync(path.join(ICON_DIR, `icon-${icon}.svg`))) errors.push(`${name}：アイコンの画像が無い assets/img/icon/icon-${icon}.svg`);
+      }
+    }
+    if (/\[icon:/.test(article.title ?? '')) errors.push(`${name}：title にアイコンは入れない（ページの題・一覧・チャットボットのリンクに文字のまま出る）`);
 
     if (article.checked !== true) notices.push(`確認がまだ：${article.id}（${article.title}）`);
     for (const todo of article.todo ?? []) notices.push(`  todo ${article.id}：${todo}`);

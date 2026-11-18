@@ -18,6 +18,51 @@
 
 ---
 
+## 2026-11-18 — ヘルプとチャットボットの中身を設計案から作り直す（★18ページ＋Q&A 45件）
+
+- 依頼：(1) `_top.css` の変更（hero の landform のスライド距離）を commit (2) 本体の設計案 `docs/help-and-chatbot-content-plan_2026-11-16.md` をもとに、チャットボットとヘルプをより正確に・いろいろな質問に対応できるように改良（まず修正案 → Usami の回答：カテゴリは A〜J・★18ページと Q&A 約35件まで・問い合わせは本体のフィードバックの Google フォーム・答えられなかった質問の記録は見送り・ヘルプの URL は今のまま）
+- やったこと：
+  - (1) `style/hero-landform-slide` に commit・push（`bf055d5`）。main へのマージはまだ
+  - (2) ブランチ `feat/help-chatbot-content`（main から）
+    - 見つけた問題：チャットボットの答えが12件とも「TODO」のままだった。ヘルプの「招待リンクを出す場所」が設計案と違った。「山にオブジェクトが出る」は本体で 11/13 から止めている
+    - `help.json`：カテゴリを A〜J の10個に組み替え、記事を26件に（★18ページ全部＋home-screen・mountain・roles・calendar・webhook・explore・handover・delete-account）。`audience`・`devices` を足した。publish-range は publish-tasks に、purpose は first-steps にまとめた（古い id は外部から指されていない）
+    - `faq.json`：45項目・8カテゴリ。答えは設計案 §6 の文。`help`（記事の id）を足した
+    - `synonyms.json`：設計案 §3 の言い換えを足した。「公開」から「アーカイブ」を外した（別の話題になった）
+    - 判定：`normalize.js` に `TRAILING_PHRASES`（「ガントはどこ」の「とは」が消えて「ガンドコ」になっていた）。`matcher.js` に珍しさの重み（`createIdfBigramScorer`）。`engine.js` にヘルプの記事の検索（`createHelpIndex`。本文まで）。`THRESHOLD_SUGGEST` 0.30 → 0.25
+    - チャットボットの画面：答えの下に「ヘルプ『…』をくわしく読む」。もしかして→どれでもない・答えられないときは、近いヘルプの記事と問い合わせ先（展示モードでは出さない）
+    - ヘルプの画面：記事の頭に「対象：…」。トップと記事の下に「フィードバック・お問い合わせ」（`feedbackLink.js`・`config.js` の `FEEDBACK_URL`）
+    - `check-help.mjs`：audience・devices の形。`check-faq.mjs`：help の id・答えない質問にヘルプを案内したら注意
+- 変えたファイル：`assets/data/`（help・faq・faq-tests・synonyms）・`assets/js/modules/chatbot/`（chatbot・engine・matcher・normalize）・`help.js`・`config.js`・`common.js`・`feedbackLink.js`（新規）・`pages/help-article.js`・`pages/help/index.html`・`pages/help/article/index.html`・`_help.css`（対象と問い合わせの仮の見た目だけ）・`scripts/check-*.mjs`・CLAUDE.md・START.md
+- 決めたこと・理由：
+  - 問い合わせ先は展示モードで出さない。Google フォームに移ると、無操作で Top に戻る仕組みが働かないため
+  - IDF の重みは、今の45項目では重みなしよりわずかに良い程度（正答 65 対 63・到達 96 対 95）。項目が増えたときに効くので残した
+  - フォームの URL は本体のリポジトリを読むだけで確かめた（`public/js/components.js`）。本体は変えていない
+- 確かめたこと：
+  - `npm run check`（29件 OK）・`npm run check:help`（誤りなし）・`npm run check:faq`（98問：正答 66%・到達 98%・誤答 0。答えない質問にヘルプを出していない）
+  - ブラウザ（localhost:5173）：記事の「対象：管理者」・カテゴリ「タスク」・問い合わせのリンク。チャットボットで「通知が来ない」→ 答え＋ヘルプのリンク／「天気を教えて」→ カテゴリ＋問い合わせ。展示モードでヘルプの問い合わせが隠れる
+- 追加の依頼（同じ日）：ボタン名にアイコンを付けて見せる（「＋イベントを作成」のように）。アイコンは Usami が `assets/img/icon/` に入れた。わからないものは本番の本体から調べる
+  - `[icon:名前]` の印 → `inlineIcon.js`（`setRichText`・`stripIconTokens`）・`component/_inline-icon.css`（`--inline-icon-*`）。help.js（本文）とチャットボット（答え）で使う。check:help / check:faq が、無いアイコン・title / question のアイコンを誤りにする
+  - アイコンの使い場所は本体のコード（`public/js/components.js`・`views/mainBoard.js`・本体の commit 42d2b0d）で調べた（読むだけ）。本番（onrender）はログインしないと中が見えないので、ログインはしていない
+  - 本体でまだ使い場所が無いアイコン（delete・exit・share・send・feedback・file・rename・purpose・research・assignment-request・mini-*）は使っていない（一覧は CLAUDE.md §14）
+  - 確かめたこと：check 3つとも OK（正答率は変わらず）。ブラウザで記事（create-event・mountain）とチャットボットの答えにアイコンが出る
+- 追加の依頼（同じ日）：チャットのメッセージが一瞬で並ぶと気づけないので、送った文も返事もポンッと出す。右下のボタンを丸から吹き出し（`chatbot-box.svg`）＋キャラクターに
+  - メッセージ：`.c-chatbot__message` に `motion-pop`（bot は左下・user は右下を軸）。返事は `--chatbot-reply-delay`（0.4s）遅れて出て、続く返事は `--chatbot-reply-stagger`（0.3s）ずつ（3つまで。CSS の `+` で）。値は `_motion.css`。動きを減らす設定ではフェードだけ（0.2s）
+  - ボタン：吹き出しは CSS の背景。キャラクターは吹き出しの四角の中央（svg の y 3〜64.67 / 80 → 42.3%）、幅 52%（`--chatbot-toggle-character-*`。`_variables.css`）
+  - 確かめたこと：ブラウザでボタンの見た目、送信直後に user がポンッと出て bot は遅れて出る・前のメッセージは動かない
+- 追加の依頼（同じ日）：白いアイコン（help・send）を #484545 にして使う。本体を更新したのでアイコンを調べ直す。本体のホームの「プラットフォーム」は「みんなの記録」へ行くようになった
+  - `assets/img/icon/` を本体の `public/images/icon/` の最新にそろえた（mini-cancel・mini-comment・mini-join・hand・suggest・heart-* を足し、絵が変わった completion・create-task・platform を差し替え、誤字の名前 con-mini-join・icon-mini-coomment・「icon-remove from project」を消した）。help・send の白を #484545 に
+  - 画面の言葉の誤りを直した：承認の入口は「承認待ち」ではなくメインボードの「参加申請が届いています」（approve・faq member-approve）。脱退はイベント設定の「このイベントから脱退する」の「脱退する」か、ホームの長押しの「このイベントから脱退」（delete-account・faq event-leave）
+  - アイコンを足した：join（申請後の mini-time）・explore と faq knowledge-public（ホームの platform）・suggestions（help で提案のヒント）・notification-trouble（feedback）・notification-types（通知の種類ごとの mini-*）・faq event-delete（delete）
+  - プラットフォーム → /explore は本体の `feature/home-help-platform`（7195732）にある。本番に入ったかは explore の todo
+  - 確かめたこと：check 3つとも OK（正答 65・誤答 0 は変わらず）。ブラウザで notification-types の8つのアイコンが出る
+- 残っていること・次にやること：
+  - ★記事（26件）とチャットボットの答え（45件）を、本体の画面と見比べて確かめる（`checked: true`。`npm run check:help` の todo も）
+  - commit・push・main へのマージ（まだしていない）。`style/hero-landform-slide` のマージも
+  - ★以外の33ページ（設計案 §4）。順番は展示会で聞かれたことなどから決める
+  - 対象・問い合わせの見た目（仮のまま）
+- ユーザーに確認したいこと：設計案 `docs/help-and-chatbot-content-plan_2026-11-16.md` を根拠の資料として commit するか
+- 本体側に頼むこと：なし（設計案 §11 のとおり、本体の機能を変えたら直すページを知らせてもらう）
+
 ## 2026-11-18 — /start と /handoff のスラッシュコマンド
 
 - 依頼：(1) `fix/curtain-back` のマージ (2) アニメーションのタイミング・コマ（フレーム）はどこで調整するか (3) `/start` と `/handoff` を使えるように

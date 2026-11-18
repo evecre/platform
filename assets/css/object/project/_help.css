@@ -111,7 +111,8 @@
   line-height: var(--line-height-tight);
 }
 
-.p-help-article__updated {
+.p-help-article__updated,
+.p-help-article__audience {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
 }
@@ -176,4 +177,16 @@
 
 .p-help-article__related-title {
   font-size: var(--font-size-md);
+}
+
+/* ---- 解決しないとき（ヘルプ トップ・記事。展示モードでは JS が隠す） ---- */
+.p-help-contact {
+  margin-top: var(--space-6);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.p-help-contact__link {
+  color: inherit;
+  text-decoration: underline;
 }

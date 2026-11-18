@@ -136,13 +136,21 @@ robots.txt  _headers               検索エンジン対策（§6）
   - 答え・質問の文はすべて `textContent`、リンクは `safeUrl()` を通す
   - 展示モードで `CHATBOT_RESET_MS`（kiosk.js）操作が無ければ、閉じて最初のあいさつに戻す
   - パネルの中の keydown は Top の舞台に渡さない（stopPropagation）
+  - 右下のボタンは吹き出し（`assets/img/common/chatbot-box.svg`。CSS の背景）の中にキャラクター。キャラクターは吹き出しの四角の中央（`--chatbot-toggle-character-*`）
+  - メッセージは足されたときにポンッと出る（`motion-pop`）。返事は送った文のあと `--chatbot-reply-delay`、続く返事は `--chatbot-reply-stagger` ずつ遅らせる（3つまで）。値は `foundation/_motion.css`
 - データ：`assets/data/faq.json`（カテゴリと質問）・`synonyms.json`（類義語）・`faq-tests.json`（正答率のテスト）
-  - 質問を足す：`items` に1件足す。`id`（英小文字とハイフン）・`category`（`categories` の id）・`question`・`patterns`（言い回し。**5個以上**）・`keywords`（その項目らしい語。1つ含まれるごとに +0.1）・`answer`（改行可）・`links`（`/` か `https://` で始まる。みんなの記録は本番の URL を直接書く。展示モードでは `exploreHref()` が `?kiosk=1` を足す）・`related`（ほかの項目の id）・`featured`（カテゴリを選んだときに出すか）
+  - 質問を足す：`items` に1件足す。`id`（英小文字とハイフン）・`category`（`categories` の id）・`question`・`patterns`（言い回し。**5個以上**）・`keywords`（その項目らしい語。1つ含まれるごとに +0.1）・`answer`（改行可）・`links`（`/` か `https://` で始まる。みんなの記録は本番の URL を直接書く。展示モードでは `exploreHref()` が `?kiosk=1` を足す）・`help`（関係するヘルプの記事の id。答えの下に「ヘルプ『…』をくわしく読む」が出る。無い id は `check:faq` で誤り）・`related`（ほかの項目の id）・`featured`（カテゴリを選んだときに出すか）
+  - 中身の元は本体の設計案 `docs/help-and-chatbot-content-plan_2026-11-16.md`（§6 の Q&A・§12 の数字・§3 の用語）。数字・ボタン名・誰ができるかは、ヘルプの記事と同じ言い方にそろえる
   - ★`synonyms.json` はヘルプの検索も使う（§14）。足したら `check:faq` で誤答 0 を確かめる
-  - 言い回しが違うだけで外れるときは、まず `synonyms.json`（代表の語 → 言い換えの一覧）に足す。全部の項目に効く。語尾・つなぎは `normalize.js` の `FILLER_PHRASES`
+  - 言い回しが違うだけで外れるときは、まず `synonyms.json`（代表の語 → 言い換えの一覧）に足す。全部の項目に効く。語尾・つなぎは `normalize.js` の `FILLER_PHRASES`（どこでも除く）と `TRAILING_PHRASES`（文の終わりだけ除く。「とは」「って」「なに」など、途中で除くと語を壊すもの）
+  - ★言い換えは、ほかの語の一部になる語に気をつける。代表の語は短いほうにする（「担当者」→「担当」。逆にすると「担当者者」になる）。広すぎる語（「出ない」「されない」）は入れない（「提案が出ない」が通知の話になる）
   - テストの文を、そのまま `patterns` に写さない（テストが意味を失う）
   - 足したら `npm run check:faq`（`--tune` でしきい値の表）。faq.json に誤り（id の重複・無い related・patterns 5個未満・無いカテゴリ）があると終了コード 1
-- しきい値（`engine.js`）：1位の点数が `THRESHOLD_ANSWER`（0.55）以上で、2位との差が `MIN_MARGIN`（0.05）以上なら回答。`THRESHOLD_SUGGEST`（0.30）以上なら「もしかして」（上位3件）。それ未満は「答えられない」でカテゴリに戻す
+- しきい値（`engine.js`）：1位の点数が `THRESHOLD_ANSWER`（0.55）以上で、2位との差が `MIN_MARGIN`（0.05）以上なら回答。`THRESHOLD_SUGGEST`（0.25）以上なら「もしかして」（上位3件）。それ未満は「答えられない」でカテゴリに戻す
+  - 近さ（`matcher.js`）：2文字ずつの重なりに珍しさの重みを付けたもの（`createIdfBigramScorer`。多くの項目に出る「イベ」「ベン」などは軽い）
+  - もしかして・答えられないときは、ヘルプの記事も本文まで探して出す（`engine.js` の `createHelpIndex`。質問の2文字のうち記事に含まれる割合が `THRESHOLD_HELP`（0.5）以上を2件まで）。答えない質問（天気など）に記事を出したら `check:faq` が注意を出す
+  - 答えられないときは、問い合わせ先（`config.js` の `FEEDBACK_URL`）も出す。**展示モードでは出さない**（外のサイトに出ると Top に戻れない）
+  - 2026-11-18：45項目・テスト98問で 正答 66%・到達 98%・誤答 0
   - 下げると答える数が増えるが、**違う答え（誤答）を出しやすくなる**。誤答は「もしかして」より悪いので、`--tune` の表で誤答 0 を保てる範囲で決める（2026-11-04：0.50 以下で誤答が出る）
 - キャラクター：`assets/js/modules/character.js`（`pickCharacter()` は読み込みごとに1体。`createCharacter(ch, { className })`）＋ `object/component/_character.css`
   - 素材は `assets/img/character/`。目の寸法は素材から実測した値。目の位置・大きさ（`--face-left` / `--face-top` / `--face-width`）は Top の 02・03 のキャラクター（Figma）と同じ値（2026-11-14 にユーザーの指摘で揃えた）。勝手に変えない
@@ -160,22 +168,28 @@ robots.txt  _headers               検索エンジン対策（§6）
 - 公開イベントの一覧・詳細・つまずいたことの索引（01〜04 で作ったもの）は消した。見せるのは本体の `/explore`（`config.js` の `EXPLORE_URL`）
   - 本体の URL の形：`/explore`（一覧）・`/explore?event=<id>`（告知のモーダル）・`/explore/<id>`（ナレッジのページ。ナレッジが無ければ本体が告知のモーダルに置き換える）
 - リンク：HTML に `data-explore-link` を付けると、`common.js`（`setupExploreLinks()`）が href を `EXPLORE_URL` にする（展示モードなら `?kiosk=1`）。HTML にも同じ URL を書いておく（JS が動かないとき用）
-  - **`EXPLORE_URL` を変えたら（独自ドメインなど）**：`config.js`・`index.html` の `data-explore-link`・`pages/event-log/*/index.html` の `data-explore-redirect`・`assets/data/faq.json` の links を直す
+  - **`EXPLORE_URL` を変えたら（独自ドメインなど）**：`config.js`・`index.html` の `data-explore-link`・`pages/event-log/*/index.html` の `data-explore-redirect`・`assets/data/faq.json` の links・`assets/data/help.json` の link ブロックを直す
 - 古い URL（本体の「リンクをコピー」が以前出していた `/pages/event-log/detail/?id=…` など）：`pages/event-log/` の3ページが `explore-redirect.js` で `location.replace` する。`?id=` が `EVENT_ID_RE` に合えば `EXPLORE_URL/<id>`、それ以外は一覧。Cloudflare の `_redirects` はクエリの値をパスに移せないので使わない。3ページとも noindex を残す。**消さないこと**
 
 ## 14. ヘルプ（2026-11-13 に追加。参考：ADAY Help の構成）
 
+- カテゴリは設計案の A〜J の10個（はじめに・イベント・メンバー・タスク・目的・柱・提案・スケジュール・通知・アーカイブと公開・引き継ぎ・アカウント。2026-11-18 に組み替え）
 - 3階層：トップ `pages/help/`（検索の欄・カテゴリの一覧。`?q=` で検索結果）→ カテゴリ `category/?id=…`（記事の一覧）→ 記事 `article/?id=…`（パンくず・タイトル・最終更新・本文・関連する記事）。入口は Top のヘッダーの「ヘルプ」
 - データ：`assets/data/help.json` の `categories`（`id`・`label`・`description`）と `articles`
-  - 記事：`id`（英小文字・数字・ハイフン）・`category`・`title`・`updated`（`"YYYY-MM-DD"`）・`checked`（ユーザーが中身を確かめたら true）・`todo`（確かめること。画面には出ない）・`summary`（一覧に出す1行）・`keywords`（検索で当たりやすくする語）・`body`・`related`（記事の id）
+  - 記事：`id`（英小文字・数字・ハイフン）・`category`・`title`・`updated`（`"YYYY-MM-DD"`）・`checked`（ユーザーが中身を確かめたら true）・`todo`（確かめること。画面には出ない）・`audience`（誰向けか。人の言葉の配列。記事の頭に「対象：管理者」と出る）・`devices`（`all` / `iphone` / `android` / `pc`。all 以外は「対象」の後ろに出る）・`summary`（一覧に出す1行）・`keywords`（検索で当たりやすくする語）・`body`・`related`（記事の id）
   - `body` のブロック：`heading`・`text`・`note`（`text`）／`steps`（番号つき）・`list`（`items`）／`image`（`src`・`alt`）／`link`（`label`・`href`。ほかの記事へは `/pages/help/article/?id=…`）
-  - 足したら `npm run check:help`（id の重複・無いカテゴリ・無い related・知らない type・URL の形で終了コード 1。`checked: false` と `todo` は一覧で出す）
+  - 足したら `npm run check:help`（id の重複・無いカテゴリ・無い related・知らない type・URL の形・audience と devices の形で終了コード 1。`checked: false` と `todo` は一覧で出す）
   - 記事の中身は Claude が本体のコードを読んで書いた下書き（2026-11-13）。**ユーザーが確かめて `checked: true` にする**。操作の名前（ボタン名など）は本体の画面に合わせる
 - JS：`assets/js/modules/help.js`（`loadHelp()`・`searchArticles()`・`renderArticleBody()`・`buildArticleItem()`・URL）。**記事の本文を描くのは `renderArticleBody()` だけ**。文字は `textContent`、リンク・画像は `safeUrl()`
   - ページの入口：`help-top.js`・`help-category.js`・`help-article.js`。テンプレートの目印は `data-help-item="…"`（記事の一覧の1件）・`data-help-category="…"`（カテゴリ）、ページの部品は `data-help="…"`
 - 検索：空白で区切った語が**すべて**含まれる記事。重みはタイトル 3・キーワード 2・概要と本文 1。文字はチャットボットと同じ normalize（ひらがな・カタカナ・全角半角・`synonyms.json` の類義語と読みがな・語尾）でそろえる。日本語は単語に分けないので、「招待リンク」は1つの語として探す
 - CSS：`component/_help-search.css`（検索の欄。`--compact`）・`_help-list.css`（記事の一覧）・`_breadcrumb.css`（パンくず）・`project/_help.css`（3ページ）
-- お問い合わせのボタンは置いていない（行き先が無い。できたら足す）
+- 文の中のアイコン（2026-11-18）：記事の本文・summary とチャットボットの answer に `[icon:名前]` と書くと、`assets/img/icon/icon-名前.svg` を文の中に出す（`inlineIcon.js` の `setRichText()`・`c-inline-icon`）。ボタンは「[icon:home-plus]イベントを作成」のように、アイコン＋画面の文字で書く。title・question には入れない（文字のまま出る場所があるため）。検索・判定は印を外して比べる。無い名前は check で誤り
+  - 素材は本体の `public/images/icon/` を写したもの（2026-11-18 に本体の最新にそろえた。本体で素材が増えた・変わったら写し直す）。白い `icon-help`・`icon-send` だけは、明るい背景で見えるように #484545 に塗り替えてある（写し直したら塗り直す）
+  - 本体のコードで確かめた組（2026-11-18）：`home-plus`＝イベントを作成・タスクを作成（右下）・プロジェクトの＋／`join`＝イベントに参加・メインボードの「参加申請が届いています」／`mini-time`＝申請した人のホームの「リーダーに通知しました」／`platform`＝ホームの「プラットフォーム」（みんなの記録 `/explore` を新しいタブで。本体の feature/home-help-platform）・宣伝用の公開／`setting`＝イベント設定／`home-default`・`mainboard-default`・`archive-default`・`notification-default`＝左端の列・スマホの下のボタン／`image`＝画像・PDF を追加／`edit`＝柱を編集・開催日を編集／`link`＝リンクをコピー・予定をコピー／`calendar-pressed`＝日付（あと N 日）／`calendar-default`＝カレンダー／`filter`＝並び替え／`fire`＝意気込み／`help`＝提案の「?」（提案のヒント）／`feedback`＝フィードバックを送る／`exit`＝ホームの長押しの「このイベントから脱退」／`delete`＝削除（長押し・タスク・通知）／`rename`＝名前を変更／`file`＝プロジェクト・プロジェクトに追加／`remove-from-project`＝プロジェクトから外す／`send`＝タスクのチャットの送信／`share`＝振り返りを公開してよいかの確認／`purpose`＝目的のお知らせ（イベントづくりで困ったら）／`assignment-request`＝「担当申請があります」／`suggest`＝提案のバッジ／`heart-*`＝みんなの記録のいいね
+  - 通知の種類（本体の `_NOTIF_ICONS`）：`mini-assignment-myself`＝自分が担当に／`mini-create-task`＝タスクができた／`mini-completion`＝完了／`mini-modification-task`＝内容が変わった／`mini-apply`＝担当への応募／`mini-assignment`＝担当が決まった／`mini-join`＝メンバーが参加／`mini-roled`＝役割／`mini-cancel`＝未完了に戻した／`mini-comment`＝みんなの記録のコメント
+- 解決しないとき：ヘルプのトップと記事の下に「フィードバック・お問い合わせ」（本体の「フィードバックを送る」と同じ Google フォーム。`config.js` の `FEEDBACK_URL`）。HTML は `data-feedback`（囲み）・`data-feedback-link`（リンク）。`feedbackLink.js` が href を入れ、展示モードでは囲みごと隠す
+- 書き方（設計案 §2）：最初の2行で答える・手順は番号つきで1行に1操作・ボタン名は「」・できないことも書く・数字ははっきり。本体で確かめていない挙動（設計案 §10-3）と廃止した機能（§9）は書かない
 
 ## 15. Top の見た目と画面の切り替え（06 で作り直し）
 

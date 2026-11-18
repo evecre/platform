@@ -45,6 +45,11 @@
   --font-size-root: clamp(100%, min(1.0417vw, 1.8519vh), 250%);
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
+
+  /* 文の中のアイコン（c-inline-icon）。文字の大きさに合わせて伸びる */
+  --inline-icon-size: 1.25em;
+  --inline-icon-gap: 0.1em;
+  --inline-icon-align: -0.3em;
   --font-size-md: 1rem;
   --font-size-lg: 1.25rem;
   --font-size-xl: clamp(1.25rem, 1rem + 1vw, 1.75rem);
@@ -72,6 +77,8 @@
 
   /* --- チャットボット ------------------------------------------------------ */
   --chatbot-toggle-size: 5rem;      /* 右下のボタン（キャラクター）の大きさ */
+  --chatbot-toggle-character-width: 52%; /* ボタンの中のキャラクターの幅（ボタンに対する %） */
+  --chatbot-toggle-character-y: 42.3%;   /* キャラクターの中心の高さ。吹き出しの四角（chatbot-box.svg の y 3〜64.67 / 80）の中央 */
   --chatbot-avatar-size: 2.5rem;    /* パネルの見出しのキャラクター */
   --chatbot-panel-width: 24rem;
   --chatbot-panel-height: 36rem;    /* 画面が低いときは画面に合わせて縮む */

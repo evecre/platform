@@ -1,257 +1,59 @@
 {
-  "version": 1,
+  "version": 2,
   "categories": [
     {
-      "id": "operation",
-      "label": "操作について"
+      "id": "start",
+      "label": "はじめに"
     },
     {
-      "id": "features",
-      "label": "できること"
+      "id": "event",
+      "label": "イベント"
     },
     {
-      "id": "howto",
-      "label": "使い方"
+      "id": "member",
+      "label": "メンバー"
     },
     {
-      "id": "process",
-      "label": "イベントの進め方"
+      "id": "task",
+      "label": "タスク"
+    },
+    {
+      "id": "purpose",
+      "label": "目的・柱・提案"
+    },
+    {
+      "id": "notification",
+      "label": "通知"
+    },
+    {
+      "id": "archive",
+      "label": "記録・公開・引き継ぎ"
+    },
+    {
+      "id": "account",
+      "label": "アカウント"
     }
   ],
   "items": [
     {
-      "id": "event-create",
-      "category": "operation",
-      "question": "イベントはどうやって作りますか？",
-      "patterns": [
-        "イベントの作り方",
-        "新しいイベントを始めたい",
-        "イベントを追加するには",
-        "企画を登録したい",
-        "最初にイベントを作る方法",
-        "イベントの新規作成",
-        "イベントを立ち上げたい",
-        "新しく企画を作りたい",
-        "イベントを作成する手順",
-        "どこからイベントを作れる"
-      ],
-      "keywords": [
-        "イベント",
-        "作成"
-      ],
-      "answer": "（TODO：回答本文。2〜4文。改行可）",
-      "links": [
-        {
-          "label": "使い方を Top で見る",
-          "href": "/#how-to"
-        }
-      ],
-      "related": [
-        "member-invite",
-        "howto-start"
-      ],
-      "featured": true
-    },
-    {
-      "id": "task-create",
-      "category": "operation",
-      "question": "タスクはどうやって作りますか？",
-      "patterns": [
-        "タスクの作り方",
-        "やることを増やしたい",
-        "やることを追加するには",
-        "新しいタスクを登録したい",
-        "タスクを追加したい",
-        "作業を増やす方法",
-        "todoを作る",
-        "タスクの新規作成",
-        "やることリストに足したい",
-        "タスクを書き込むには"
-      ],
-      "keywords": [
-        "タスク",
-        "作成"
-      ],
-      "answer": "（TODO：回答本文。2〜4文。改行可）",
-      "links": [
-        {
-          "label": "使い方を Top で見る",
-          "href": "/#how-to"
-        }
-      ],
-      "related": [
-        "review-write",
-        "process-flow"
-      ],
-      "featured": true
-    },
-    {
-      "id": "member-invite",
-      "category": "operation",
-      "question": "メンバーを招待するには？",
-      "patterns": [
-        "メンバーの招待方法",
-        "仲間を呼びたい",
-        "チームに人を入れたい",
-        "参加者を招待する方法",
-        "友だちを誘うには",
-        "メンバーを増やしたい",
-        "招待リンクの送り方",
-        "部員を参加させたい",
-        "イベントに人を招きたい",
-        "一緒に使う人を追加するには"
-      ],
-      "keywords": [
-        "メンバー",
-        "招待"
-      ],
-      "answer": "（TODO：回答本文。2〜4文。改行可）",
-      "links": [],
-      "related": [
-        "event-create",
-        "task-create"
-      ],
-      "featured": true
-    },
-    {
       "id": "feature-overview",
-      "category": "features",
+      "category": "start",
       "question": "イベクリで何ができますか？",
       "patterns": [
-        "イベクリって何",
-        "どんなことができる",
-        "できることを知りたい",
+        "どんなアプリ",
+        "何に使うアプリ",
         "イベクリの機能",
-        "何に使えるアプリ",
-        "イベクリでできること一覧",
-        "このアプリは何をするもの",
-        "主な機能を教えて",
-        "どんな時に使う",
-        "イベクリの特徴"
+        "このサービスの特徴",
+        "イベクリってなに",
+        "何ができるのか知りたい",
+        "イベクリを使うと何が便利"
       ],
       "keywords": [
         "イベクリ",
         "機能"
       ],
-      "answer": "（TODO：回答本文。2〜4文。改行可）",
-      "links": [
-        {
-          "label": "使い方を Top で見る",
-          "href": "/#how-to"
-        }
-      ],
-      "related": [
-        "mountain",
-        "notification"
-      ],
-      "featured": true
-    },
-    {
-      "id": "mountain",
-      "category": "features",
-      "question": "山は何を表していますか？",
-      "patterns": [
-        "山の意味",
-        "山の絵は何",
-        "山が育つのはなぜ",
-        "山の見方",
-        "山登りってどういうこと",
-        "山で何がわかる",
-        "進み具合が山になるの",
-        "山が高くなる条件",
-        "キャラクターと山の関係",
-        "山のしくみ"
-      ],
-      "keywords": [
-        "山"
-      ],
-      "answer": "（TODO：回答本文。2〜4文。改行可）",
-      "links": [],
-      "related": [
-        "feature-overview",
-        "task-create"
-      ],
-      "featured": true
-    },
-    {
-      "id": "notification",
-      "category": "features",
-      "question": "通知は届きますか？",
-      "patterns": [
-        "通知の設定",
-        "お知らせは来る",
-        "リマインドしてくれる",
-        "締め切りを知らせてほしい",
-        "プッシュ通知を受け取りたい",
-        "通知が来ない",
-        "通知をオンにするには",
-        "知らせが届く仕組み",
-        "スマホに通知を出したい",
-        "通知を止めたい"
-      ],
-      "keywords": [
-        "通知"
-      ],
-      "answer": "（TODO：回答本文。2〜4文。改行可）",
-      "links": [],
-      "related": [
-        "feature-overview"
-      ],
-      "featured": true
-    },
-    {
-      "id": "howto-start",
-      "category": "howto",
-      "question": "はじめに何をすればいいですか？",
-      "patterns": [
-        "最初にやること",
-        "使い始め方",
-        "はじめ方を知りたい",
-        "何から始めればいい",
-        "初めて使う",
-        "スタートの手順",
-        "登録したあとは何をする",
-        "使い方の流れ",
-        "最初の一歩",
-        "始めるときの準備"
-      ],
-      "keywords": [
-        "はじめ",
-        "最初"
-      ],
-      "answer": "（TODO：回答本文。2〜4文。改行可）",
-      "links": [
-        {
-          "label": "使い方を Top で見る",
-          "href": "/#how-to"
-        }
-      ],
-      "related": [
-        "event-create",
-        "purpose-set"
-      ],
-      "featured": true
-    },
-    {
-      "id": "purpose-set",
-      "category": "howto",
-      "question": "イベントの目的はどう決めればいいですか？",
-      "patterns": [
-        "目的の決め方",
-        "ゴールを決めたい",
-        "目標の立て方",
-        "何のためにやるのか決めたい",
-        "目的を書くには",
-        "ねらいを考えるコツ",
-        "目的が決まらない",
-        "目的を見失わないためには",
-        "イベントの目的を設定する",
-        "目的をみんなで決めたい"
-      ],
-      "keywords": [
-        "目的"
-      ],
-      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "answer": "仲間と一緒にイベントを準備するためのアプリです。やること（タスク）を作って担当を決め、終わったら記録を残します。\n目的と「大事にすること（柱）」を決めておくと、準備が偏っていないかが見えます。終わったイベントの記録は、次のイベントに引き継げます。",
+      "help": "about",
       "links": [
         {
           "label": "使い方を Top で見る",
@@ -260,30 +62,53 @@
       ],
       "related": [
         "howto-start",
-        "process-flow"
+        "app-install"
       ],
       "featured": true
     },
     {
-      "id": "review-write",
-      "category": "howto",
-      "question": "振り返りはどう書けばいいですか？",
+      "id": "app-install",
+      "category": "start",
+      "question": "アプリはどこからダウンロードしますか？",
       "patterns": [
-        "振り返りの書き方",
-        "反省を書きたい",
-        "ふりかえりのやり方",
-        "振り返りを入力するには",
-        "終わったあとに記録を残したい",
-        "うまくいったことを書く",
-        "困ったことを残したい",
-        "振り返りのコツ",
-        "反省会のメモを残す",
-        "タスクの振り返りを書く"
+        "App Store にある？",
+        "インストールの方法",
+        "Google Play で探したけど無い",
+        "スマホのアプリはある？",
+        "アプリのように使いたい",
+        "ホーム画面に追加する方法",
+        "アイコンをホーム画面に置きたい"
       ],
       "keywords": [
-        "振り返り"
+        "インストール",
+        "ホーム画面",
+        "app store"
       ],
-      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "answer": "ストアのアプリはありません。ブラウザで開いて使います。\nスマホではホーム画面に追加すると、アプリのように開けます。iPhone は Safari の共有ボタン →「ホーム画面に追加」です。iPhone では、ホーム画面に追加しないと通知が届きません。",
+      "help": "home-screen",
+      "links": [],
+      "related": [
+        "notification-on"
+      ],
+      "featured": true
+    },
+    {
+      "id": "howto-start",
+      "category": "start",
+      "question": "はじめに何をすればいいですか？",
+      "patterns": [
+        "最初の一歩",
+        "登録したあと何をする",
+        "初めて使う",
+        "スタートの手順",
+        "まずやることを教えて",
+        "使いはじめの流れ"
+      ],
+      "keywords": [
+        "はじめ"
+      ],
+      "answer": "まずアカウントを作り、ホームの「[icon:home-plus]イベントを作成」からイベントを作ります。\n作ると「概要」と「目的」の2つのタスクが入っているので、そこを書きます。そのあとメンバーを招待し、タスクを作って担当を決めましょう。招待された人は、届いたリンクから参加を申請します。",
+      "help": "first-steps",
       "links": [
         {
           "label": "使い方を Top で見る",
@@ -291,32 +116,29 @@
         }
       ],
       "related": [
-        "handover",
-        "knowledge-public"
+        "event-create",
+        "member-invite"
       ],
       "featured": true
     },
     {
       "id": "process-flow",
-      "category": "process",
+      "category": "start",
       "question": "イベントはどんな流れで進めればいいですか？",
       "patterns": [
-        "イベントの進め方",
-        "準備の流れ",
-        "何から順番にやる",
-        "企画の段取り",
-        "イベントづくりの手順",
-        "準備のスケジュールの立て方",
-        "当日までの流れ",
-        "進め方のコツ",
-        "準備がうまく進まない",
-        "全体の流れを知りたい"
+        "全体の流れ",
+        "準備の進め方の順番",
+        "イベント準備の手順",
+        "本番までの流れ",
+        "どういう順番で使う",
+        "フェーズってなに"
       ],
       "keywords": [
-        "進め方",
-        "流れ"
+        "流れ",
+        "フェーズ"
       ],
-      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "answer": "イベントは「企画準備 → 振り返り → 完了」の順に進みます。\n1. 目的と柱を決める\n2. タスクを作って担当を決め、終わったら完了と振り返りを書く\n3. 開催後は、アーカイブにまとまった記録を公開したり、次の代に引き継いだりする\n振り返りをする「引き継ぎ日」を過ぎると、自動で「完了」に進みます。",
+      "help": "first-steps",
       "links": [
         {
           "label": "使い方を Top で見る",
@@ -325,60 +147,874 @@
       ],
       "related": [
         "purpose-set",
+        "task-complete"
+      ],
+      "featured": false
+    },
+    {
+      "id": "mountain",
+      "category": "start",
+      "question": "山は何を表していますか？",
+      "patterns": [
+        "山の意味",
+        "山の絵は何",
+        "山の見方",
+        "山登りってどういうこと",
+        "山で何がわかる",
+        "メインボードの山",
+        "背景の山はなに"
+      ],
+      "keywords": [
+        "山"
+      ],
+      "answer": "メインボードの背景の山は、イベントの進み具合を表しています。タスクを完了すると、山を登っていきます。\n山をスクロールすると、これまでの道のりを振り返れます。開催日を過ぎると、山頂に看板が立ちます。",
+      "help": "mountain",
+      "links": [],
+      "related": [
+        "task-complete",
+        "feature-overview"
+      ],
+      "featured": false
+    },
+    {
+      "id": "event-create",
+      "category": "event",
+      "question": "イベントはどうやって作りますか？",
+      "patterns": [
+        "イベントの作成方法",
+        "新しいイベントを始めたい",
+        "イベントを立ち上げる",
+        "イベントの新規作成",
+        "イベントを登録したい",
+        "イベントを作る手順"
+      ],
+      "keywords": [],
+      "answer": "ホームの「[icon:home-plus]イベントを作成」から作れます。名前・種別・来てほしい人数などを順に答えます。\n開催日や意気込みは、あとで決めてもかまいません。最後に招待リンクが出るので、メンバーに送ってください。作った人が、そのイベントのオーナーになります。",
+      "help": "create-event",
+      "links": [],
+      "related": [
+        "first-steps-blocked",
+        "member-invite"
+      ],
+      "featured": true
+    },
+    {
+      "id": "first-steps-blocked",
+      "category": "event",
+      "question": "最初の画面から先に進めません",
+      "patterns": [
+        "目的を書かないと進めない",
+        "概要と目的の画面から戻れない",
+        "最初のタスクしか触れない",
+        "ほかの画面に行けない",
+        "次に進めない",
+        "最初から先へいけない"
+      ],
+      "keywords": [
+        "進めない",
+        "概要"
+      ],
+      "answer": "イベントを作った人は、最初に「概要」と「目的」の2つのタスクを書くまで、ほかの画面へ進めません。イベクリでいちばん大事にしている準備だからです。\n書いた内容は、あとから直せます。",
+      "help": "first-steps",
+      "links": [],
+      "related": [
+        "purpose-set"
+      ],
+      "featured": false
+    },
+    {
+      "id": "event-date",
+      "category": "event",
+      "question": "開催日を変えたい",
+      "patterns": [
+        "開催日の変更",
+        "本番の日付を直す",
+        "日程を変える方法",
+        "開催日時を編集",
+        "開催の時刻を入れたい",
+        "日付が違っている"
+      ],
+      "keywords": [
+        "開催日",
+        "日程"
+      ],
+      "answer": "管理者なら、イベント設定の「開催日時」か、メインボードの日付（[icon:calendar-pressed]あと N 日）→ カレンダーの「[icon:edit]開催日を編集」から変えられます。\n日付ごとに開始・終了の時刻も入れられます。",
+      "help": "calendar",
+      "links": [],
+      "related": [
+        "calendar"
+      ],
+      "featured": true
+    },
+    {
+      "id": "calendar",
+      "category": "event",
+      "question": "カレンダーやガントはどこで見られますか？",
+      "patterns": [
+        "スケジュールの確認",
+        "予定表を見たい",
+        "ガントチャート",
+        "締め切りの一覧を見たい",
+        "予定をLINEに貼りたい",
+        "予定をテキストでコピー"
+      ],
+      "keywords": [
+        "カレンダー",
+        "ガント",
+        "スケジュール",
+        "予定"
+      ],
+      "answer": "スマホではメインボードの日付（[icon:calendar-pressed]あと N 日）から、PC では画面の右側の「[icon:calendar-default]カレンダー」で見られます。日付を押すと、その日のタスクに絞り込めます。\n「[icon:link]予定をコピー」で、締め切りごとにまとめた予定を文章でコピーして、LINE などに貼ることもできます。",
+      "help": "calendar",
+      "links": [],
+      "related": [
+        "event-date"
+      ],
+      "featured": false
+    },
+    {
+      "id": "event-delete",
+      "category": "event",
+      "question": "イベントを削除したい",
+      "patterns": [
+        "イベントを消す方法",
+        "作ったイベントをなくしたい",
+        "間違えて作ったイベント",
+        "イベントの削除",
+        "イベントを消去したい"
+      ],
+      "keywords": [],
+      "answer": "イベントを作った人（オーナー）だけが削除できます。ホームでイベントを長押しして「[icon:delete]削除」を選びます。\n削除すると、タスク・提出物・チャット・通知もすべて消え、元に戻せません。",
+      "help": "create-event",
+      "links": [],
+      "related": [
+        "event-leave"
+      ],
+      "featured": true
+    },
+    {
+      "id": "event-leave",
+      "category": "event",
+      "question": "イベントから抜けたい",
+      "patterns": [
+        "イベントを脱退する",
+        "参加をやめたい",
+        "イベントから出る方法",
+        "チームを抜ける",
+        "参加しているイベントを離れる"
+      ],
+      "keywords": [
+        "脱退"
+      ],
+      "answer": "イベント設定（[icon:setting]）のいちばん下の「このイベントから脱退する」で「脱退する」を押すと抜けられます。\nホームでイベントを長押しして「[icon:exit]このイベントから脱退」を選んでも抜けられます。",
+      "help": "delete-account",
+      "links": [],
+      "related": [
+        "event-delete"
+      ],
+      "featured": false
+    },
+    {
+      "id": "member-invite",
+      "category": "member",
+      "question": "メンバーを招待するには？",
+      "patterns": [
+        "メンバーの招待方法",
+        "仲間を呼びたい",
+        "チームに人を入れたい",
+        "招待リンクの出し方",
+        "招待URLはどこ",
+        "一緒に使う人を追加するには",
+        "部員を参加させたい",
+        "メンバーを増やしたい",
+        "新入生を入れたい"
+      ],
+      "keywords": [
+        "招待"
+      ],
+      "answer": "管理者は、イベント設定（[icon:setting]）の「メンバー管理」→「メンバーを招待」で招待リンクを出せます。リンクは7日間使えます。\nリンクを開いた人が参加を申請し、管理者が承認すると参加になります。",
+      "help": "invite",
+      "links": [],
+      "related": [
+        "member-approve",
+        "join-blocked"
+      ],
+      "featured": true
+    },
+    {
+      "id": "join-blocked",
+      "category": "member",
+      "question": "招待リンクを開いたのに入れません",
+      "patterns": [
+        "参加できない",
+        "承認待ちのまま",
+        "リンクから入れない",
+        "イベントの中が見られない",
+        "参加申請したのに入れない",
+        "招待されたのに見られない"
+      ],
+      "keywords": [
+        "承認待ち",
+        "入れない"
+      ],
+      "answer": "参加には、管理者の承認が必要です。承認されるまで、イベントの中は見られません。申請が届いているか、管理者に確かめてもらってください。\n招待リンクの期限（7日）が切れているときは、新しいリンクをもらってください。",
+      "help": "join",
+      "links": [],
+      "related": [
+        "member-approve",
+        "invite-code"
+      ],
+      "featured": true
+    },
+    {
+      "id": "invite-code",
+      "category": "member",
+      "question": "招待コードはどこに入れますか？",
+      "patterns": [
+        "参加コードの入力",
+        "コードで参加する方法",
+        "招待コードの使い方",
+        "コードをもらった",
+        "コードを入れる場所"
+      ],
+      "keywords": [
+        "招待コード",
+        "コード"
+      ],
+      "answer": "ホームの「[icon:join]イベントに参加」に入れてください。そのあと参加を申請し、管理者の承認を待ちます。",
+      "help": "join",
+      "links": [],
+      "related": [
+        "join-blocked"
+      ],
+      "featured": false
+    },
+    {
+      "id": "member-approve",
+      "category": "member",
+      "question": "参加申請を承認するには？",
+      "patterns": [
+        "申請の承認方法",
+        "参加の許可を出す",
+        "承認待ちの人を入れる",
+        "申請を断りたい",
+        "参加申請が来た"
+      ],
+      "keywords": [
+        "承認",
+        "申請"
+      ],
+      "answer": "参加の申請が届くと、管理者に通知が届きます。メインボードの上に出る「[icon:join]参加申請が届いています」を押し、役割を選んで承認してください。\n申請を断ると、その人のフォームの回答も消えます。",
+      "help": "approve",
+      "links": [],
+      "related": [
+        "member-invite",
+        "role-change"
+      ],
+      "featured": false
+    },
+    {
+      "id": "role-change",
+      "category": "member",
+      "question": "管理者にしたい・権限を変えたい",
+      "patterns": [
+        "役割の変更",
+        "ロールを変える",
+        "権限を付ける方法",
+        "管理者を増やしたい",
+        "閲覧のみにしたい",
+        "ロールの作り方"
+      ],
+      "keywords": [
+        "権限",
+        "役割",
+        "ロール"
+      ],
+      "answer": "管理者が、イベント設定（[icon:setting]）の「メンバー管理」で、その人の役割を変えられます。\n「管理者権限」の付いた役割を持つ人は、タスクの作成や設定の変更ができます。「閲覧のみ」の役割の人は、見ることだけができます。",
+      "help": "roles",
+      "links": [],
+      "related": [
+        "button-missing"
+      ],
+      "featured": true
+    },
+    {
+      "id": "button-missing",
+      "category": "member",
+      "question": "＋ボタン（タスクを作るボタン）がありません",
+      "patterns": [
+        "プラスのボタンが見つからない",
+        "ボタンが出てこない",
+        "設定が変えられない",
+        "自分だけボタンがない",
+        "編集できない",
+        "提案が見えない"
+      ],
+      "keywords": [
+        "ボタン",
+        "見つからない"
+      ],
+      "answer": "タスクの作成（[icon:home-plus]）・キャラクターの提案・多くの設定は、管理者だけが使えます。管理者に役割を変えてもらってください。\nPC では、スマホの下のボタンの代わりに、左端の列にあります。",
+      "help": "roles",
+      "links": [],
+      "related": [
+        "role-change"
+      ],
+      "featured": false
+    },
+    {
+      "id": "task-create",
+      "category": "task",
+      "question": "タスクはどうやって作りますか？",
+      "patterns": [
+        "タスクの作成方法",
+        "やることを追加したい",
+        "新しいタスクを足す",
+        "タスクを登録する",
+        "仕事を割り振りたい",
+        "担当者を決めたい"
+      ],
+      "keywords": [],
+      "answer": "管理者は、メインボードの右下の[icon:home-plus]からタスクを作れます。タスク名・説明・ラベル・優先度・担当者・実施期間を決めます。\n柱を立てているイベントでは、「次へ」でそのタスクがどの柱のためかを選びます。",
+      "help": "task-create",
+      "links": [],
+      "related": [
+        "task-complete",
+        "suggestions",
+        "button-missing"
+      ],
+      "featured": true
+    },
+    {
+      "id": "task-complete",
+      "category": "task",
+      "question": "タスクを完了するには？",
+      "patterns": [
+        "完了の手順",
+        "やったことを提出したい",
+        "タスクを終わらせる方法",
+        "報告の出し方",
+        "完了ボタンはどこ",
+        "タスクの終わらせ方"
+      ],
+      "keywords": [
+        "完了"
+      ],
+      "answer": "1. タスクをタップして詳細を開きます。\n2. やったことを書きます（画像や PDF は[icon:image]から付けられます）。\n3. 「完了」を押します。\n4. 振り返りのページで「保存して完了する」か「振り返らずに完了する」を押すと、完了になります。",
+      "help": "task-complete",
+      "links": [],
+      "related": [
+        "complete-not-done",
+        "review-write"
+      ],
+      "featured": true
+    },
+    {
+      "id": "complete-not-done",
+      "category": "task",
+      "question": "完了を押したのに完了になっていません",
+      "patterns": [
+        "完了にならない",
+        "完了したはずが未完了",
+        "完了が反映されない",
+        "完了押したのに残ってる",
+        "振り返りの画面で戻った"
+      ],
+      "keywords": [
+        "完了にならない",
+        "反映されない"
+      ],
+      "answer": "振り返りのページで「戻る」を押すと、完了になりません。もう一度タスクを開き、振り返りのページの最後のボタン（「保存して完了する」か「振り返らずに完了する」）まで進めてください。\n書いた内容は残っています。",
+      "help": "task-complete",
+      "links": [],
+      "related": [
+        "task-complete"
+      ],
+      "featured": false
+    },
+    {
+      "id": "attach-limit",
+      "category": "task",
+      "question": "画像は何枚付けられますか？",
+      "patterns": [
+        "写真の添付",
+        "PDFを付けたい",
+        "画像が入らない",
+        "ファイルの上限",
+        "何文字まで書ける",
+        "添付できるファイル"
+      ],
+      "keywords": [
+        "画像",
+        "pdf",
+        "添付",
+        "heic"
+      ],
+      "answer": "「[icon:image]画像・PDF を追加」から、画像は5枚まで、PDF は3つまで（1つ10MBまで）付けられます。文章の途中に置けて、ドラッグで並べ替えられます。本文は4,000字までです。\n画像が入らないときは、形式を確かめてください。iPhone の写真（HEIC）はブラウザによって読めないので、JPEG か PNG にしてください。",
+      "help": "task-complete",
+      "links": [],
+      "related": [
+        "task-complete"
+      ],
+      "featured": false
+    },
+    {
+      "id": "completed-gone",
+      "category": "task",
+      "question": "完了したタスクが消えました",
+      "patterns": [
+        "終わったタスクが見当たらない",
+        "完了済みのタスクはどこ",
+        "一覧からタスクがなくなった",
+        "完了したら消えた",
+        "前のタスクが見られない"
+      ],
+      "keywords": [
+        "消えた",
+        "見当たらない"
+      ],
+      "answer": "完了したタスクはアーカイブに移ります。[icon:archive-default]アーカイブから見られます。",
+      "help": "archive",
+      "links": [],
+      "related": [
+        "complete-undo"
+      ],
+      "featured": false
+    },
+    {
+      "id": "complete-undo",
+      "category": "task",
+      "question": "完了を取り消したい",
+      "patterns": [
+        "未完了に戻す方法",
+        "間違えて完了した",
+        "完了をやり直したい",
+        "完了の取り消し",
+        "完了を戻す",
+        "押し間違えて完了になった"
+      ],
+      "keywords": [
+        "未完了",
+        "取り消"
+      ],
+      "answer": "管理者が、アーカイブのそのタスクの ⋯ から「未完了に戻す」を選べます。\n戻すと、提出した内容と振り返りも消えます。",
+      "help": "task-complete",
+      "links": [],
+      "related": [
+        "completed-gone"
+      ],
+      "featured": false
+    },
+    {
+      "id": "claim-recruit",
+      "category": "task",
+      "question": "担当を募集したい",
+      "patterns": [
+        "担当者を応募で決めたい",
+        "やりたい人を募る",
+        "立候補してもらう",
+        "担当の応募",
+        "手を挙げてもらう方法"
+      ],
+      "keywords": [
+        "応募",
+        "募集",
+        "立候補"
+      ],
+      "answer": "タスクの詳細設定で「担当者を応募する」をオンにすると、メンバーが応募でき、管理者が担当者を選べます。応募の期限も決められます。",
+      "help": "task-create",
+      "links": [],
+      "related": [
+        "task-create",
+        "individual-clear"
+      ],
+      "featured": false
+    },
+    {
+      "id": "individual-clear",
+      "category": "task",
+      "question": "みんなに一人ずつ出してほしい（アンケートなど）",
+      "patterns": [
+        "全員に提出してもらいたい",
+        "個別で完了する",
+        "一人ひとり提出",
+        "アンケートを集めたい",
+        "各自で完了させたい"
+      ],
+      "keywords": [
+        "個別",
+        "アンケート",
+        "全員"
+      ],
+      "answer": "詳細設定の「個別で完了する」をオンにすると、メンバーそれぞれが提出できます。",
+      "help": "task-create",
+      "links": [],
+      "related": [
+        "claim-recruit"
+      ],
+      "featured": false
+    },
+    {
+      "id": "review-write",
+      "category": "task",
+      "question": "振り返りはどう書けばいいですか？",
+      "patterns": [
+        "振り返りの書き方",
+        "振り返りのコツ",
+        "振り返りに何を書く",
+        "振り返りの例",
+        "うまくいったことの書き方",
+        "つまずいたことの書き方"
+      ],
+      "keywords": [
+        "振り返り"
+      ],
+      "answer": "タスクを完了するとき、うまくいったか・つまずいたかを選び、その理由を書きます（1つ200字まで）。\nつまずいたときは「困ったこと」と「次にやるなら」を書くと、次の代やほかの団体にいちばん役立つ記録になります。",
+      "help": "task-complete",
+      "links": [],
+      "related": [
+        "task-complete",
         "handover"
       ],
       "featured": true
     },
     {
-      "id": "handover",
-      "category": "process",
-      "question": "次の代に引き継ぐにはどうすればいいですか？",
+      "id": "purpose-set",
+      "category": "purpose",
+      "question": "イベントの目的はどう決めればいいですか？",
       "patterns": [
-        "引き継ぎの方法",
-        "後輩に引き継ぎたい",
-        "来年に残したい",
-        "次の担当に渡す",
-        "引継ぎ資料を作りたい",
-        "代替わりのとき",
-        "ノウハウを残すには",
-        "前の代の記録を見たい",
-        "経験を次に活かす",
-        "引き継ぎで困らないために"
+        "目的の決め方",
+        "目的には何を書く",
+        "目的の書き方のコツ",
+        "イベントの目的とは",
+        "なぜやるかを決めたい"
       ],
       "keywords": [
-        "引き継ぎ"
+        "目的"
       ],
-      "answer": "（TODO：回答本文。2〜4文。改行可）",
-      "links": [],
+      "answer": "目的は「このイベントを何のためにやるか」です。何をするか（内容）ではなく、来た人や自分たちにどうなってほしいかを書きます。\nイベントを作ると、最初のタスクとして「目的」が入っています。書いた内容は、あとから直せます。",
+      "help": "first-steps",
+      "links": [
+        {
+          "label": "使い方を Top で見る",
+          "href": "/#how-to"
+        }
+      ],
       "related": [
-        "review-write",
-        "knowledge-public"
+        "pillars",
+        "first-steps-blocked"
       ],
       "featured": true
     },
     {
-      "id": "knowledge-public",
-      "category": "process",
-      "question": "ほかのイベントの振り返りを見られますか？",
+      "id": "pillars",
+      "category": "purpose",
+      "question": "柱って何ですか？",
       "patterns": [
-        "ほかのイベントを参考にしたい",
-        "公開されているイベントを見たい",
-        "ナレッジとは",
-        "他の団体の記録",
-        "過去のイベントを見たい",
-        "アーカイブを見るには",
-        "イベントを公開したい",
-        "公開のしかた",
-        "人のイベントの振り返りを読みたい",
-        "参考になる事例",
-        "みんなの記録って何"
+        "柱の意味",
+        "柱の立て方",
+        "柱はいくつ作れる",
+        "柱を決めたい",
+        "柱にタスクを振り分ける",
+        "柱が0件"
       ],
       "keywords": [
-        "公開",
-        "ナレッジ",
-        "みんなの記録"
+        "柱"
       ],
-      "answer": "（TODO：回答本文。2〜4文。改行可）",
+      "answer": "目的を支える「大事にすること」です。3つまで決められます。\nタスクを柱に紐づけると、柱ごとのタスクの数と進み具合がメインボードの上に出ます。0件の柱は、まだ誰も手を付けていないという合図です。",
+      "help": "pillars",
+      "links": [],
+      "related": [
+        "purpose-set",
+        "suggestions"
+      ],
+      "featured": true
+    },
+    {
+      "id": "suggestions",
+      "category": "purpose",
+      "question": "キャラクターの提案はどう使いますか？",
+      "patterns": [
+        "AIの提案",
+        "下にいるキャラは何",
+        "提案の使い方",
+        "おすすめのタスク",
+        "キャラクターが出すタスク",
+        "3体のキャラ"
+      ],
+      "keywords": [
+        "提案",
+        "キャラクター"
+      ],
+      "answer": "メインボードの下の3体が、イベントに合わせて「次にやるとよいこと」を3つ出します（管理者だけ）。\nタップすると作成シートが開くので、そのまま作るか直して作ってください。提案は12時間ごとに入れ替わります。",
+      "help": "suggestions",
+      "links": [],
+      "related": [
+        "suggestions-sleeping",
+        "suggestions-data"
+      ],
+      "featured": true
+    },
+    {
+      "id": "suggestions-sleeping",
+      "category": "purpose",
+      "question": "キャラクターが寝ていて提案が出ません",
+      "patterns": [
+        "提案が出てこない",
+        "キャラが寝てる",
+        "Zzzになっている",
+        "提案が更新されない",
+        "提案が表示されない"
+      ],
+      "keywords": [
+        "寝て",
+        "zzz"
+      ],
+      "answer": "次の提案を準備中です。12時間たってからメインボードを開くと、新しい提案が出ます。\n開催日を過ぎたイベントや「完了」にしたイベントでは、提案は出ません。管理者でない人にも出ません。",
+      "help": "suggestions",
+      "links": [],
+      "related": [
+        "suggestions"
+      ],
+      "featured": false
+    },
+    {
+      "id": "suggestions-data",
+      "category": "purpose",
+      "question": "提案に送られる情報は何ですか？",
+      "patterns": [
+        "AIに何を送っている",
+        "提案のデータの扱い",
+        "個人情報はAIに送られる",
+        "AIのプライバシー",
+        "提案はどうやって作っている"
+      ],
+      "keywords": [
+        "ai",
+        "プライバシー",
+        "送られる"
+      ],
+      "answer": "提案を作るため、イベント名・説明・タスクの内容・進み具合を、AI のサービス（Cloudflare Workers AI）に送っています。\nメールアドレスやパスワードは送っていません。",
+      "help": "suggestions",
+      "links": [],
+      "related": [
+        "suggestions"
+      ],
+      "featured": false
+    },
+    {
+      "id": "notification-on",
+      "category": "notification",
+      "question": "通知をオンにしたい",
+      "patterns": [
+        "通知の設定方法",
+        "プッシュ通知を受け取る",
+        "通知を許可する",
+        "iPhoneで通知を受けたい",
+        "通知を有効にする",
+        "テスト通知"
+      ],
+      "keywords": [
+        "許可",
+        "オン"
+      ],
+      "answer": "・iPhone：Safari で開き、共有ボタン →「ホーム画面に追加」。追加したアイコンから開くと、通知を許可する画面が出ます。\n・Android・PC：案内が出たら「許可」を押します。\nアカウント設定から、テスト通知を送って確かめられます。",
+      "help": "notification",
+      "links": [],
+      "related": [
+        "notification-trouble",
+        "notification-types"
+      ],
+      "featured": true
+    },
+    {
+      "id": "notification-trouble",
+      "category": "notification",
+      "question": "通知が届きません",
+      "patterns": [
+        "通知が来ない",
+        "プッシュが鳴らない",
+        "通知されない",
+        "スマホに通知が出ない",
+        "締め切りの通知がこない"
+      ],
+      "keywords": [
+        "届かない"
+      ],
+      "answer": "いちばん多いのは、iPhone でホーム画面に追加していない場合と、端末の設定で通知が止まっている場合です。\n1. iPhone なら、ホーム画面のアイコンから開いているか\n2. アカウント設定で通知を許可したか\n3. 端末の設定で、ブラウザの通知が止まっていないか\n4. 「テスト通知を送る」で届くか\nを順に確かめてください。締め切りの通知は担当者だけに届きます。",
+      "help": "notification-trouble",
+      "links": [],
+      "related": [
+        "notification-on",
+        "notification-types"
+      ],
+      "featured": true
+    },
+    {
+      "id": "notification-types",
+      "category": "notification",
+      "question": "どんなときに通知が来ますか？",
+      "patterns": [
+        "通知の種類",
+        "通知のタイミング",
+        "何時に通知が来る",
+        "通知が届く条件",
+        "締め切りのお知らせの時間"
+      ],
+      "keywords": [
+        "種類",
+        "タイミング",
+        "何時"
+      ],
+      "answer": "タスクの担当になったとき、新しいタスクができたとき、締め切りの日の朝9時と前日の13時（担当者だけ）などに届きます。\nくわしくはヘルプの「届く通知の種類と時刻」を見てください。",
+      "help": "notification-types",
+      "links": [],
+      "related": [
+        "notification-on",
+        "webhook"
+      ],
+      "featured": true
+    },
+    {
+      "id": "webhook",
+      "category": "notification",
+      "question": "Discord や Slack に流したい",
+      "patterns": [
+        "Discordと連携",
+        "Slackに投稿したい",
+        "Webhookの設定",
+        "外部連携のやり方",
+        "チャンネルに自動で投稿"
+      ],
+      "keywords": [
+        "discord",
+        "slack",
+        "webhook",
+        "連携"
+      ],
+      "answer": "管理者は、イベント設定（[icon:setting]）の「外部連携」に Discord か Slack の Webhook の URL を貼ると、タスクの作成・完了と、毎朝9時の締め切りのまとめが投稿されます。\nURL を知っている人は誰でもそのチャンネルに投稿できるので、ほかの人に見せないでください。",
+      "help": "webhook",
+      "links": [],
+      "related": [
+        "notification-types"
+      ],
+      "featured": false
+    },
+    {
+      "id": "archive-about",
+      "category": "archive",
+      "question": "アーカイブって何ですか？",
+      "patterns": [
+        "アーカイブの意味",
+        "アーカイブの見方",
+        "アーカイブを書く",
+        "記録のまとめ",
+        "アーカイブの並べ替え"
+      ],
+      "keywords": [
+        "アーカイブ"
+      ],
+      "answer": "完了したタスクの記録を、1本の文書にまとめたものです。目次があり、ラベル別・完了日順・優先度順に並べ替えられます。\n管理者は最初からアーカイブに書き込めます。右上の「プレビュー」で、読む形で確かめられます。",
+      "help": "archive",
+      "links": [],
+      "related": [
+        "publish",
+        "completed-gone"
+      ],
+      "featured": true
+    },
+    {
+      "id": "publish",
+      "category": "archive",
+      "question": "記録を外に公開したい",
+      "patterns": [
+        "公開の方法",
+        "宣伝用に公開",
+        "タスクも含めて公開",
+        "みんなの記録に載せたい",
+        "告知を出したい",
+        "公開スイッチが出ない",
+        "イベントの告知をしたい",
+        "宣伝のために公開"
+      ],
+      "keywords": [
+        "宣伝"
+      ],
+      "answer": "2段階あります。\n・「宣伝用に公開」：タイトル・画像・概要・期間・場所だけを公開します。開催前から使えます。\n・「タスクも含めて公開」：開催日を過ぎてから、確認ページで外に出る姿を見たうえで公開します。タスクごとに公開するかを選べます。",
+      "help": "publish-tasks",
+      "links": [],
+      "related": [
+        "publish-names",
+        "publish-stop"
+      ],
+      "featured": true
+    },
+    {
+      "id": "publish-names",
+      "category": "archive",
+      "question": "公開すると名前が出ますか？",
+      "patterns": [
+        "個人情報は公開される",
+        "メンバーの名前は見える",
+        "公開される範囲",
+        "チャットも公開される",
+        "何が外に出る"
+      ],
+      "keywords": [
+        "名前",
+        "個人情報",
+        "範囲"
+      ],
+      "answer": "メンバーの名前・アバター・チャット・参加時の回答は公開されません。\n公開されるのは、イベントの基本情報と、公開を選んだタスクの内容と振り返りです。「非公開」にした文字も公開されません。",
+      "help": "publish-tasks",
+      "links": [],
+      "related": [
+        "publish"
+      ],
+      "featured": false
+    },
+    {
+      "id": "publish-stop",
+      "category": "archive",
+      "question": "公開をやめたい",
+      "patterns": [
+        "公開の停止",
+        "非公開に戻す",
+        "公開を取り消す",
+        "載せた記録を消したい",
+        "公開を止める方法"
+      ],
+      "keywords": [
+        "停止",
+        "非公開"
+      ],
+      "answer": "アーカイブ右上の ⋯ から「公開を停止する」を選びます。\n外のページから消えるまで、数分かかることがあります。",
+      "help": "publish-tasks",
+      "links": [],
+      "related": [
+        "publish"
+      ],
+      "featured": false
+    },
+    {
+      "id": "knowledge-public",
+      "category": "archive",
+      "question": "ほかのイベントの記録を見られますか？",
+      "patterns": [
+        "みんなの記録",
+        "ほかの団体の振り返り",
+        "事例を見たい",
+        "公開されているイベント",
+        "参考になるイベント",
+        "いいねを押したい"
+      ],
+      "keywords": [
+        "みんなの記録",
+        "事例",
+        "いいね"
+      ],
+      "answer": "見られます。「みんなの記録」で、公開されたイベントの準備や振り返りを誰でも読めます。\nいいねはログインしなくても押せます。コメントは、メール認証が済んだアカウントでログインすると書けます。\nイベクリのホームの「[icon:platform]プラットフォーム」から開けます。",
+      "help": "explore",
       "links": [
         {
           "label": "みんなの記録を見る",
@@ -386,8 +1022,124 @@
         }
       ],
       "related": [
-        "review-write",
+        "publish",
         "handover"
+      ],
+      "featured": true
+    },
+    {
+      "id": "handover",
+      "category": "archive",
+      "question": "前の代のイベントの内容を使いたい",
+      "patterns": [
+        "前年度から引き継ぎたい",
+        "次の代に引き継ぐには",
+        "去年のタスクをコピー",
+        "先輩の記録を使う",
+        "前回の記録を見たい",
+        "引き継ぎのやり方"
+      ],
+      "keywords": [
+        "引き継ぎ"
+      ],
+      "answer": "イベントを作るときの最後の質問か、イベント設定（[icon:setting]）の「前の代のイベント」で、前のイベントを登録できます。\nそのあと「前の代のタスクから追加」で、使いたいタスクを選んで追加します。期日・担当者は引き継がれません。前回の記録は、タスクの詳細で読めます。",
+      "help": "handover",
+      "links": [],
+      "related": [
+        "knowledge-public",
+        "review-write"
+      ],
+      "featured": true
+    },
+    {
+      "id": "password-reset",
+      "category": "account",
+      "question": "パスワードを忘れました",
+      "patterns": [
+        "パスワードがわからない",
+        "パスワードの再設定",
+        "ログインできない",
+        "パスワードを変えたい",
+        "パスワードのリセット"
+      ],
+      "keywords": [
+        "パスワード"
+      ],
+      "answer": "ログイン画面の「パスワードをお忘れですか？」から、メールに届くリンクで新しいパスワードにできます。\n変えると、ほかの端末はログアウトされます。",
+      "help": "password-reset",
+      "links": [],
+      "related": [
+        "logged-out"
+      ],
+      "featured": true
+    },
+    {
+      "id": "code-not-arriving",
+      "category": "account",
+      "question": "確認コードが届きません",
+      "patterns": [
+        "認証コードが来ない",
+        "ワンタイムコードが届かない",
+        "確認メールがこない",
+        "コードのメールが見つからない",
+        "メールアドレスを間違えた"
+      ],
+      "keywords": [
+        "確認コード",
+        "認証",
+        "メール"
+      ],
+      "answer": "迷惑メールのフォルダを確かめてください。届かなければ、60秒たってから再送できます。\nメールアドレスを間違えたときは、その画面でアドレスを直せます。",
+      "help": "signup",
+      "links": [],
+      "related": [
+        "password-reset"
+      ],
+      "featured": true
+    },
+    {
+      "id": "logged-out",
+      "category": "account",
+      "question": "ログアウトされました",
+      "patterns": [
+        "勝手にようこそ画面になった",
+        "通信できませんでしたと出る",
+        "急にログイン画面に戻った",
+        "画面が真っ白",
+        "つながらない"
+      ],
+      "keywords": [
+        "ログアウト",
+        "通信",
+        "真っ白"
+      ],
+      "answer": "「通信できませんでした」の画面なら、ログアウトされたわけではありません。電波を確かめて「もう一度試す」を押してください。ログインは30日間続きます。\n画面が古い・真っ白のときは、アプリを閉じて開き直すか、ページを読み込み直してください。",
+      "help": "password-reset",
+      "links": [],
+      "related": [
+        "password-reset"
+      ],
+      "featured": false
+    },
+    {
+      "id": "delete-account",
+      "category": "account",
+      "question": "退会したい",
+      "patterns": [
+        "アカウントを消したい",
+        "アカウント削除の方法",
+        "イベクリをやめたい",
+        "登録を解除したい",
+        "退会の手続き"
+      ],
+      "keywords": [
+        "退会"
+      ],
+      "answer": "アカウント設定の「アカウントを削除する」から退会できます。元に戻せません。\nあなたがオーナーのイベントは、ほかにメンバーがいれば別の人に引き継がれ、いなければ削除されます。",
+      "help": "delete-account",
+      "links": [],
+      "related": [
+        "event-leave"
       ],
       "featured": true
     }

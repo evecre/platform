@@ -3,6 +3,8 @@
 //   文字はすべて textContent、リンクと画像は safeUrl() を通す
 import { safeUrl } from './format.js';
 import { createNormalizer } from './chatbot/normalize.js';
+import { exploreHref } from './exploreLink.js';
+import { setRichText, stripIconTokens } from './inlineIcon.js';
 
 const DATA_URL = '/assets/data/help.json';
 const SYNONYMS_URL = '/assets/data/synonyms.json'; // チャットボットと同じ類義語（検索で、言い換え・読みがなをそろえる）
@@ -45,6 +47,7 @@ function bodyText(article) {
   return (Array.isArray(article.body) ? article.body : [])
     .flatMap((block) => [block.text, block.label, ...(Array.isArray(block.items) ? block.items : [])])
     .filter((text) => typeof text === 'string')
+    .map(stripIconTokens)
     .join(' ');
 }
 
@@ -79,6 +82,19 @@ export function searchArticles(articles, query, normalize) {
   return scored.sort((a, b) => b.score - a.score).map(({ article }) => article);
 }
 
+const DEVICE_LABELS = { iphone: 'iPhone', android: 'Android', pc: 'PC' };
+
+/**
+ * 記事の「対象」の1行（例：「管理者」「全員・立てるのは管理者 ／ iPhone・Android」）。無ければ ''
+ * audience は人の言葉のまま並べる。devices は all（または無し）なら出さない
+ */
+export function formatAudience(article) {
+  const who = (Array.isArray(article.audience) ? article.audience : []).filter((v) => typeof v === 'string' && v).join('・');
+  const devices = (Array.isArray(article.devices) ? article.devices : []).filter((d) => d !== 'all' && DEVICE_LABELS[d]);
+  const where = devices.map((d) => DEVICE_LABELS[d]).join('・');
+  return [who, where].filter(Boolean).join(' ／ ');
+}
+
 /** 'YYYY-MM-DD' → '2026/11/13'（new Date は使わない。日本時間でずれるため） */
 export function formatUpdated(dateStr) {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(typeof dateStr === 'string' ? dateStr : '');
@@ -92,14 +108,22 @@ function el(tag, className, text) {
   return node;
 }
 
+/** 段落など。文の中の [icon:…] はアイコンにする */
+function richEl(tag, className, text) {
+  const node = el(tag, className);
+  setRichText(node, text);
+  return node;
+}
+
 function listOf(tag, className, items) {
   const list = el(tag, className);
-  for (const item of items) if (typeof item === 'string' && item) list.append(el('li', `${className.split(' ')[0]}-item`, item));
+  for (const item of items) if (typeof item === 'string' && item) list.append(richEl('li', `${className.split(' ')[0]}-item`, item));
   return list;
 }
 
 /**
  * 記事の本文を描く。★記事の本文を描くのはここだけ
+ * 文の中の [icon:名前] はアイコンにする（inlineIcon.js）
  * ブロック：heading（見出し）・text（段落）・steps（番号つきの手順）・list（箇条書き）・note（補足）・image（src・alt）・link（label・href）
  * 知らない type・中身の無いブロックは出さない
  */
@@ -111,13 +135,13 @@ export function renderArticleBody(container, blocks) {
     const text = typeof block.text === 'string' ? block.text : '';
     switch (block.type) {
       case 'heading':
-        if (text) nodes.push(el('h2', 'p-help-article__heading', text));
+        if (text) nodes.push(richEl('h2', 'p-help-article__heading', text));
         break;
       case 'text':
-        if (text) nodes.push(el('p', 'p-help-article__text', text));
+        if (text) nodes.push(richEl('p', 'p-help-article__text', text));
         break;
       case 'note':
-        if (text) nodes.push(el('p', 'p-help-article__note', text));
+        if (text) nodes.push(richEl('p', 'p-help-article__note', text));
         break;
       case 'steps':
         if (items.length) nodes.push(listOf('ol', 'p-help-article__steps', items));
@@ -140,7 +164,7 @@ export function renderArticleBody(container, blocks) {
         break;
       }
       case 'link': {
-        const href = safeUrl(block.href);
+        const href = exploreHref(safeUrl(block.href)); // みんなの記録へは、展示モードなら ?kiosk=1
         if (!href || !block.label) break;
         const p = el('p', 'p-help-article__link-row');
         const a = el('a', 'p-help-article__link', block.label);
@@ -162,7 +186,7 @@ export function buildArticleItem(template, article) {
   const q = (name) => fragment.querySelector(`[data-help-item="${name}"]`);
   q('link').href = articleUrl(article.id);
   q('title').textContent = article.title || '（タイトル未設定）';
-  if (article.summary) q('summary').textContent = article.summary;
+  if (article.summary) q('summary').textContent = stripIconTokens(article.summary);
   else q('summary').remove();
   return fragment;
 }

@@ -1,6 +1,6 @@
 // ヘルプの記事（pages/help/article/?id=…）の入口
 import { initCommon } from '../modules/common.js';
-import { loadHelp, renderArticleBody, buildArticleItem, categoryUrl, formatUpdated } from '../modules/help.js';
+import { loadHelp, renderArticleBody, buildArticleItem, categoryUrl, formatUpdated, formatAudience } from '../modules/help.js';
 
 initCommon({ page: 'help' });
 
@@ -32,6 +32,10 @@ try {
     field('crumbCategoryLink').textContent = category.label;
     field('crumbCurrent').textContent = title;
     field('title').textContent = title;
+
+    const audience = formatAudience(article);
+    if (audience) field('audience').textContent = audience;
+    else field('audienceRow').remove();
 
     const updated = formatUpdated(article.updated);
     if (updated) {

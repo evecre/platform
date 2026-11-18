@@ -1,0 +1,9 @@
+/* 文の中のアイコン（ヘルプの記事・チャットボットの答え。assets/js/modules/inlineIcon.js が img を作る）
+   大きさは文字に合わせる（em）。外側の余白は持たない（すき間は padding） */
+.c-inline-icon {
+  display: inline-block;
+  width: auto;
+  height: var(--inline-icon-size);
+  padding-inline: var(--inline-icon-gap);
+  vertical-align: var(--inline-icon-align);
+}

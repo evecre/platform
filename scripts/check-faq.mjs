@@ -7,8 +7,9 @@
 //   expect が id      → answer でその id を返したら正答
 //   expect が null    → fallback なら正答（答えられない質問に、別の答えも、関係の無い「もしかして」も出さない）
 // 到達：正答、または suggest（もしかして）の候補に期待の id が入っている（ユーザーが1回押せば答えにたどり着ける）
+// help（ヘルプの記事の id）が help.json に無いときも誤り。答えない質問（expect が null）にヘルプの記事を案内したら注意として出す
 
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createEngine, THRESHOLD_ANSWER, THRESHOLD_SUGGEST, MIN_MARGIN } from '../assets/js/modules/chatbot/engine.js';
@@ -16,6 +17,8 @@ import { createEngine, THRESHOLD_ANSWER, THRESHOLD_SUGGEST, MIN_MARGIN } from '.
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_DIR = path.join(ROOT, 'assets/data');
 const MIN_PATTERNS = 5;
+const ICON_DIR = path.join(ROOT, 'assets/img/icon');
+const ICON_TOKEN_RE = /\[icon:([^\]]*)\]/g; // 答えの中のアイコン（inlineIcon.js と同じ印）
 const TUNE_STEP = 0.05;
 const TUNE_ANSWER = [0.3, 0.8];
 const TUNE_SUGGEST = [0.1, 0.5];
@@ -30,10 +33,11 @@ function percent(n, total) {
 
 // --- faq.json の検査 -----------------------------------------------------------
 
-function validate(faq, tests) {
+function validate(faq, tests, help) {
   const errors = [];
   const warnings = [];
   const categoryIds = new Set((faq.categories ?? []).map((c) => c.id));
+  const articleIds = new Set((help.articles ?? []).map((a) => a.id));
   const ids = new Set();
 
   for (const item of faq.items ?? []) {
@@ -46,8 +50,15 @@ function validate(faq, tests) {
     if (!item.question) errors.push(`${name}：question がありません`);
     if (!item.answer) errors.push(`${name}：answer がありません`);
     else if (item.answer.includes('TODO')) warnings.push(`${name}：answer がまだ TODO です`);
+    for (const [, icon] of (item.answer ?? '').matchAll(ICON_TOKEN_RE)) {
+      if (!/^[a-z0-9-]+$/.test(icon)) errors.push(`${name}：アイコンの名前は英小文字・数字・ハイフンだけ [icon:${icon}]`);
+      else if (!existsSync(path.join(ICON_DIR, `icon-${icon}.svg`))) errors.push(`${name}：アイコンの画像が無い assets/img/icon/icon-${icon}.svg`);
+    }
+    if (/\[icon:/.test(item.question ?? '')) errors.push(`${name}：question にアイコンは入れない（選択肢のボタンに文字のまま出る）`);
     const patterns = item.patterns ?? [];
     if (patterns.length < MIN_PATTERNS) errors.push(`${name}：patterns が ${patterns.length} 個です（${MIN_PATTERNS} 個以上にする）`);
+    if (item.help !== undefined && !articleIds.has(item.help)) errors.push(`${name}：help の「${item.help}」は help.json にありません`);
+    if (item.help === undefined) warnings.push(`${name}：help（ヘルプの記事）がありません`);
     for (const link of item.links ?? []) {
       if (!link.label || !/^(\/|https?:\/\/)/.test(link.href ?? '')) errors.push(`${name}：リンクの label か href がおかしいです（${JSON.stringify(link)}）`);
     }
@@ -82,7 +93,8 @@ function run(engine, tests) {
     const candidates = result.type === 'suggest' ? result.items.map((item) => item.id) : [];
     const wrong = got !== null && got !== test.expect; // 違う答えを出した（いちばん困る外れ方）
     const reach = pass || (test.expect !== null && candidates.includes(test.expect));
-    return { ...test, type: result.type, got, candidates, pass, wrong, reach, top: result.top };
+    const articles = (result.articles ?? []).map((a) => a.id);
+    return { ...test, type: result.type, got, candidates, pass, wrong, reach, articles, top: result.top };
   });
 }
 
@@ -128,8 +140,9 @@ const args = new Set(process.argv.slice(2));
 const faq = load('faq.json');
 const synonyms = load('synonyms.json');
 const tests = load('faq-tests.json');
+const help = load('help.json');
 
-const { errors, warnings } = validate(faq, tests);
+const { errors, warnings } = validate(faq, tests, help);
 console.log(`■ faq.json の検査：${faq.items.length} 項目・${faq.categories.length} カテゴリ`);
 for (const e of errors) console.log(`  NG  ${e}`);
 if (warnings.length) {
@@ -140,7 +153,7 @@ if (warnings.length) {
 }
 if (!errors.length) console.log('  誤りはありません');
 
-const engine = createEngine({ faq, synonyms });
+const engine = createEngine({ faq, synonyms, help });
 const results = run(engine, tests);
 const s = summarize(results);
 console.log(`\n■ 正答率（しきい値 ANSWER ${THRESHOLD_ANSWER} / SUGGEST ${THRESHOLD_SUGGEST} / MARGIN ${MIN_MARGIN}）`);
@@ -156,9 +169,15 @@ if (misses.length) {
     const actual = r.type === 'answer' ? `answer ${r.got}` : r.type === 'suggest' ? `suggest [${r.candidates.join(', ')}]` : 'fallback';
     const top = r.top.map((t) => `${t.id} ${t.score.toFixed(2)}`).join(' / ');
     console.log(`  ${r.reach ? '△' : '×'} 「${r.q}」 ${r.expect ?? '（答えない）'} → ${actual}`);
-    console.log(`      ${top || '（点数なし）'}`);
+    console.log(`      ${top || '（点数なし）'}${r.articles.length ? `　ヘルプ：${r.articles.join(', ')}` : ''}`);
   }
   console.log('  △ ＝ もしかしての候補には正解が出ている');
+}
+
+const strayHelp = results.filter((r) => r.expect === null && r.articles.length);
+if (strayHelp.length) {
+  console.log('\n■ 注意：答えない質問に、ヘルプの記事を案内した（THRESHOLD_HELP を見直す）');
+  for (const r of strayHelp) console.log(`  「${r.q}」 → ${r.articles.join(', ')}`);
 }
 
 if (args.has('--tune')) tune(faq, synonyms, tests);
