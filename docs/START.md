@@ -2,6 +2,8 @@
 
 ## 読む順番
 
+`/start` で、下の 1〜3 を読んで今の状態を報告する（`.claude/skills/start/SKILL.md`）。作業を終えるときは `/handoff`（`.claude/skills/handoff/SKILL.md`）
+
 1. `CLAUDE.md`（規約・決定事項）
 2. `docs/HANDOFF.md` の**いちばん新しい記録**（前回どこまで進んだか・次にやること）
 3. ユーザーから渡された指示書（`docs/instructions/` の該当ファイル）

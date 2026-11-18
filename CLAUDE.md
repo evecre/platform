@@ -3,6 +3,8 @@
 作業を始める前に必ずこのファイルと `docs/START.md`、`docs/HANDOFF.md` の最新の記録を読むこと。
 作業が終わったら、`docs/HANDOFF.md` に記録を追加し、このファイルに新しい決まりや機能を追記すること。
 
+スラッシュコマンド：`/start`（上の3つを読み、今の状態と次にやることを報告する）・`/handoff`（HANDOFF に記録を足し、CLAUDE.md・START.md を直す。commit はしない）。中身は `.claude/skills/start/`・`.claude/skills/handoff/`
+
 ---
 
 ## 1. このサイトは何か
