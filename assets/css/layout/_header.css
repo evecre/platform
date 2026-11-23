@@ -1,6 +1,10 @@
 /* ==========================================================================
    Layout / header — TOP・みんなの記録（本体の /explore）・ヘルプへのリンク（各ページの HTML に直接書いてある）
-   ロゴは置かない（06：Figma のとおり）。Top は画面の上に重ねる（--overlay）
+   ロゴは置かない（06：Figma のとおり）
+   位置・大きさは全ページで Top に揃える（Figma の基準のフレームに合わせて --top-u で伸び縮みする）
+   ・Top：舞台の上に重ねる（--overlay。背景なし）
+   ・ヘルプなど：ページの上に貼りつき、背景を持つ（スクロールした本文が下に透けないように、下にも余白を取る）
+   ★本体の「みんなの記録」も同じ値に揃えてもらう（docs/requests/main-app-explore-header.md）。値を変えたら依頼文も直す
    ========================================================================== */
 
 .l-header {
@@ -10,51 +14,46 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--space-4);
-  padding: var(--space-3) var(--space-4);
+  padding: calc(64 * var(--top-u)) calc(120 * var(--top-u)) calc(24 * var(--top-u)) 0;
   background-color: var(--color-bg);
 }
 
 .l-header__list {
   display: flex;
-  gap: var(--space-4);
+  gap: calc(44 * var(--top-u));
 }
 
 .l-header__link {
-  font-size: var(--font-size-sm);
+  font-size: calc(24 * var(--top-u));
 }
 
 .l-header__link[aria-current="page"] {
   color: var(--color-accent);
 }
 
-/* Top：舞台の上に重ねる（背景なし）。位置は Figma（基準のフレーム 1728×1117）に合わせて --top-u で伸び縮みする */
+/* Top：舞台の上に重ねる（背景なし・下の余白なし） */
 .l-header--overlay {
   position: fixed;
   inset: 0 0 auto;
-  padding: calc(64 * var(--top-u)) calc(120 * var(--top-u)) 0 0;
+  padding-bottom: 0;
   background-color: transparent;
 }
 
-.l-header--overlay .l-header__list {
-  gap: calc(44 * var(--top-u));
-}
-
-.l-header--overlay .l-header__link {
-  font-size: calc(24 * var(--top-u));
-}
-
-/* 縦長の画面（基準のフレーム 390×844） */
+/* 縦長の画面（基準のフレーム 390×700） */
 @media (max-aspect-ratio: 4/5) {
-  .l-header--overlay {
-    padding: calc(18 * var(--top-u)) calc(20 * var(--top-u)) 0 0;
+  .l-header {
+    padding: calc(18 * var(--top-u)) calc(20 * var(--top-u)) calc(12 * var(--top-u)) 0;
   }
 
-  .l-header--overlay .l-header__list {
+  .l-header--overlay {
+    padding-bottom: 0;
+  }
+
+  .l-header__list {
     gap: calc(18 * var(--top-u));
   }
 
-  .l-header--overlay .l-header__link {
+  .l-header__link {
     font-size: calc(14 * var(--top-u));
   }
 }

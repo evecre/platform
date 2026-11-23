@@ -35,7 +35,7 @@
 
   <!-- Top の舞台（紙芝居）。仕組みは scrollStage.js、動きの付け方は assets/css/README.md §4
        ★見える要素には data-enter（出現）を付ける。data-order＝順番、data-leave＝後退
-       位置・大きさは object/project/_top.css（Figma の座標） -->
+       位置・大きさは object/project/_top.css（Figma の座標）。p-top-at は座標で置く絵、hero のロゴと STEP の文は流れで置く -->
   <main class="l-main l-stage" data-stage>
 
     <!-- 01-hero
@@ -43,7 +43,7 @@
          雲は assets/js/modules/heroClouds.js が [data-hero-clouds] の中に出す -->
     <section class="p-top-hero l-stage__scene" data-scene="hero">
       <div class="l-stage__frame">
-        <h1 class="p-top-at p-top-hero__title" data-enter="fade-up" data-order="1">
+        <h1 class="p-top-hero__title" data-enter="fade-up" data-order="1">
           <img class="p-top-hero__logo" src="/assets/img/common/logo-with-tagline.svg" alt="イベクリ イベントづくりを楽しく" width="351" height="115" fetchpriority="high">
         </h1>
 
@@ -76,10 +76,10 @@
     <!-- 02-about（キャラクターは画面をまたぐので l-stage__persistent にある） -->
     <section class="p-top-about l-stage__scene" data-scene="about">
       <div class="l-stage__frame">
-        <!-- 斜めの線（CSS で描く）。テキストと一緒に出る・消える -->
-        <span class="p-top-at p-top-about__line p-top-about__line--left" data-enter="fade-up" data-order="2" data-leave="fade-up-out" aria-hidden="true"></span>
-        <span class="p-top-at p-top-about__line p-top-about__line--right" data-enter="fade-up" data-order="2" data-leave="fade-up-out" aria-hidden="true"></span>
-        <div class="p-top-at p-top-about__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
+        <div class="p-top-about__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
+          <!-- 斜めの線（CSS で描く）。文の中に置き、文と一緒に出る・消える。位置は文の左上から -->
+          <span class="p-top-about__line p-top-about__line--left" aria-hidden="true"></span>
+          <span class="p-top-about__line p-top-about__line--right" aria-hidden="true"></span>
           <h2 class="p-top-about__title">イベクリとは？</h2>
           <p class="p-top-about__lead">イベントづくりを支えて、その経験を次へつなぐ。<br>イベントをつくる人のためのプラットフォームです。</p>
         </div>
@@ -116,7 +116,7 @@
       <div class="l-stage__frame">
         <img class="p-top-at p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out"
           srcset="/assets/img/top/mountaineering-768w.webp 768w, /assets/img/top/mountaineering-1536w.webp 1536w, /assets/img/top/mountaineering-1920w.webp 1920w, /assets/img/top/mountaineering-2560w.webp 2560w, /assets/img/top/mountaineering-3840w.webp 3840w, /assets/img/top/mountaineering-5120w.webp 5120w" sizes="34vw" src="/assets/img/top/mountaineering-1536w.webp" width="1921" height="1921" alt="" loading="lazy">
-        <div class="p-top-at p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
+        <div class="p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
           <p class="p-top-step__number">STEP 1</p>
           <h2 class="p-top-step__title">イベントをつくる</h2>
           <p class="p-top-step__paragraph">イベントの名前や開催日など、<br>いくつかの質問に答えるだけ。</p>
@@ -127,7 +127,7 @@
 
     <section class="p-top-step p-top-step--2 l-stage__scene" data-scene="step-2">
       <div class="l-stage__frame">
-        <div class="p-top-at p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
+        <div class="p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
           <p class="p-top-step__number">STEP 2</p>
           <h2 class="p-top-step__title">仲間を招待する</h2>
           <p class="p-top-step__paragraph">招待リンクを送って、<br>メンバーを集めましょう。</p>
@@ -140,7 +140,7 @@
       <div class="l-stage__frame">
         <img class="p-top-at p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out"
           srcset="/assets/img/top/planning-768w.webp 768w, /assets/img/top/planning-1536w.webp 1536w, /assets/img/top/planning-1920w.webp 1920w, /assets/img/top/planning-2560w.webp 2560w, /assets/img/top/planning-3840w.webp 3840w, /assets/img/top/planning-5120w.webp 5120w" sizes="30vw" src="/assets/img/top/planning-1536w.webp" width="1892" height="1892" alt="" loading="lazy">
-        <div class="p-top-at p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
+        <div class="p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
           <p class="p-top-step__number">STEP 3</p>
           <h2 class="p-top-step__title">やることを決める</h2>
           <p class="p-top-step__paragraph">イベントに必要なやることを書き出します。</p>
@@ -151,13 +151,13 @@
 
     <section class="p-top-step p-top-step--4 l-stage__scene" data-scene="step-4">
       <div class="l-stage__frame">
-        <img class="p-top-at p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out"
-          src="/assets/img/top/role.svg" width="698" height="283" alt="運営・制作・企画のキャラクター" loading="lazy">
-        <div class="p-top-at p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
+        <div class="p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
           <p class="p-top-step__number">STEP 4</p>
           <h2 class="p-top-step__title">分担して進める</h2>
           <p class="p-top-step__paragraph">担当を決めて、締め切りを設定。<br>終わったら完了を報告します。</p>
           <p class="p-top-step__paragraph">やることが片付くたびに、<br>チームは山の頂上（イベント当日）<br>へ近づいていきます。</p>
+          <!-- role.svg（STEP 2 と同じ絵）。テキストの真下に（テキストと一緒に出る・消える） -->
+          <img class="p-top-step__role" src="/assets/img/top/role.svg" width="698" height="283" alt="運営・制作・企画のキャラクター" loading="lazy">
         </div>
       </div>
     </section>
@@ -166,7 +166,7 @@
       <div class="l-stage__frame">
         <img class="p-top-at p-top-step__illust" data-enter="fade-up" data-order="2" data-leave="fade-up-out"
           srcset="/assets/img/top/writing-768w.webp 768w, /assets/img/top/writing-1536w.webp 1536w, /assets/img/top/writing-1920w.webp 1920w, /assets/img/top/writing-2560w.webp 2560w, /assets/img/top/writing-3840w.webp 3840w, /assets/img/top/writing-5120w.webp 5120w" sizes="38vw" src="/assets/img/top/writing-1536w.webp" width="2458" height="1921" alt="" loading="lazy">
-        <div class="p-top-at p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
+        <div class="p-top-step__text" data-enter="fade-up" data-order="2" data-leave="fade-up-out">
           <p class="p-top-step__number">STEP 5</p>
           <h2 class="p-top-step__title">イベントを振り返る</h2>
           <p class="p-top-step__paragraph">イベントが終わったら、<br>困ったこととその乗り越え方を残しましょう。</p>
@@ -185,7 +185,7 @@
         <div class="p-top-connect__slider p-top-connect__slider--bottom" aria-hidden="true">
           <div class="p-top-connect__track"><span class="p-top-connect__slide">Knowledge Platform　Planning　Creation　Management　</span><span class="p-top-connect__slide" aria-hidden="true">Knowledge Platform　Planning　Creation　Management　</span><span class="p-top-connect__slide" aria-hidden="true">Knowledge Platform　Planning　Creation　Management　</span><span class="p-top-connect__slide" aria-hidden="true">Knowledge Platform　Planning　Creation　Management　</span><span class="p-top-connect__slide" aria-hidden="true">Knowledge Platform　Planning　Creation　Management　</span><span class="p-top-connect__slide" aria-hidden="true">Knowledge Platform　Planning　Creation　Management　</span></div>
         </div>
-        <div class="p-top-at p-top-connect__content" data-enter="none">
+        <div class="p-top-connect__content" data-enter="none">
           <p class="p-top-step__number">STEP 6</p>
           <h2 class="p-top-step__title">公開して、つなぐ</h2>
           <p class="p-top-step__paragraph">イベントを告知として公開したり、振り返りをナレッジとして公開したりできます。次の代は、公開されたアーカイブを引き継いで新しいイベントをはじめられます。</p>
