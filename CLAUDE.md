@@ -210,7 +210,8 @@ robots.txt  _headers               検索エンジン対策（§6）
 - 02・03（Phase 3）：キャラクターは3体で1つの箱（`.p-top-chara`。体は `character-*-body.svg`、目は `c-eyes`）。02 は 03 の 4.82 倍で、箱ごと縮めて 03 へ移る。03 → 04 でポンッと消える。02 の斜めの線は CSS（`.p-top-about__line`）。03 は `about-landform`・UI（PC ＋ スマホ。まとめて右から）
 - 04〜08・09（Phase 4）：スマホは `.p-top-phone`（画面をまたぐ1つ。04・08 は右 x1065、05〜07 は左 x365）。中身5枚（`data-screen`）は、新しい中身を上に重ねてフェードで出し、出しきってから古い中身を消す（白く抜けない）。03 より前は `display: none`（中の画像を読まない）。丸いイラスト・role はテキストと一緒（fade-up 2・fade-up-out）。08 → 09 は 08 をそのまま残し、09 の枠を `clip-path: circle()` で中央から広げる（背景色は被さりきってから）。スライダーは同じ文（「Knowledge Platform　Planning　Creation　Management」。2026-11-14 に Evecre を外した）を6つ並べた帯を半分ずらして無限に流す（上は右から左・下は左から右）。止めるのは 09 が見えていないとき（09 の `data-state` が before / after）と動きを減らす設定だけ（「今の画面が 09 でないとき」だと、09 から去って縮む間に止まって見える）。行の高さは 1.4（g の下が切れないように）。STEP 4 の絵は role.svg（テキストの下。summit は使っていない）。STEP 2 には絵を置かない（2026-11-14 に role を STEP 4 へ移した）
 - 09 → 01（Phase 5。展示モードだけ）：`direction: 'loop'`。09 の枠が `clip-path` で中央へ縮み、その下で 01 の出現が同時に起きる（`--motion-shrink-*`）。スクロールでは 09 の次へ進まない
-- 縦長の画面（Phase 5）：`max-aspect-ratio: 4/5` で基準のフレームを 390×844 にし、`_top.css` の末尾で位置を組み替える。箱は `--box-u` で中身ごと縮める（箱の横長での左上は `--ox` / `--oy` にはっきり書く）。ドットは出さない
+- 縦長の画面（Phase 5。2026-11-23 に 390×700 に）：`max-aspect-ratio: 4/5` で基準のフレームを 390×700 にし（844 だとスマホのブラウザの見える高さで縮み、絵が小さく左右が空いた）、`_top.css` の末尾で位置を組み替える。箱は `--box-u` で中身ごと縮める（箱の横長での左上は `--ox` / `--oy` にはっきり書く）。ドットは出さない
+- 流れで置く要素（2026-11-23）：hero のロゴ・02 の文・04〜08 の文・09 の文は `.p-top-at` を付けず absolute を使わない。hero・02・04〜09 の枠を「基準のフレームの1マス」のグリッドにし、マスの左上からの margin で置く（ロゴは中央なので左右 auto）。STEP の文の位置は STEP 2〜4 で共通、STEP 1・5 だけ替える。文は `position: relative; z-index: 1` でイラストより手前（縦長ではイラストを文の後ろに少し重ねる）。STEP 4 の role.svg は文の中の最後（`.p-top-step__role`。縦長では文と同じ幅）。02 の斜めの線も文の中（`--line-x` / `--line-y` は文の左上から）。02 の文は縦長では上下の中央より少し上（`align-self: center` ＋ margin-bottom）
 - 最初の画面（`#…` で開いたときも）は `.is-preload` で隠したまま描いてから画像を待つ（`display: none` のままだと lazy の画像が読まれず、待ち続ける）
 - 本文の太さは 500（`foundation/_base.css` の body。りょうゴシック PlusN の Medium）。09 のスライダーは Ultra
 - 09 から去るとき（09 → 08・展示モードの 09 → 01）は、09 が中央へ縮む（`--motion-shrink-*`）
@@ -219,5 +220,7 @@ robots.txt  _headers               検索エンジン対策（§6）
 - 01-hero（Phase 2）：マスク（`hero-mask.svg` を CSS の mask に。中の要素は `.p-top-box` の中で Figma の座標）。雲は `assets/js/modules/heroClouds.js`（マスクの右の外から左へ。種類・高さ・速さ・間隔はランダム、値は `--hero-cloud-*`。hero 以外では新しく出さず、CSS で止まる）。hero → 02 は 02 の背景色の幕が下からせり上がる（hero の要素は残す・背景色は被さりきってから替える・02 の出現は `--motion-delay-base` で幕のあと）。02 → hero（戻る）はその逆：02 のキャラクターがポンッと消え・テキストは下へフェードダウン（`motion-fade-down-out`）→ `--motion-duration-pop` 待って、幕が覆った状態から上から下へ下がって hero を見せる（hero は出現なし。重なりは hero 1 ＜ 幕 2 ＜ 去る 02 の 3 ＜ キャラクター 5。背景色はすぐ替える）
 - フォント：日本語＝りょうゴシック PlusN（Adobe Fonts の kit `jtx8lwo`。JS だけの kit なので `assets/js/modules/webfonts.js` が読む。★kit のドメインに localhost と evecre.pages.dev が要る）、英字の見出し＝Ultra（Google Fonts。Top の `<head>`）。`--font-family-base` / `--font-family-display`
 - ヘッダー：TOP / みんなの記録 / ヘルプ。ロゴは置かない（全ページ）。Top は舞台の上に重ねる（`l-header--overlay`）
+  - 位置・大きさは全ページで Top に揃える（2026-11-23）。`--top-u` で書く（横長：上 64・右 120・間 44・文字 24／縦長：上 18・右 20・間 18・文字 14）。ヘルプは背景つきで上に貼りつき、下に余白（横長 24・縦長 12）。Top だけ背景なし・下の余白なし
+  - 本体の「みんなの記録」も同じ値に揃えてもらう（依頼文 `docs/requests/main-app-explore-header.md`）。**値を変えたら依頼文も直す**
 - Usami の決定（2026-11-13）：08 の文は PDF のとおり（「イベントが終わったら、困ったこととその乗り越え方を残しましょう。」を入れる）／03 の背景は `about-landform`（PDF と違うがこちら）／02 の斜めの線は CSS で描く／04〜08 の丸いイラストと role はテキストと一緒に出る・消える／目の位置は PDF から測る／背景色は PDF から測った値（`--color-top-*`）
 

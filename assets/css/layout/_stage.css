@@ -99,6 +99,7 @@
   inset: 0;
   z-index: 5;
   display: block;
+  overflow: clip; /* 画面の外へはみ出した分（02 のキャラクターなど）を切る */
   pointer-events: none;
 }
 
