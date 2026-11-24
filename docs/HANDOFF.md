@@ -18,6 +18,18 @@
 
 ---
 
+## 2026-11-24 — 指示書 07：タスクの詳細設定をヘルプに書き足す（Phase 1）
+
+- 依頼：`docs/instructions/07_task-advanced-settings.md` を進める（本体側が書いた指示書。§2 が本体のいまの動き）
+- やったこと（ブランチ `feat/task-advanced-help`。ユーザーの help.json の編集は `chore/help-content-user-edits` で先に commit し、その上に切った）：
+  - help.json に記事 `task-advanced`（`task-create` の次。管理者向け・checked: false）。5つの項目と「このタスクを削除する」を、何が起きるか → 例 → 注意の順で
+  - `task-create`：最後に詳細設定の1行とリンク、related に `task-advanced`
+  - `task-complete`：チェック項目・ワンタップで完了するの注意を1行ずつ、related に `task-advanced`
+  - 確かめた：カテゴリ「タスク」に出る。検索の「チェック項目」「応募」「アナウンス」「個別」「一人ずつ」「公開終了」で1位。check:help・check:faq（誤答 0）・check OK
+- 残っていること：Phase 2（チャットボット：`claim-recruit`・`individual-clear` を直し、8件を足す。synonyms・faq-tests も）。ユーザーが記事の文面を読んでから
+- ユーザーに確認したいこと：記事の文面
+- 本体側に頼むこと：なし
+
 ## 2026-11-23 — ヘッダーを Top に揃える・本体への依頼文
 
 - 依頼：ヘルプと Top でヘッダーが微妙に違うので Top に揃える。「みんなの記録」（本体）のヘッダーも Top に揃える指示文を作る
