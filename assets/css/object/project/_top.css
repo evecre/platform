@@ -888,13 +888,13 @@ img.p-top-at {
 
   /* --- 01-hero（絵は大きく：左右の山は画面の外へはみ出し、キャラクターは画面に収まる大きさ） --- */
   .p-top-hero__title {
-    --y: 190;
+    --y: 154;
     --w: 300;
   }
 
   .p-top-hero__mask {
     --x: -56;
-    --y: 302;
+    --y: 236;
     --w: 500;
     --h: 320;
     --box-u: calc(var(--top-u) * 500 / 1105);
@@ -917,7 +917,7 @@ img.p-top-at {
      ★マスクの --y を変えたら、ここの --y も同じだけ変える */
   .p-top-hero__phone {
     --x: 2.4;
-    --y: 585.7;
+    --y: 519.7;
     --w: 39.4;
     --h: 48.9;
     transform-origin: calc(192.8 * var(--top-u)) calc(-14.5 * var(--top-u));
