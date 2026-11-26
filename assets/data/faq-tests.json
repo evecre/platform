@@ -390,5 +390,77 @@
   {
     "q": "電車の時刻表",
     "expect": null
+  },
+  {
+    "q": "詳細設定ではどんなことが設定できる？",
+    "expect": "task-advanced"
+  },
+  {
+    "q": "タスクの詳細設定について教えて",
+    "expect": "task-advanced"
+  },
+  {
+    "q": "担当者にチェックリストを確認させたい",
+    "expect": "checklist"
+  },
+  {
+    "q": "完了前の確認項目を作るには",
+    "expect": "checklist"
+  },
+  {
+    "q": "完了しようとしたらエラーが出た",
+    "expect": "checklist-blocked"
+  },
+  {
+    "q": "エラーが出てタスクを完了できない",
+    "expect": "checklist-blocked"
+  },
+  {
+    "q": "タスクをみんなにアナウンスするには",
+    "expect": "announce"
+  },
+  {
+    "q": "メンバー全員に周知したいタスクがある",
+    "expect": "announce"
+  },
+  {
+    "q": "ボタンだけで完了にしたい",
+    "expect": "one-tap"
+  },
+  {
+    "q": "報告なしで終われるタスクを作りたい",
+    "expect": "one-tap"
+  },
+  {
+    "q": "公開終了ってなに",
+    "expect": "individual-close"
+  },
+  {
+    "q": "個別で完了するタスクがずっと完了にならない",
+    "expect": "individual-close"
+  },
+  {
+    "q": "担当に立候補したい",
+    "expect": "claim-apply"
+  },
+  {
+    "q": "応募を取り消すには",
+    "expect": "claim-apply"
+  },
+  {
+    "q": "応募者から担当を選ぶには",
+    "expect": "claim-select"
+  },
+  {
+    "q": "応募してきた人を担当者にしたい",
+    "expect": "claim-select"
+  },
+  {
+    "q": "担当者を募集するには",
+    "expect": "claim-recruit"
+  },
+  {
+    "q": "各自に提出してもらうタスクを作りたい",
+    "expect": "individual-clear"
   }
 ]

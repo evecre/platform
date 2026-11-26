@@ -18,6 +18,20 @@
 
 ---
 
+## 2026-11-26 — 指示書 07 Phase 2：タスクの詳細設定をチャットボットに書き足す
+
+- 依頼：Phase 1 の記事はユーザーが確認済み（「問題ない」）。Phase 2 へ
+- やったこと（ブランチ `feat/task-advanced-chatbot`）：
+  - faq.json：`claim-recruit`（応募期限 23:59・「選定する」で何人でも・決まるまで完了できない）と `individual-clear`（担当者の決め方で誰が出せるか・いつ完了か）の答えを直し、help を `task-advanced` に
+  - 8件を足した：`task-advanced`・`checklist`・`checklist-blocked`・`announce`・`one-tap`・`individual-close`・`claim-apply`・`claim-select`（すべて help は `task-advanced`）
+  - synonyms.json：応募（立候補・手を挙げ・募集 …）・個別（一人ずつ・各自 …）・チェック項目（チェックリスト・確認項目 …）・アナウンス（周知）
+    - ★「お知らせ」は通知の、「告知」は宣伝の言い換えにすでに入っているので、アナウンスには足さなかった
+  - faq-tests.json に18問（新しい8件に2問ずつ・直した2件に1問ずつ）
+  - 結果：53項目・116問で 正答 65%・到達 98%・誤答 0。新しい18問は 13問が正答、5問が「もしかして」に正解
+- 残っていること：なし（指示書 07 は終わり。マージはユーザーが決める）
+- ユーザーに確認したいこと：なし
+- 本体側に頼むこと：なし
+
 ## 2026-11-24 — 指示書 07：タスクの詳細設定をヘルプに書き足す（Phase 1）
 
 - 依頼：`docs/instructions/07_task-advanced-settings.md` を進める（本体側が書いた指示書。§2 が本体のいまの動き）
