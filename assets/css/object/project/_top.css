@@ -159,7 +159,7 @@ img.p-top-at {
 
 /* landform の横の移動は短く */
 .p-top-hero__landform {
-  --motion-distance-slide: 0.75rem;
+  --motion-distance-slide: 1.75rem;
 }
 
 .p-top-hero__ipad {
